@@ -7,7 +7,7 @@
 # 介绍
 
 > 注意，该项目属于fork二次开发，使用需谨慎  
-> 原作者 github: https://github.com/Carole007/carole-admin，不错的开源项目，欢迎大家去支持原作者  
+> 原作者 github: https://github.com/Carole007/carole-admin
 > 原作者演示地址：[https://carole.top](https://carole.top)
 
 ## 当前fork分支路线图
@@ -15,11 +15,12 @@
 > 当前版本不稳定，请勿上生产环境
 
 - 持续优化代码性能，代码结构，优化若依UI [进行中]
-- 添加 DockerFile 和 DockerCompose [未开始]
+- 添加 DockerFile 和 DockerCompose [已完成]
 - 从 express 替换至 fastify [未开始]
 - 添加 webpack 和 swc 提升随着项目扩大的热更和打包速度 [未开始]
 - 重构若依vue3前端部分，使用geeker admin，整合其他后台框架的有点例如pure admin，vben admin等 [未开始]
 - 添加单元测试 [未开始]
+- 进行性能测试 [未开始]
 - 投入生产环境 [未开始]
 
 ## 环境

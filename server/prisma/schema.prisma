@@ -1,0 +1,11 @@
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["views", "relationJoins", "prismaSchemaFolder", "omitApi"]
+  binaryTargets   = ["native"]
+}
+
+datasource db {
+  provider     = "mysql"
+  url          = env("DATABASE_URL")
+  relationMode = "prisma"
+}

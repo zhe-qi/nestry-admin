@@ -16,6 +16,7 @@ services:
       - .env
     ports:
       - '3000:3000'
+    restart: unless-stopped
   mysql-container:
     container_name: mysql-container
     hostname: mysql-container
@@ -31,6 +32,7 @@ services:
       test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
       timeout: 20s
       retries: 10
+    restart: unless-stopped
   redis-container:
     container_name: redis-container
     image: redis
@@ -38,3 +40,4 @@ services:
       - '6379:6379'
     volumes:
       - /Users/zheqi/nest_admin:/data
+    restart: unless-stopped

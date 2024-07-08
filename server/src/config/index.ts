@@ -79,7 +79,7 @@ export const Config = {
   // 代码生成工具配置。
   gen: {
     // 代码作者标识。
-    author: 'carole',
+    author: 'admin',
     // 默认生成的模块包名。
     packageName: 'admin',
     // 生成代码的子模块目录。

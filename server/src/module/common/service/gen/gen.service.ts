@@ -258,6 +258,12 @@ export class GenService {
 
   // 预览生成代码
   async previewTable(tableId: number) {
+    try {
+      this.readTemplates();
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.log(error);
+    }
     const info = await this.getTableInfoById(tableId);
     this.prepareTableInfo(info);
     const data = this.prepareTemplateData(info);

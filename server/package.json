@@ -6,7 +6,8 @@
   "author": "",
   "license": "MIT",
   "prisma": {
-    "schema": "./prisma"
+    "schema": "./prisma",
+    "seed": "ts-node ./prisma/seed.ts"
   },
   "scripts": {
     "build": "nest build",

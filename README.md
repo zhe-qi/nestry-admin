@@ -16,7 +16,7 @@
 
 - 持续优化代码性能，代码结构，优化若依UI，解耦代码 [进行中]
 - 添加 DockerFile 和 DockerCompose [已完成]
-- 添加基于npx prisma db push，和 seed.ts 的数据库初始化脚本 [进行中]
+- 添加基于npx prisma db push，和 seed.ts 的数据库初始化脚本 [已完成]
 - 从 express 替换至 fastify [未开始] [待定]
 - 添加 webpack 和 swc 提升随着项目扩大的热更和打包速度 [未开始] [待定]
 - 重构若依vue3前端部分，使用geeker admin，整合其他后台框架的有点例如pure admin，vben admin等 [未开始] [待定]

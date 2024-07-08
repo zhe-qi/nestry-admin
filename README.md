@@ -14,13 +14,16 @@
 
 > 当前版本不稳定，请勿上生产环境
 
-- 持续优化代码性能，代码结构，优化若依UI，解耦代码 [进行中]
+- 持续优化代码性能，代码结构，优化若依UI，解耦代码 [持续进行中]
 - 添加 DockerFile 和 DockerCompose [已完成]
 - 添加基于npx prisma db push，和 seed.ts 的数据库初始化脚本 [已完成]
+- 修改ExceptionsFilter、HttpExceptionsFilter，并添加更多的异常处理 [未开始]
+- 修改为passport全家桶 [未开始] [待定]
 - 从 express 替换至 fastify [未开始] [待定]
 - 添加 webpack 和 swc 提升随着项目扩大的热更和打包速度 [未开始] [待定]
 - 重构若依vue3前端部分，使用geeker admin，整合其他后台框架的有点例如pure admin，vben admin等 [未开始] [待定]
-- 密码加密从crypto改为bcrypt，添加Helmet [未开始] [待定]
+- 密码加密从crypto改为bcrypt，添加Helmet [已完成]
+- redis修改为redis模块，redis services [未开始] [待定]
 - 从node-xlsx迁移到exceljs [未开始]
 - 从直接导入config迁移到@nestjs/config [未开始]
 - 添加单元测试 [未开始]

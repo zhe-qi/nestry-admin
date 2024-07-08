@@ -31,11 +31,11 @@ export const Config = {
   },
   crypto: {
     // 密码加密使用的密钥。
-    psdSecret: process.env.psdSecret || 'carole123456',
+    psdSecret: process.env.psdSecret,
   },
   token: {
     // 用于token生成的加密密钥。
-    secret: process.env.tokenSecret || 'carole123456',
+    secret: process.env.tokenSecret,
     // token的有效期，单位为秒。
     expiresIn: 60 * 60 * 24,
   },
@@ -48,7 +48,7 @@ export const Config = {
   // Redis数据库连接配置。
   redis: {
     // Redis服务器地址。
-    host: '127.0.0.1',
+    host: process.env.VITE_REDIS_HOST as string,
     // Redis服务器端口。
     port: 6379,
     // 使用的Redis数据库索引。

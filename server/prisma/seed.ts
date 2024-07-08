@@ -1,9 +1,17 @@
 import { PrismaClient } from '@prisma/client';
+import * as bcrypt from 'bcrypt';
 import { genTableColumn, genTableData, sysConfigData, sysDeptData, sysDictData, sysDictTypeData, sysLogininforData, sysMenuData, sysNoticeData, sysPostData, sysRoleData, sysRoleDeptData, sysRoleMenuData, sysUserData, sysUserPostData, sysUserRoleData } from './data';
 
 const prisma = new PrismaClient();
 
 async function main() {
+  const _sysUserData = sysUserData.map((item) => {
+    return {
+      ...item,
+      password: bcrypt.hashSync(item.password, bcrypt.genSaltSync(10)),
+    };
+  });
+
   // 禁用外键检查
   await prisma.$executeRaw`SET FOREIGN_KEY_CHECKS = 0;`;
 
@@ -20,7 +28,7 @@ async function main() {
   await prisma.sysRole.createMany({ data: sysRoleData });
   await prisma.sysRoleDept.createMany({ data: sysRoleDeptData });
   await prisma.sysRoleMenu.createMany({ data: sysRoleMenuData });
-  await prisma.sysUser.createMany({ data: sysUserData });
+  await prisma.sysUser.createMany({ data: _sysUserData });
   await prisma.sysUserRole.createMany({ data: sysUserRoleData });
   await prisma.sysUserPost.createMany({ data: sysUserPostData });
 

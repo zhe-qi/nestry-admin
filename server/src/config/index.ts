@@ -29,10 +29,6 @@ export const Config = {
     // 在时间窗口内允许的最大请求次数。
     limit: 60,
   },
-  crypto: {
-    // 密码加密使用的密钥。
-    psdSecret: process.env.psdSecret,
-  },
   token: {
     // 用于token生成的加密密钥。
     secret: process.env.tokenSecret,

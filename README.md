@@ -20,7 +20,7 @@
 - 从 express 替换至 fastify [未开始] [待定]
 - 添加 webpack 和 swc 提升随着项目扩大的热更和打包速度 [未开始] [待定]
 - 重构若依vue3前端部分，使用geeker admin，整合其他后台框架的有点例如pure admin，vben admin等 [未开始] [待定]
-- 密码加密从crypto改为bcrypt，添加Helmet、 [未开始] [待定]
+- 密码加密从crypto改为bcrypt，添加Helmet [未开始] [待定]
 - 从node-xlsx迁移到exceljs [未开始]
 - 从直接导入config迁移到@nestjs/config [未开始]
 - 添加单元测试 [未开始]

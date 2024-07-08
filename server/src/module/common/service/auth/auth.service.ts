@@ -1,12 +1,13 @@
 import { randomUUID } from 'node:crypto';
 import { BadRequestException, Injectable } from '@nestjs/common';
 import * as bowser from 'bowser';
-import { HmacSHA256 } from 'crypto-js';
+// import { HmacSHA256 } from 'crypto-js';
 import { SysLogininfor, SysRole, SysUser } from '@prisma/client';
 import * as jwt from 'jsonwebtoken';
 import * as requestIp from 'request-ip';
 import { Request } from 'express';
 import { capitalize } from 'lodash';
+import * as bcrypt from 'bcrypt';
 import { PrismaService } from '../prisma/prisma.service';
 import type { MenuItem, RawItem } from './types';
 import { AxiosService } from '@/module/axios/axios.service';
@@ -350,7 +351,7 @@ export class AuthService {
    * @desc 密码加密
    */
   encrypt(str: string): string {
-    return HmacSHA256(str, Config.crypto.psdSecret).toString();
+    return bcrypt.hashSync(str, bcrypt.genSaltSync(10));
   }
 
   /** @desc 创建token */
@@ -471,7 +472,7 @@ export class AuthService {
       throw new BadRequestException('用户不存在');
     }
 
-    if (user.password !== this.encrypt(password)) {
+    if (!bcrypt.compareSync(password, user.password)) {
       throw new BadRequestException('密码不正确');
     }
 

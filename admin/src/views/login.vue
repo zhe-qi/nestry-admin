@@ -86,7 +86,7 @@ const base64 =
 
 const loginForm = ref({
   username: "admin",
-  password: "carole",
+  password: "123456",
   rememberMe: false,
   code: "",
   uuid: ""

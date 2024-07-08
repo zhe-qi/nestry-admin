@@ -2,6 +2,7 @@ import 'module-alias/register';
 import { NestFactory } from '@nestjs/core';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import helmet from 'helmet';
 import { AppModule } from './app.module';
 import { Config } from '@/config';
 
@@ -12,6 +13,10 @@ async function bootstrap() {
   app.disable('x-powered-by');
   app.setGlobalPrefix(Config.contextPath || '/');
   app.enableCors();
+
+  // web 安全，防常见漏洞
+  // 注意： 开发环境如果开启 nest static module 需要将 crossOriginResourcePolicy 设置为 false 否则 静态资源 跨域不可访问
+  app.use(helmet({ crossOriginOpenerPolicy: { policy: 'same-origin-allow-popups' }, crossOriginResourcePolicy: false }));
 
   await configureStaticAssets(app);
   await configureSwagger(app);

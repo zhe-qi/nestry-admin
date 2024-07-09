@@ -5,7 +5,7 @@
         <basic-info-form ref="basicInfo" :info="info" />
       </el-tab-pane>
       <el-tab-pane label="字段信息" name="columnInfo">
-        <el-table ref="dragTable" :data="columns" row-key="columnId" :max-height="tableHeight">
+        <el-table v-loading="loading" ref="dragTable" :data="columns" row-key="columnId" :max-height="tableHeight">
           <el-table-column label="序号" type="index" min-width="5%"/>
           <el-table-column
             label="字段列名"
@@ -42,7 +42,6 @@
               <el-input v-model="scope.row.javaField"></el-input>
             </template>
           </el-table-column>
-
           <el-table-column label="插入" min-width="5%">
             <template #default="scope">
               <el-checkbox true-label="1" false-label="0" v-model="scope.row.isInsert"></el-checkbox>
@@ -141,6 +140,7 @@ const tables = ref([]);
 const columns = ref([]);
 const dictOptions = ref([]);
 const info = ref({});
+const loading = ref(true);
 
 /** 提交按钮 */
 function submitForm() {
@@ -186,6 +186,7 @@ function close() {
     // 获取表详细信息
     getGenTable(tableId).then(res => {
       columns.value = res.data.rows;
+      loading.value = false;
       info.value = res.data.info;
     
       tables.value = res.data.tables;

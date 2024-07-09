@@ -97,16 +97,16 @@ export class GenController {
   @RequirePermission('tool:gen:edit')
   @Get('/:id')
   async getGenTable(@Param('id') id: string) {
-    const info = isNumber(+id)
-      ? await this.genService.getTableInfoById(+id)
+    const numericId = +id; // 将转换操作只做一次
+    const info = !Number.isNaN(numericId) // 直接使用 isNaN 检查转换后的值是否为数字
+      ? await this.genService.getTableInfoById(numericId)
       : await this.genService.getTableInfoByTableName(id);
     if (!info) { return Result.ok(null); }
-    const data = {
+    return Result.ok({
       info,
       rows: info.columns,
       tables: [info],
-    };
-    return Result.ok(data);
+    });
   }
 
   @ApiOperation({ summary: '删除表数据' })

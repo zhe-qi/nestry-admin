@@ -7,7 +7,7 @@ import { nowDateTime } from '@/common/utils';
 import { ${className}Service } from './service/${filename}.service';
 import { Query${className}Dto, Create${className}Dto, Update${className}Dto } from './dto/index';
 import { Response } from 'express';
-import { $modelName1 } from '@prismaClient';
+import { $modelName1 } from '@prisma/client';
 import { TableDataInfo } from '@/common/domain/table';
 
 @ApiTags("${functionName}")
@@ -32,7 +32,6 @@ export class ${className}Controller {
        return Result.ok(await this.${businessName}Service.select${BusinessName}All())
     }
 
-    
     @ApiOperation({ summary: "导出${functionName}xlsx文件" })
     @RequirePermission("${moduleName}:${businessName}:export")
     @Get("/export")

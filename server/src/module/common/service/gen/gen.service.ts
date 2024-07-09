@@ -456,13 +456,14 @@ export class GenService {
         where: { tableId: id },
         include: { tableColumns: true },
       });
+
     if (!tableInfo) { return null; }
 
     const tableColumns = tableInfo.tableColumns.map(this.processColumn);
     const { dicts, dictsNoSymbol } = this.extractDicts(tableColumns);
     const pkColumn = tableColumns.find(v => v.pk && v.increment) || tableColumns[0];
     const options = JSON.parse(tableInfo.options || '{}');
-    const parentMenuId = options.parentMenuId ? +options.parentMenuId : 0;
+    const parentMenuId = +options.parentMenuId ?? 0;
 
     return {
       ...tableInfo,

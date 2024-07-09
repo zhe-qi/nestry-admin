@@ -5,7 +5,7 @@ import { Prisma } from '@prisma/client';
 import { isNotEmpty } from 'class-validator';
 import { camelCase, kebabCase, toLower, upperFirst } from 'lodash';
 import * as Velocity from 'velocityjs';
-import * as archiver from 'archiver';
+import archiver from 'archiver';
 import { Response } from 'express';
 import { ConfigService } from '@nestjs/config';
 import { PrismaService } from '../prisma/prisma.service';
@@ -359,7 +359,7 @@ export class GenService {
 
   sendResponse(res) {
     res.setHeader('content-type', 'application/octet-stream;charset=UTF-8');
-    res.setHeader('content-disposition', 'attachment;filename="carole.zip"');
+    res.setHeader('content-disposition', 'attachment;filename="code.zip"');
     res.setHeader('Access-Control-Expose-Headers', 'Content-Disposition');
     res.setHeader('X-Content-Type-Options', 'nosniff');
     res.setHeader('Transfer-Encoding', 'chunked');

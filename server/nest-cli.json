@@ -4,10 +4,13 @@
   "sourceRoot": "src",
   "compilerOptions": {
     "deleteOutDir": true,
-    "builder": "swc",
+    "builder": {
+      "type": "swc",
+      "options": {}
+    },
     "typeCheck": true,
     "assets": [
-      { "include": "module/common/service/gen/gen-template", "outDir": "dist/src", "watchAssets": true }
+      { "include": "module/common/service/gen/gen-template", "watchAssets": true }
     ]
   }
 }

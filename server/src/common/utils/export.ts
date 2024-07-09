@@ -4,15 +4,23 @@ import ExcelJS from 'exceljs';
 export async function exportTable(
   data: any[][],
   res: Response,
-  options: Record<string, any> = {},
+  options: {
+    header: any[]
+    dictMap?: any
+    sheetName?: string
+  } = {
+    header: [],
+    dictMap: {},
+    sheetName: 'Sheet1',
+  },
 ) {
   const workbook = new ExcelJS.Workbook();
-  const sheetName = options.sheetName || 'Sheet1';
+  const sheetName = options.sheetName;
 
   const worksheet = workbook.addWorksheet(sheetName);
 
-  if (options.header) {
-    worksheet.columns = options.header?.map((column) => {
+  if (options.header.length) {
+    worksheet.columns = options.header.map((column) => {
       const width = column.width;
       return {
         header: column.title,
@@ -20,34 +28,34 @@ export async function exportTable(
         width: Number.isNaN(width) ? 16 : width,
       };
     });
+
+    // 定义表头样式
+    const headerStyle: Partial<ExcelJS.Style> = {
+      font: {
+        size: 10,
+        bold: true,
+        color: { argb: 'ffffff' },
+      },
+      alignment: { vertical: 'middle', horizontal: 'center' },
+      fill: {
+        type: 'pattern',
+        pattern: 'solid',
+        fgColor: { argb: '808080' },
+      },
+      border: {
+        top: { style: 'thin', color: { argb: '9e9e9e' } },
+        left: { style: 'thin', color: { argb: '9e9e9e' } },
+        bottom: { style: 'thin', color: { argb: '9e9e9e' } },
+        right: { style: 'thin', color: { argb: '9e9e9e' } },
+      },
+    };
+
+    const headerRow = worksheet.getRow(1);
+
+    headerRow.eachCell((cell) => {
+      cell.style = headerStyle;
+    });
   }
-
-  // 定义表头样式
-  const headerStyle: Partial<ExcelJS.Style> = {
-    font: {
-      size: 10,
-      bold: true,
-      color: { argb: 'ffffff' },
-    },
-    alignment: { vertical: 'middle', horizontal: 'center' },
-    fill: {
-      type: 'pattern',
-      pattern: 'solid',
-      fgColor: { argb: '808080' },
-    },
-    border: {
-      top: { style: 'thin', color: { argb: '9e9e9e' } },
-      left: { style: 'thin', color: { argb: '9e9e9e' } },
-      bottom: { style: 'thin', color: { argb: '9e9e9e' } },
-      right: { style: 'thin', color: { argb: '9e9e9e' } },
-    },
-  };
-
-  const headerRow = worksheet.getRow(1);
-
-  headerRow.eachCell((cell) => {
-    cell.style = headerStyle;
-  });
 
   data.forEach((item) => {
     worksheet.addRow(item);

@@ -9,53 +9,25 @@ import { ChunkFileDto, ChunkMergeFileDto, FileUploadDto, uploadIdDto } from './d
 export class UploadController {
   constructor(private readonly uploadService: UploadService) {}
 
-  /**
-   * 文件上传
-   * @param file
-   * @returns
-   */
-  @ApiOperation({
-    summary: '文件上传',
-  })
-  @ApiBody({
-    type: FileUploadDto,
-    required: true,
-  })
-  @HttpCode(200)
   @Post()
+  @HttpCode(200)
+  @ApiOperation({ summary: '文件上传' })
   @UseInterceptors(FileInterceptor('file'))
+  @ApiBody({ type: FileUploadDto, required: true })
   singleFileUpload(@UploadedFile() file: Express.Multer.File) {
     return this.uploadService.singleFileUpload(file);
   }
 
-  /**
-   * 获取切片上传任务Id
-   * @param file
-   * @returns
-   */
-  @ApiOperation({
-    summary: '获取切片上传任务Id',
-  })
-  @ApiBody({
-    required: true,
-  })
+  @ApiOperation({ summary: '获取切片上传任务Id' })
+  @ApiBody({ required: true })
   @HttpCode(200)
   @Get('/chunk/uploadId')
   getChunkUploadId() {
     return this.uploadService.getChunkUploadId();
   }
 
-  /**
-   * 文件分片上传
-   * @param file
-   * @returns
-   */
-  @ApiOperation({
-    summary: '文件切片上传',
-  })
-  @ApiBody({
-    required: true,
-  })
+  @ApiOperation({ summary: '文件切片上传' })
+  @ApiBody({ required: true })
   @HttpCode(200)
   @Post('/chunk')
   @UseInterceptors(FileInterceptor('file'))
@@ -63,52 +35,24 @@ export class UploadController {
     return this.uploadService.chunkFileUpload(file, body);
   }
 
-  /**
-   * 文件分片合并
-   * @returns
-   */
-  @ApiOperation({
-    summary: '合并切片',
-  })
-  @ApiBody({
-    type: ChunkMergeFileDto,
-    required: true,
-  })
+  @ApiOperation({ summary: '合并切片' })
+  @ApiBody({ type: ChunkMergeFileDto, required: true })
   @HttpCode(200)
   @Post('/chunk/merge')
   chunkMergeFile(@Body() body: ChunkMergeFileDto) {
     return this.uploadService.chunkMergeFile(body);
   }
 
-  /**
-   * 获取切片上传任务结果
-   * @param file
-   * @returns
-   *
-   */
-  @ApiOperation({
-    summary: '获取切片上传结果',
-  })
-  @ApiQuery({
-    type: uploadIdDto,
-    required: true,
-  })
+  @ApiOperation({ summary: '获取切片上传结果' })
+  @ApiQuery({ type: uploadIdDto, required: true })
   @HttpCode(200)
   @Get('/chunk/result')
   getChunkUploadResult(@Query() query: { uploadId: string }) {
     return this.uploadService.getChunkUploadResult(query.uploadId);
   }
 
-  /**
-   * 获取cos授权
-   * @param query
-   */
-  @ApiOperation({
-    summary: '获取cos上传密钥',
-  })
-  @ApiBody({
-    required: true,
-  })
+  @ApiOperation({ summary: '获取cos上传密钥' })
+  @ApiBody({ required: true })
   @Get('/cos/authorization')
   getAuthorization(@Query() query: { key: string }) {
     return this.uploadService.getAuthorization(query.key);

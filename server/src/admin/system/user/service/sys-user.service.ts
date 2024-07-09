@@ -5,7 +5,7 @@ import { isNotEmpty } from 'class-validator';
 import { isArray } from 'lodash';
 import { CreateSysUserDto, QuerySysUserDto, UpdateSysUserDto, UpdateSysUserStatusDto, resetPasswordDto, updateProfileDto } from '../dto/index';
 import { AuthService } from '@/module/common/service/auth/auth.service';
-import { exportTable } from '@/common/utils';
+import { exportTable } from '@/common/utils/export';
 import { PrismaService } from '@/module/common/service/prisma/prisma.service';
 import Result from '@/common/utils/result';
 import { redisUtils } from '@/common/utils/redisUtils';

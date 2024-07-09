@@ -3,7 +3,8 @@ import { Response } from 'express';
 import { Prisma } from '@prisma/client';
 import { isNotEmpty } from 'class-validator';
 import { CreateSysMenuDto, QuerySysMenuDto, UpdateSysMenuDto } from '../dto/index';
-import { exportTable, tree } from '@/common/utils';
+import { tree } from '@/common/utils';
+import { exportTable } from '@/common/utils/export';
 import { PrismaService } from '@/module/common/service/prisma/prisma.service';
 
 @Injectable()

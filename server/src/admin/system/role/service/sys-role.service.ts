@@ -3,7 +3,7 @@ import { Response } from 'express';
 import { Prisma } from '@prisma/client';
 import { isArray, isNotEmpty } from 'class-validator';
 import { CreateSysRoleDto, QueryAllocatedListDto, QuerySysRoleDto, UpdateSysRoleDto, UpdateSysRoleStatusDto } from '../dto/index';
-import { exportTable } from '@/common/utils';
+import { exportTable } from '@/common/utils/export';
 import { PrismaService } from '@/module/common/service/prisma/prisma.service';
 import { AuthService } from '@/module/common/service/auth/auth.service';
 

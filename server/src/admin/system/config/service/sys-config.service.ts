@@ -3,7 +3,7 @@ import { Response } from 'express';
 import { Prisma } from '@prisma/client';
 import { isNotEmpty } from 'class-validator';
 import { CreateSysConfigDto, QuerySysConfigDto, UpdateSysConfigDto } from '../dto/index';
-import { exportTable } from '@/common/utils';
+import { exportTable } from '@/common/utils/export';
 import { PrismaService } from '@/module/common/service/prisma/prisma.service';
 import { redisUtils } from '@/common/utils/redisUtils';
 import { Constants } from '@/common/constant/constants';

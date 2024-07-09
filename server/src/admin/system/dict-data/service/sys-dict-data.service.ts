@@ -9,7 +9,7 @@ import { Constants } from '@/common/constant/constants';
 import { queryDictDataDto } from '@/admin/system/dict-data/dto/queryDictDataDto';
 import { CreateDictDataDto } from '@/admin/system/dict-data/dto/createDictDataDto';
 import { updateDictDataDto } from '@/admin/system/dict-data/dto/updateDictDataDto';
-import { exportTable } from '@/common/utils';
+import { exportTable } from '@/common/utils/export';
 
 @Injectable()
 export class SysDictDataService implements OnModuleInit {

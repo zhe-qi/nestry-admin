@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '@/module/common/service/prisma/prisma.service';
 import { Response } from 'express';
-import { exportTable } from '@/common/utils';
+import { exportTable } from '@/common/utils/export';
 import { Query${className}Dto, Create${className}Dto, Update${className}Dto } from '../dto/index';
 import { Prisma } from '@prismaClient';
 import { isNotEmpty,isEmpty } from 'class-validator';

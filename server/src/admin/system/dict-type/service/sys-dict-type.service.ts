@@ -8,7 +8,7 @@ import { queryDictTypeDto } from '@/admin/system/dict-type/dto/queryDictTypeDto'
 import { CreateDictTypeDto } from '@/admin/system/dict-type/dto/createDictTypeDto';
 import { updateDictTypeDto } from '@/admin/system/dict-type/dto/updateDictTypeDto';
 import { ValidationException } from '@/common/exception/validation';
-import { exportTable } from '@/common/utils';
+import { exportTable } from '@/common/utils/export';
 import { redisUtils } from '@/common/utils/redisUtils';
 import { Constants } from '@/common/constant/constants';
 

@@ -3,8 +3,6 @@ import day from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
 import 'dayjs/locale/zh-cn';
-import { Response } from 'express';
-import { build } from 'node-xlsx';
 import { camelCase } from 'lodash';
 
 day.extend(utc);
@@ -114,21 +112,4 @@ export function tree(
 /** @desc 转换为camelCase并且首字母大写 */
 export function toPascalCase(str) {
   return str[0].toUpperCase() + camelCase(str).slice(1);
-}
-
-/** @description 导出表为xlsx文件返回 */
-export async function exportTable(data: any[][], res: Response) {
-  const buffer = build([
-    {
-      name: 'sheet',
-      data,
-      options: {},
-    },
-  ]);
-  res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-  res.setHeader('Content-Disposition', 'attachment;filename=sheet.xlsx');
-  res.setHeader('Access-Control-Expose-Headers', 'Content-Disposition');
-  res.setHeader('X-Content-Type-Options', 'nosniff');
-  // 将 Excel 文件的二进制流数据返回给客户端
-  res.end(buffer, 'binary');
 }

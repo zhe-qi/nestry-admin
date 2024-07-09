@@ -1,5 +1,5 @@
 import { randomUUID } from 'node:crypto';
-import { Controller, Get, Inject } from '@nestjs/common';
+import { Controller, Get } from '@nestjs/common';
 import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { Throttle } from '@nestjs/throttler';
 import { ConfigService } from '@nestjs/config';
@@ -14,16 +14,13 @@ import { Constants } from '@/common/constant/constants';
 export class CaptchaController {
   constructor(private readonly configService: ConfigService) {}
 
-  /*
-   * 生成验证码
-   * */
-  @Get()
   @ApiOperation({
     summary: '获取验证码',
   })
   @ApiOkResponse({
     type: CaptchaImageVo,
   })
+  @Get()
   @Throttle({
     default: {
       limit: 8,

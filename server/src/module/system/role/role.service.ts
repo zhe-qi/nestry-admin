@@ -5,7 +5,7 @@ import { isArray, isNotEmpty } from 'class-validator';
 import { CreateSysRoleDto, QueryAllocatedListDto, QuerySysRoleDto, UpdateSysRoleDto, UpdateSysRoleStatusDto } from './dto';
 import { exportTable } from '@/common/utils/export';
 import { PrismaService } from '@/module/prisma/prisma.service';
-import { AuthService } from '@/module/auth/auth.service';
+import { AuthService } from '@/module/common/auth/auth.service';
 
 @Injectable()
 export class RoleService {

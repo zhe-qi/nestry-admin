@@ -49,9 +49,9 @@ export function configuration() {
     // Redis数据库连接配置。
     redis: {
       // Redis服务器地址。
-      host: process.env.VITE_REDIS_HOST as string,
+      host: process.env.VITE_REDIS_HOST || 'localhost',
       // Redis服务器端口。
-      port: 6379,
+      port: Number(process.env.VITE_REDIS_PORT) || 6379,
       // 使用的Redis数据库索引。
       db: 5,
       // Redis连接密码（如果有）。

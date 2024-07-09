@@ -4,7 +4,7 @@ import { Prisma } from '@prisma/client';
 import { isNotEmpty } from 'class-validator';
 import { isArray } from 'lodash';
 import { CreateSysUserDto, QuerySysUserDto, UpdateSysUserDto, UpdateSysUserStatusDto, resetPasswordDto, updateProfileDto } from './dto';
-import { AuthService } from '@/module/auth/auth.service';
+import { AuthService } from '@/module/common/auth/auth.service';
 import { exportTable } from '@/common/utils/export';
 import { PrismaService } from '@/module/prisma/prisma.service';
 import Result from '@/common/utils/result';

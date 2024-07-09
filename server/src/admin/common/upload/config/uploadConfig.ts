@@ -1,10 +1,11 @@
 import * as path from 'node:path';
 import { randomUUID } from 'node:crypto';
 import * as multer from 'multer';
-
 import { createFolder, nowDate } from '@/common/utils';
-import { Config } from '@/config';
 import { Constants } from '@/common/constant/constants';
+import { configuration } from '@/config';
+
+const Config = configuration();
 
 let saveDir = Config.upload.path;
 const avatarDir = path.join(saveDir, 'avatar');

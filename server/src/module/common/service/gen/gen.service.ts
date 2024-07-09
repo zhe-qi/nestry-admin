@@ -7,16 +7,16 @@ import { camelCase, kebabCase, toLower, upperFirst } from 'lodash';
 import * as Velocity from 'velocityjs';
 import * as archiver from 'archiver';
 import { Response } from 'express';
+import { ConfigService } from '@nestjs/config';
 import { PrismaService } from '../prisma/prisma.service';
 import { queryGenTableDto } from '@/admin/gen/dto/queryGenTableDto';
 import { queryDataBaseDto } from '@/admin/gen/dto/queryDatabaseDto';
 import { formatDate, nowDateTime, toPascalCase } from '@/common/utils';
 import { GenConstants } from '@/common/constant/gen';
-import { Config } from '@/config';
 
 @Injectable()
 export class GenService {
-  constructor(private prisma: PrismaService) {}
+  constructor(private prisma: PrismaService, private configService: ConfigService) {}
 
   // 查询生成表数据
   async listTable(q: queryGenTableDto) {
@@ -157,19 +157,19 @@ export class GenService {
 
       for (const table of tableList) {
         const tableName = table.tableName;
-        const baseClassName = tableName.replace(new RegExp(Config.gen.tablePrefix.join('|')), '');
-        const className = Config.gen.autoRemovePre ? toPascalCase(baseClassName) : toPascalCase(tableName);
+        const baseClassName = tableName.replace(new RegExp(this.configService.get('gen.tablePrefix').join('|')), '');
+        const className = this.configService.get('gen.autoRemovePre') ? toPascalCase(baseClassName) : toPascalCase(tableName);
 
         // 初始化table表信息，并插入数据库
         let tableInfo = {
           ...table,
           className,
-          packageName: Config.gen.packageName, // 生成模块路径
-          moduleName: Config.gen.moduleName, // 子系统名，模块下的目录
+          packageName: this.configService.get('gen.packageName'), // 生成模块路径
+          moduleName: this.configService.get('gen.moduleName'), // 子系统名，模块下的目录
           businessName: tableName.slice(tableName.lastIndexOf('_') + 1), // 生成业务名
           tableComment: table.tableComment?.trim() || table.tableName,
           functionName: table.tableComment?.trim() || table.tableName, // 生成功能名
-          functionAuthor: Config.gen.author, // 作者
+          functionAuthor: this.configService.get('gen.author'), // 作者
           tplWebType: 'element-plus',
           tplCategory: 'crud',
           genType: '0',

@@ -4,14 +4,15 @@ import { ScheduleModule } from '@nestjs/schedule';
 import { ThrottlerStorageRedisService } from 'nestjs-throttler-storage-redis';
 import { MiddlewareConsumer, Module, NestModule, ValidationError, ValidationPipe } from '@nestjs/common';
 import { HttpModule } from '@nestjs/axios';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TasksService } from './schedule';
 import { GlobalFiltersModule } from './module/filter/global-filters.module';
 import { AxiosModule } from './module/axios/axios.module';
+import { configuration } from './config/index';
 import { ThrottlerCustomGuard } from '@/common/guard/throttler-custom.guard';
 import { ValidationException } from '@/common/exception/validation';
 import { RoleGuard } from '@/common/guard/role.guard';
 import { PermissionGuard } from '@/common/guard/permission.guard';
-import { Config } from '@/config';
 import { AuthService } from '@/module/common/service/auth/auth.service';
 import { AuthMiddleware } from '@/common/middleware/auth.middleware';
 import { CommonModule } from '@/module/common/common.module';
@@ -22,9 +23,21 @@ import '@/common/utils/email';
 
 @Module({
   imports: [
-    ThrottlerModule.forRoot({
-      throttlers: [{ name: 'default', ttl: Config.rateLimit.ttl, limit: Config.rateLimit.limit }],
-      storage: Config.rateLimit.storage === 'redis' && new ThrottlerStorageRedisService({ ...Config.redis, disconnectTimeout: 60 * 5 * 1000 }),
+    ConfigModule.forRoot({
+      cache: true,
+      load: [configuration],
+      isGlobal: true,
+    }),
+    ThrottlerModule.forRootAsync({
+      inject: [ConfigService],
+      useFactory: (config: ConfigService) => {
+        config.get('redis');
+        return {
+          throttlers: [{ name: 'default', ttl: config.get('rateLimit.ttl'), limit: config.get('rateLimit.limit') }],
+          storage: config.get('rateLimit.storage') === 'redis'
+          && new ThrottlerStorageRedisService({ ...config.get<ReturnType<typeof configuration>['redis']>('redis'), disconnectTimeout: 60 * 5 * 1000 }),
+        };
+      },
     }),
     ScheduleModule.forRoot(),
     HttpModule,

@@ -5,7 +5,9 @@ import * as assert from 'node:assert';
 import { Transporter, createTransport } from 'nodemailer';
 import Mail from 'nodemailer/lib/mailer';
 import { isEmail } from 'class-validator';
-import { Config } from '@/config';
+import { configuration } from '@/config';
+
+const Config = configuration();
 
 let transporter: Transporter;
 if (Config.mail.enable) {

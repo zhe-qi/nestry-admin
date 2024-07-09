@@ -2,9 +2,9 @@ import { randomUUID } from 'node:crypto';
 import { Controller, Get } from '@nestjs/common';
 import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { Throttle } from '@nestjs/throttler';
+import { ConfigService } from '@nestjs/config';
 import CaptchaImageVo from './vo/CaptchaImageVo';
 import { createMath, createText } from '@/common/utils/captcha';
-import { Config } from '@/config';
 import { redisUtils } from '@/common/utils/redisUtils';
 import Result from '@/common/utils/result';
 import { Constants } from '@/common/constant/constants';
@@ -12,6 +12,8 @@ import { Constants } from '@/common/constant/constants';
 @ApiTags('验证码模块')
 @Controller('/captchaImage')
 export class CaptchaController {
+  constructor(private readonly configService: ConfigService) {}
+
   /*
    * 生成验证码
    * */
@@ -34,7 +36,7 @@ export class CaptchaController {
       text: createText,
     };
     // 根据配置的是math还是text自动调用方法生成数据
-    const captchaInfo = map[Config.captcha.mode]();
+    const captchaInfo = map[this.configService.get('captcha.mode')]();
     // 是否开启验证码
     const enable = await redisUtils.get(`${Constants.SYS_CONFIG_KEY}sys.account.captchaEnabled`);
     const captchaEnabled: boolean = enable == '' ? true : enable === 'true';
@@ -47,7 +49,7 @@ export class CaptchaController {
       await redisUtils.set(
         Constants.CAPTCHA_CODE_KEY + data.uuid,
         captchaInfo.text.toLowerCase(),
-        Config.captcha.expiresIn,
+        this.configService.get('captcha.expiresIn'),
       );
       return data;
     } catch (err) {

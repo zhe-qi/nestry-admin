@@ -3,34 +3,36 @@ import { NestFactory } from '@nestjs/core';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import helmet from 'helmet';
+import { ConfigService } from '@nestjs/config';
 import { AppModule } from './app.module';
-import { Config } from '@/config';
 
 declare const module: any;
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
 
+  const config = app.get(ConfigService);
+
   app.set('trust proxy', true);
   app.disable('x-powered-by');
-  app.setGlobalPrefix(Config.contextPath || '/');
+  app.setGlobalPrefix(config.get('contextPath') || '/');
   app.enableCors();
 
   // web 安全，防常见漏洞
   // 注意： 开发环境如果开启 nest static module 需要将 crossOriginResourcePolicy 设置为 false 否则 静态资源 跨域不可访问
   app.use(helmet({ crossOriginOpenerPolicy: { policy: 'same-origin-allow-popups' }, crossOriginResourcePolicy: false }));
 
-  await configureStaticAssets(app);
-  await configureSwagger(app);
+  await configureStaticAssets(app, config);
+  await configureSwagger(app, config);
 
-  await app.listen(Config.port);
+  await app.listen(config.get('port'));
 
   if (module.hot) {
     module.hot.accept();
     module.hot.dispose(() => app.close());
 
     // eslint-disable-next-line no-console
-    console.log(`Server is running at http://localhost:${Config.port}`);
+    console.log(`Server is running at http://localhost:${config.get('port')}`);
   }
 }
 
@@ -40,8 +42,8 @@ bootstrap();
  * 配置Swagger
  * @param app NestExpressApplication
  */
-async function configureSwagger(app: NestExpressApplication) {
-  if (Config.swagger.enable) {
+async function configureSwagger(app: NestExpressApplication, config: ConfigService) {
+  if (config.get('swagger.enable')) {
     const options = new DocumentBuilder()
       .setTitle('全栈后台管理系统接口文档')
       .setDescription('全栈后台管理系统接口文档')
@@ -50,7 +52,7 @@ async function configureSwagger(app: NestExpressApplication) {
       .build();
     const document = SwaggerModule.createDocument(app, options);
     SwaggerModule.setup(
-      `${Config.contextPath.replace(/\/$/, '')}${Config.swagger.prefix}`,
+      `${config.get('contextPath').replace(/\/$/, '')}${config.get('swagger.prefix')}`,
       app,
       document,
     );
@@ -61,10 +63,10 @@ async function configureSwagger(app: NestExpressApplication) {
  * 配置静态资源
  * @param app NestExpressApplication
  */
-async function configureStaticAssets(app: NestExpressApplication) {
+async function configureStaticAssets(app: NestExpressApplication, config: ConfigService) {
   const staticConfig = {
-    prefix: `${Config.contextPath.replace(/\/$/, '')}/file`,
+    prefix: `${config.get('contextPath').replace(/\/$/, '')}/file`,
     maxAge: 86400000 * 365, // 1 year
   };
-  app.useStaticAssets(Config.upload.path, staticConfig);
+  app.useStaticAssets(config.get('upload.path'), staticConfig);
 }

@@ -8,19 +8,23 @@ import * as requestIp from 'request-ip';
 import { Request } from 'express';
 import { capitalize } from 'lodash';
 import * as bcrypt from 'bcrypt';
+import { ConfigService } from '@nestjs/config';
 import { PrismaService } from '../prisma/prisma.service';
 import type { MenuItem, RawItem } from './types';
 import { AxiosService } from '@/module/axios/axios.service';
 import { LoginBody } from '@/admin/system/auth/dto/LoginBody';
 import { redisUtils } from '@/common/utils/redisUtils';
-import { Config } from '@/config';
 import { Constants } from '@/common/constant/constants';
 import { nowDateTime } from '@/common/utils';
 import { ValidationException } from '@/common/exception/validation';
 
 @Injectable()
 export class AuthService {
-  constructor(private axiosService: AxiosService, private prisma: PrismaService) {}
+  constructor(
+    private axiosService: AxiosService,
+    private prisma: PrismaService,
+    private configService: ConfigService,
+  ) {}
 
   /** @desc 登录 */
   async login(loginBody: LoginBody, req: Request) {
@@ -76,7 +80,7 @@ export class AuthService {
     await redisUtils.set(
       Constants.LOGIN_TOKEN_KEY + cacheInfo.tokenId,
       JSON.stringify(cacheInfo),
-      Config.token.expiresIn,
+      this.configService.get('token.expiresIn'),
     );
 
     // 初始化用户信息存到reids缓存包括权限。。
@@ -118,7 +122,7 @@ export class AuthService {
     await redisUtils.set(
       Constants.LOGIN_CACHE_TOKEN_KEY + userId,
       JSON.stringify(result),
-      Config.token.expiresIn,
+      this.configService.get('token.expiresIn'),
     );
     return result;
   }
@@ -151,7 +155,7 @@ export class AuthService {
     await redisUtils.set(
       Constants.LOGIN_CACHE_TOKEN_KEY + userId,
       JSON.stringify(result),
-      Config.token.expiresIn,
+      this.configService.get('token.expiresIn'),
     );
     return true;
   }
@@ -358,9 +362,9 @@ export class AuthService {
   createToken(payload) {
     return jwt.sign(
       payload,
-      Config.token.secret,
+      this.configService.get('token.secret'),
       {
-        expiresIn: Config.token.expiresIn,
+        expiresIn: this.configService.get('token.expiresIn'),
       },
     );
   }
@@ -370,7 +374,7 @@ export class AuthService {
     return new Promise((resolve, reject) => {
       jwt.verify(
         token,
-        Config.token.secret,
+        this.configService.get('token.secret'),
         (err, data) => {
           if (err) {
             reject(err);

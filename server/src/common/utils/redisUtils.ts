@@ -1,6 +1,8 @@
 import Redis, { RedisOptions } from 'ioredis';
 import { Pool, createPool } from 'generic-pool';
-import { Config } from '@/config';
+import { configuration } from '@/config';
+
+const Config = configuration();
 
 const redisConfig: RedisOptions = {
   host: Config.redis.host || 'localhost',

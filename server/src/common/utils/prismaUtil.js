@@ -3,7 +3,7 @@ const { readFileSync, writeFileSync, existsSync } = require('node:fs');
 const { join } = require('node:path');
 const _ = require('lodash');
 
-const prismaPath = join(__dirname, '../../prisma/introspected.prisma');
+const prismaPath = join(__dirname, '../../../prisma/introspected.prisma');
 
 function runPrismaCommand(command) {
   execSync(`npx prisma ${command}`);

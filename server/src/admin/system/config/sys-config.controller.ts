@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put, Query, Req, Res } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Inject, Param, ParseIntPipe, Post, Put, Query, Req, Res } from '@nestjs/common';
 import { ApiBearerAuth, ApiBody, ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Response } from 'express';
 import { SysConfig } from '@prisma/client';
@@ -14,7 +14,7 @@ import { TableDataInfo } from '@/common/domain/table';
 @ApiBearerAuth()
 @Controller('system/config')
 export class SysConfigController {
-  constructor(private configService: ConfigService) {}
+  constructor(private readonly configService: ConfigService) {}
 
   @ApiOperation({ summary: '查询参数配置列表' })
   @ApiQuery({ type: QuerySysConfigDto })

@@ -23,6 +23,7 @@ import { UserService } from './system/user/service/sys-user.service';
 import { SysNoticeController } from './system/notice/sys-notice.controller';
 import { SysLogininforController } from './system/logininfor/sys-logininfor.controller';
 import { monitorController } from './system/monitor/monitor.controller';
+import { UploadService } from './common/upload/upload.service';
 import { GenService } from '@/module/common/service/gen/gen.service';
 import { CaptchaController } from '@/admin/common/captcha/captcha.controller';
 
@@ -59,6 +60,7 @@ import { CaptchaController } from '@/admin/common/captcha/captcha.controller';
     SysDictTypeService,
     UserService,
     LogininforService,
+    UploadService,
   ],
 })
 export class AdminModule {}

@@ -1,7 +1,6 @@
 import { randomUUID } from 'node:crypto';
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Inject, Injectable } from '@nestjs/common';
 import * as bowser from 'bowser';
-// import { HmacSHA256 } from 'crypto-js';
 import { SysLogininfor, SysRole, SysUser } from '@prisma/client';
 import * as jwt from 'jsonwebtoken';
 import * as requestIp from 'request-ip';
@@ -21,9 +20,10 @@ import { ValidationException } from '@/common/exception/validation';
 @Injectable()
 export class AuthService {
   constructor(
-    private axiosService: AxiosService,
-    private prisma: PrismaService,
-    private configService: ConfigService,
+    private readonly axiosService: AxiosService,
+    private readonly prisma: PrismaService,
+
+    private readonly configService: ConfigService,
   ) {}
 
   /** @desc 登录 */

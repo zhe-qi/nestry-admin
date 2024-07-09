@@ -1,0 +1,13 @@
+model SysUpload {
+  uploadId    String   @id @default(uuid()) @map("upload_id") @db.Char(64)
+  size        Int?     @map("size") @db.UnsignedInt
+  fileName    String?  @map("file_name") @db.VarChar(100)
+  newFileName String?  @map("new_file_name") @db.VarChar(100)
+  url         String?  @map("url") @db.VarChar(500)
+  ext         String?  @map("ext") @db.VarChar(50)
+  status      String?  @default("0") @map("status") @db.Char(1)
+  createTime  DateTime @default(dbgenerated("NOW()")) @map("create_time") @db.DateTime
+  updateTime  DateTime @default(dbgenerated("NOW() ON UPDATE NOW()")) @map("update_time") @db.Timestamp(0)
+
+  @@map("sys_upload")
+}

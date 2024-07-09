@@ -1,6 +1,6 @@
 import { existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Inject, Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { isNotEmpty } from 'class-validator';
 import { camelCase, kebabCase, toLower, upperFirst } from 'lodash';
@@ -16,7 +16,7 @@ import { GenConstants } from '@/common/constant/gen';
 
 @Injectable()
 export class GenService {
-  constructor(private prisma: PrismaService, private configService: ConfigService) {}
+  constructor(private readonly prisma: PrismaService, private readonly configService: ConfigService) {}
 
   // 查询生成表数据
   async listTable(q: queryGenTableDto) {

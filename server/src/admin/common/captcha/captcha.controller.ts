@@ -1,5 +1,5 @@
 import { randomUUID } from 'node:crypto';
-import { Controller, Get } from '@nestjs/common';
+import { Controller, Get, Inject } from '@nestjs/common';
 import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { Throttle } from '@nestjs/throttler';
 import { ConfigService } from '@nestjs/config';

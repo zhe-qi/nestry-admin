@@ -14,7 +14,6 @@ import { RequirePermission } from '@/common/decorator/require-premission.decorat
 import { nowDateTime, tree } from '@/common/utils';
 import { RequireRole } from '@/common/decorator/require-role.decorator';
 import { PrismaService } from '@/module/common/service/prisma/prisma.service';
-import { getFilePath, uploadAvatarConfig } from '@/admin/common/upload/config/uploadConfig';
 
 @ApiTags('用户管理')
 @ApiBearerAuth()
@@ -151,18 +150,14 @@ export class SysUserController {
    * @description 用户头像上传
    */
 
-  @UseInterceptors(FileInterceptor('avatarfile', uploadAvatarConfig))
   @Post('/profile/avatar')
-  async updateAvatar(@UploadedFile() file: Express.Multer.File, @Req() req) {
+  async updateAvatar(@Body() body, @Req() req) {
     const userId = req.userId;
-    if (!file) {
-      return Result.BadRequest('请选择上传图片！');
-    }
-    const avatar = getFilePath(file);
-    await this.userService.updateAvatar(userId, avatar);
+    if (!body.avatar) { return Result.BadRequest('请选择上传头像！'); }
+    await this.userService.updateAvatar(userId, body.avatar);
     return {
       ...Result.ok(),
-      imgUrl: avatar,
+      imgUrl: body.avatar,
     };
   }
 

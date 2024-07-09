@@ -1,77 +1,116 @@
-import { Controller, Post, UploadedFile, UploadedFiles, UseInterceptors } from '@nestjs/common';
-import { FileInterceptor, FilesInterceptor } from '@nestjs/platform-express';
-import { ApiBearerAuth, ApiBody, ApiConsumes, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
-import { uploadMultiple, uploadSingle } from './vo/upload';
-import Result from '@/common/utils/result';
-import { getFilePath, uploadFileConfig } from '@/admin/common/upload/config/uploadConfig';
-import { UploadFileDto, UploadFilesDto } from '@/admin/common/upload/dto/upload.dto';
+import { Body, Controller, Get, HttpCode, Post, Query, UploadedFile, UseInterceptors } from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
+import { ApiBody, ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger';
+import { UploadService } from './upload.service';
+import { ChunkFileDto, ChunkMergeFileDto, FileUploadDto, uploadIdDto } from './dto/index';
 
-@ApiBearerAuth()
-@ApiTags('文件上传模块')
-@Controller()
+@ApiTags('通用-文件上传')
+@Controller('common/upload')
 export class UploadController {
-  @Post('/common/upload')
+  constructor(private readonly uploadService: UploadService) {}
+
+  /**
+   * 文件上传
+   * @param file
+   * @returns
+   */
   @ApiOperation({
-    summary: '上传单个文件',
-    description: '上传单个文件',
+    summary: '文件上传',
   })
-  @ApiConsumes('multipart/form-data')
   @ApiBody({
-    type: UploadFileDto,
+    type: FileUploadDto,
+    required: true,
   })
-  @ApiOkResponse({
-    schema: {
-      example: uploadSingle,
-    },
-  })
-  @UseInterceptors(FileInterceptor('file', uploadFileConfig))
-  async uploadFile(@UploadedFile() file: Express.Multer.File) {
-    if (!file) {
-      return Result.BadRequest('请选择要上传的文件！');
-    }
-    const data = {
-      fileName: file.filename,
-      newFileName: file.filename,
-      originalFilename: file.originalname,
-      url: getFilePath(file),
-      size: file.size,
-    };
-    return { ...Result.ok(), ...data };
+  @HttpCode(200)
+  @Post()
+  @UseInterceptors(FileInterceptor('file'))
+  singleFileUpload(@UploadedFile() file: Express.Multer.File) {
+    return this.uploadService.singleFileUpload(file);
   }
 
-  @Post('/common/uploads')
+  /**
+   * 获取切片上传任务Id
+   * @param file
+   * @returns
+   */
   @ApiOperation({
-    summary: '上传多文件',
-    description: '上传多文件',
+    summary: '获取切片上传任务Id',
   })
-  @ApiConsumes('multipart/form-data')
   @ApiBody({
-    type: UploadFilesDto,
+    required: true,
   })
-  @ApiOkResponse({
-    schema: {
-      example: uploadMultiple,
-    },
+  @HttpCode(200)
+  @Get('/chunk/uploadId')
+  getChunkUploadId() {
+    return this.uploadService.getChunkUploadId();
+  }
+
+  /**
+   * 文件分片上传
+   * @param file
+   * @returns
+   */
+  @ApiOperation({
+    summary: '文件切片上传',
   })
-  @UseInterceptors(FilesInterceptor(
-    'files',
-    10,
-    uploadFileConfig,
-  ))
-  async uploadFiles(@UploadedFiles() files: Express.Multer.File[]) {
-    if (!files?.length) {
-      return Result.BadRequest('请选择要上传的文件！');
-    }
-    const data = [];
-    files.forEach((file) => {
-      data.push({
-        fileName: file.filename,
-        newFileName: file.filename,
-        originalFilename: file.originalname,
-        url: getFilePath(file),
-        size: file.size,
-      });
-    });
-    return Result.ok(data);
+  @ApiBody({
+    required: true,
+  })
+  @HttpCode(200)
+  @Post('/chunk')
+  @UseInterceptors(FileInterceptor('file'))
+  chunkFileUpload(@UploadedFile() file: Express.Multer.File, @Body() body: ChunkFileDto) {
+    return this.uploadService.chunkFileUpload(file, body);
+  }
+
+  /**
+   * 文件分片合并
+   * @returns
+   */
+  @ApiOperation({
+    summary: '合并切片',
+  })
+  @ApiBody({
+    type: ChunkMergeFileDto,
+    required: true,
+  })
+  @HttpCode(200)
+  @Post('/chunk/merge')
+  chunkMergeFile(@Body() body: ChunkMergeFileDto) {
+    return this.uploadService.chunkMergeFile(body);
+  }
+
+  /**
+   * 获取切片上传任务结果
+   * @param file
+   * @returns
+   *
+   */
+  @ApiOperation({
+    summary: '获取切片上传结果',
+  })
+  @ApiQuery({
+    type: uploadIdDto,
+    required: true,
+  })
+  @HttpCode(200)
+  @Get('/chunk/result')
+  getChunkUploadResult(@Query() query: { uploadId: string }) {
+    return this.uploadService.getChunkUploadResult(query.uploadId);
+  }
+
+  /**
+   * 获取cos授权
+   * @param query
+   */
+  @ApiOperation({
+    summary: '获取cos上传密钥',
+  })
+  @ApiBody({
+    required: true,
+  })
+  @Get('/cos/authorization')
+  getAuthorization(@Query() query: { key: string }) {
+    return this.uploadService.getAuthorization(query.key);
   }
 }

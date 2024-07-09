@@ -63,6 +63,7 @@ import "vue-cropper/dist/index.css";
 import { VueCropper } from "vue-cropper";
 import { uploadAvatar } from "@/api/system/user";
 import useUserStore from "@/store/modules/user";
+import { uploadFile } from "@/api/common";
 
 const userStore = useUserStore();
 const { proxy } = getCurrentInstance();
@@ -79,7 +80,7 @@ const options = reactive({
   autoCropHeight: 200,       // 默认生成截图框高度
   fixedBox: true,            // 固定截图框大小 不允许改变
   outputType: "png",         // 默认生成截图为PNG格式
-  filename: 'avatar',        // 文件名称
+  filename: 'avatar.png',        // 文件名称
   previews: {}               //预览数据
 });
 
@@ -121,13 +122,16 @@ function beforeUpload(file) {
 }
 /** 上传图片 */
 function uploadImg() {
-  proxy.$refs.cropper.getCropBlob(data => {
+  proxy.$refs.cropper.getCropBlob(async data => {
     let formData = new FormData();
-    formData.append("avatarfile", data, options.filename);
-    uploadAvatar(formData).then(response => {
+    formData.append("file", data, options.filename);
+    const res = await uploadFile(formData)
+
+    const avatar = res.data.url
+
+    uploadAvatar({ avatar }).then(() => {
       open.value = false;
-      options.img = import.meta.env.VITE_APP_BASE_API + response.imgUrl;
-      userStore.avatar = options.img;
+      userStore.avatar = avatar;
       proxy.$modal.msgSuccess("修改成功");
       visible.value = false;
     });

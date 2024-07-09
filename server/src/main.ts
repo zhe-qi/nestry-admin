@@ -49,8 +49,8 @@ bootstrap();
 async function configureSwagger(app: NestExpressApplication, config: ConfigService) {
   if (config.get('swagger.enable')) {
     const options = new DocumentBuilder()
-      .setTitle('全栈后台管理系统接口文档')
-      .setDescription('全栈后台管理系统接口文档')
+      .setTitle('全栈管理系统接口文档')
+      .setDescription('全栈管理系统接口文档')
       .setVersion('1.0')
       .addBearerAuth()
       .build();
@@ -72,5 +72,5 @@ async function configureStaticAssets(app: NestExpressApplication, config: Config
     prefix: `${config.get('contextPath').replace(/\/$/, '')}/file`,
     maxAge: 86400000 * 365, // 1 year
   };
-  app.useStaticAssets(config.get('upload.path'), staticConfig);
+  app.useStaticAssets(config.get('file.location'), staticConfig);
 }

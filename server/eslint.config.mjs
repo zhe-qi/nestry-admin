@@ -28,6 +28,8 @@ export default antfu({
     'brace-style': ['error', '1tbs', { allowSingleLine: true }],
     // 同上，但适用于特定的代码风格规则
     'style/brace-style': ['error', '1tbs', { allowSingleLine: true }],
+    // 关闭对在Node.js中优先使用全局Buffer对象的检查
+    'node/prefer-global/buffer': 'off',
   },
   ignores: ['**/prisma-client'],
 });

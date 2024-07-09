@@ -5,6 +5,7 @@ import { ThrottlerStorageRedisService } from 'nestjs-throttler-storage-redis';
 import { MiddlewareConsumer, Module, NestModule, ValidationError, ValidationPipe } from '@nestjs/common';
 import { HttpModule } from '@nestjs/axios';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ServeStaticModule } from '@nestjs/serve-static';
 import { TasksService } from './schedule';
 import { GlobalFiltersModule } from './module/filter/global-filters.module';
 import { AxiosModule } from './module/axios/axios.module';
@@ -37,6 +38,15 @@ import '@/common/utils/email';
           storage: config.get('rateLimit.storage') === 'redis'
           && new ThrottlerStorageRedisService({ ...config.get<ReturnType<typeof configuration>['redis']>('redis'), disconnectTimeout: 60 * 5 * 1000 }),
         };
+      },
+    }),
+    ServeStaticModule.forRootAsync({
+      inject: [ConfigService],
+      useFactory: (config: ConfigService) => {
+        return [{
+          rootPath: config.get('file.location'),
+          serveRoot: config.get('file.serveRoot'),
+        }];
       },
     }),
     ScheduleModule.forRoot(),

@@ -29,7 +29,6 @@ async function bootstrap() {
   app.useGlobalFilters(new ExceptionsFilter());
   app.useGlobalFilters(new HttpExceptionsFilter());
 
-  await configureStaticAssets(app, config);
   await configureSwagger(app, config);
 
   await app.listen(config.get('port'));
@@ -61,16 +60,4 @@ async function configureSwagger(app: NestExpressApplication, config: ConfigServi
       document,
     );
   }
-}
-
-/**
- * 配置静态资源
- * @param app NestExpressApplication
- */
-async function configureStaticAssets(app: NestExpressApplication, config: ConfigService) {
-  const staticConfig = {
-    prefix: `${config.get('contextPath').replace(/\/$/, '')}/file`,
-    maxAge: 86400000 * 365, // 1 year
-  };
-  app.useStaticAssets(config.get('file.location'), staticConfig);
 }

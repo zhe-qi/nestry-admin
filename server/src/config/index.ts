@@ -63,10 +63,12 @@ export function configuration() {
       isLocal: true,
       // 文件上传后存储目录，相对路径（相对本项目根目录）或绝对路径。
       location: './_upload',
+      // 文件上传后查找目录，绝对路径。
+      rootPath: path.resolve(__dirname, '../../_upload'),
       // 文件服务器地址，这是开发环境的配置 生产环境请自行配置成可访问域名。
-      domain: 'http://localhost:8080',
+      domain: 'http://localhost:3000',
       // 文件虚拟路径, 必须以 / 开头， 如 http://localhost:8081/static/****.jpg  , 如果不需要则 设置 ''。
-      serveRoot: '_upload',
+      serveRoot: '/_upload',
       // 文件大小限制，单位M。
       maxSize: 10,
     },

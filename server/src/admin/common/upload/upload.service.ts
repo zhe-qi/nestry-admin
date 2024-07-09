@@ -151,7 +151,7 @@ export class UploadService {
     await this.thunkStreamMerge(sourceFilesDir, targetFile);
     // 文件相对地址
     const relativeFilePath = targetFile.replace(baseDirPath, '');
-    const url = path.join(this.config.get('file.domain'), fileName);
+    const url = new URL(fileName, this.config.get('file.domain')).toString();
     const key = path.join('test', relativeFilePath);
     const data = {
       fileName: key,
@@ -162,7 +162,7 @@ export class UploadService {
 
     if (!this.isLocal) {
       this.uploadLargeFileCos(targetFile, key);
-      data.url = path.join(this.config.get('cos.domain'), key);
+      data.url = new URL(key, this.config.get('cos.domain')).toString();
       // 写入上传记录
       await this.prisma.sysUpload.create({
         data: {
@@ -277,7 +277,8 @@ export class UploadService {
 
     // 文件服务完整路径
     const fileName = path.join(this.config.get('file.serveRoot'), relativeFilePath);
-    const url = path.join(this.config.get('file.domain'), fileName);
+    const url = new URL(fileName, this.config.get('file.domain')).toString();
+
     return {
       fileName,
       newFileName,

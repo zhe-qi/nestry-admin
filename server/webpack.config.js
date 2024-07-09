@@ -52,6 +52,23 @@ module.exports = function (options, webpack) {
     ],
     plugins: [
       ...options.plugins,
+      new IgnorePlugin({
+        checkResource: (resource) => {
+          if (lazyImports.some(modulo => resource.startsWith(modulo))) {
+            try {
+              require.resolve(resource);
+            } catch (err) {
+              return true;
+            }
+          }
+          return false;
+        },
+      }),
+      new webpack.HotModuleReplacementPlugin(),
+      new webpack.WatchIgnorePlugin({
+        paths: [/\.js$/, /\.d\.ts$/],
+      }),
+      new RunScriptWebpackPlugin({ name: options.output.filename, autoRestart: false }),
       new CopyWebpackPlugin({
         patterns: [
           {
@@ -79,23 +96,6 @@ module.exports = function (options, webpack) {
         ],
       }),
       new WriteFilePlugin(),
-      new IgnorePlugin({
-        checkResource: (resource) => {
-          if (lazyImports.some(modulo => resource.startsWith(modulo))) {
-            try {
-              require.resolve(resource);
-            } catch (err) {
-              return true;
-            }
-          }
-          return false;
-        },
-      }),
-      new webpack.HotModuleReplacementPlugin(),
-      new webpack.WatchIgnorePlugin({
-        paths: [/\.js$/, /\.d\.ts$/],
-      }),
-      new RunScriptWebpackPlugin({ name: options.output.filename, autoRestart: false }),
     ],
   };
 };

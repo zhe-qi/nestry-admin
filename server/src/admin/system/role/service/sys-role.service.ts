@@ -1,5 +1,5 @@
 import * as assert from 'node:assert';
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { Response } from 'express';
 import { Prisma } from '@prisma/client';
 import { isArray, isNotEmpty } from 'class-validator';
@@ -245,12 +245,16 @@ export class RoleService {
 
   /** @description 批量删除角色管理 */
   async deleteRoleByRoleIds(roleIds: number[]) {
-    const userroles = await this.prisma.sysUserRole.findFirst({
+    const userRoles = await this.prisma.sysUserRole.findFirst({
       where: {
         roleId: { in: roleIds },
       },
     });
-    assert(!userroles, '角色已被分配！');
+
+    if (userRoles) {
+      throw new BadRequestException('角色已被分配！');
+    }
+
     return this.prisma.$transaction(async (db) => {
       await db.sysRoleDept.deleteMany({
         where: {
@@ -283,7 +287,10 @@ export class RoleService {
         roleId,
       },
     });
-    assert(!userroles, '角色已被分配！');
+    // assert(userroles, '角色已被分配！');
+    if (userroles) {
+      return;
+    }
     return this.prisma.$transaction(async (db) => {
       await db.sysRoleDept.deleteMany({
         where: {

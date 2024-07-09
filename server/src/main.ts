@@ -4,7 +4,10 @@ import { NestExpressApplication } from '@nestjs/platform-express';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import helmet from 'helmet';
 import { ConfigService } from '@nestjs/config';
+import { ValidationPipe } from '@nestjs/common';
 import { AppModule } from './app.module';
+import { ExceptionsFilter } from '@/common/filter/exceptions-filter';
+import { HttpExceptionsFilter } from '@/common/filter/http-exceptions-filter';
 
 declare const module: any;
 
@@ -21,6 +24,10 @@ async function bootstrap() {
   // web 安全，防常见漏洞
   // 注意： 开发环境如果开启 nest static module 需要将 crossOriginResourcePolicy 设置为 false 否则 静态资源 跨域不可访问
   app.use(helmet({ crossOriginOpenerPolicy: { policy: 'same-origin-allow-popups' }, crossOriginResourcePolicy: false }));
+
+  app.useGlobalPipes(new ValidationPipe({ transform: true, whitelist: true }));
+  app.useGlobalFilters(new ExceptionsFilter());
+  app.useGlobalFilters(new HttpExceptionsFilter());
 
   await configureStaticAssets(app, config);
   await configureSwagger(app, config);

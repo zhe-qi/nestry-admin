@@ -1,6 +1,6 @@
 import * as os from 'node:os';
 import * as si from 'systeminformation';
-import * as dayjs from 'dayjs';
+import dayjs from 'dayjs';
 
 // 获取cpu
 async function getCpu(): Promise<void | {

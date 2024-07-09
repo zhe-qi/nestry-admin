@@ -1,19 +1,19 @@
 import * as fs from 'node:fs';
-import * as Dayjs from 'dayjs';
-import * as utc from 'dayjs/plugin/utc';
-import * as timezone from 'dayjs/plugin/timezone';
+import day from 'dayjs';
+import utc from 'dayjs/plugin/utc';
+import timezone from 'dayjs/plugin/timezone';
 import 'dayjs/locale/zh-cn';
 import { Response } from 'express';
 import { build } from 'node-xlsx';
 import { camelCase } from 'lodash';
 
-Dayjs.extend(utc);
-Dayjs.extend(timezone);
-Dayjs.locale('zh-cn');
-Dayjs.tz.setDefault('Asia/Shanghai');
+day.extend(utc);
+day.extend(timezone);
+day.locale('zh-cn');
+day.tz.setDefault('Asia/Shanghai');
 
 /** dayjs 时区设置 */
-export const dayjs = Dayjs.tz;
+export const dayjs = day.tz;
 
 /** 获取当前日期 */
 export const nowDate = () => dayjs().format('YYYY-MM-DD');

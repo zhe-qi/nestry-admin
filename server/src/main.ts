@@ -6,6 +6,8 @@ import helmet from 'helmet';
 import { AppModule } from './app.module';
 import { Config } from '@/config';
 
+declare const module: any;
+
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
 
@@ -22,8 +24,14 @@ async function bootstrap() {
   await configureSwagger(app);
 
   await app.listen(Config.port);
-  // eslint-disable-next-line no-console
-  console.log(`Server is running at http://localhost:${Config.port}`);
+
+  if (module.hot) {
+    module.hot.accept();
+    module.hot.dispose(() => app.close());
+
+    // eslint-disable-next-line no-console
+    console.log(`Server is running at http://localhost:${Config.port}`);
+  }
 }
 
 bootstrap();

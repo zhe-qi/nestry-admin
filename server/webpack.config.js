@@ -1,31 +1,14 @@
 const path = require('node:path');
 const nodeExternals = require('webpack-node-externals');
 const { RunScriptWebpackPlugin } = require('run-script-webpack-plugin');
-const { IgnorePlugin } = require('webpack');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const WriteFilePlugin = require('write-file-webpack-plugin');
 const swcDefaultConfig = require('@nestjs/cli/lib/compiler/defaults/swc-defaults').swcDefaultsFactory().swcOptions;
 
-const lazyImports = [
-  '@fastify/static',
-  '@fastify/view',
-  '@nestjs/microservices',
-  '@nestjs/websockets',
-  'class-transformer',
-  'class-validator',
-];
-
-module.exports = function (options, webpack) {
+module.exports = function (options = {}, webpack) {
   return {
     ...options,
     entry: ['webpack/hot/poll?100', options.entry],
-    output: {
-      path: path.join(__dirname, 'dist'),
-      filename: '[name].js',
-    },
-    optimization: {
-      minimize: true,
-    },
     // JUST KEEP THEM
     mode: 'production',
     target: 'node',
@@ -51,19 +34,7 @@ module.exports = function (options, webpack) {
       }),
     ],
     plugins: [
-      ...options.plugins,
-      new IgnorePlugin({
-        checkResource: (resource) => {
-          if (lazyImports.some(modulo => resource.startsWith(modulo))) {
-            try {
-              require.resolve(resource);
-            } catch (err) {
-              return true;
-            }
-          }
-          return false;
-        },
-      }),
+      ...(options.plugins || []),
       new webpack.HotModuleReplacementPlugin(),
       new webpack.WatchIgnorePlugin({
         paths: [/\.js$/, /\.d\.ts$/],

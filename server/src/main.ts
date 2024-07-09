@@ -37,9 +37,6 @@ async function bootstrap() {
   if (module.hot) {
     module.hot.accept();
     module.hot.dispose(() => app.close());
-
-    // eslint-disable-next-line no-console
-    console.log(`Server is running at http://localhost:${config.get('port')}`);
   }
 }
 

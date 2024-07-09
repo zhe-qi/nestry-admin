@@ -1,4 +1,3 @@
-import * as assert from 'node:assert';
 import { ArgumentsHost, BadRequestException, Catch, ExceptionFilter, ForbiddenException, NotFoundException, PayloadTooLargeException } from '@nestjs/common';
 import { Response } from 'express';
 import { MulterError } from 'multer';
@@ -13,17 +12,6 @@ import { AuthorizationException } from '@/common/exception/authorization';
 @Catch(ValidationException)
 export class ValidationExceptionFilter implements ExceptionFilter {
   catch(exception: ValidationException, host: ArgumentsHost) {
-    const res = host.switchToHttp().getResponse<Response>();
-    res.send(Result.Validation(exception.message));
-  }
-}
-
-/**
- * @desc 断言不通过
- */
-@Catch(assert.AssertionError)
-export class AssertionErrorFilter implements ExceptionFilter {
-  catch(exception: assert.AssertionError, host: ArgumentsHost) {
     const res = host.switchToHttp().getResponse<Response>();
     res.send(Result.Validation(exception.message));
   }

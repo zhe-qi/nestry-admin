@@ -1,5 +1,4 @@
-import * as assert from 'node:assert';
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { Response } from 'express';
 import { Prisma } from '@prisma/client';
 import { isNotEmpty } from 'class-validator';
@@ -337,14 +336,20 @@ export class UserService {
     oldPassword: string,
     newPassword: string,
   ) {
-    assert(isNotEmpty(oldPassword) && isNotEmpty(newPassword), '请检查参数！');
-    assert(oldPassword.length > 5 && newPassword.length > 5, '请检查参数！');
+    if (!isNotEmpty(oldPassword) || !isNotEmpty(newPassword)) {
+      throw new BadRequestException('请检查参数！');
+    }
+    if (oldPassword.length < 6 || newPassword.length < 6) {
+      throw new BadRequestException('请检查参数！');
+    }
     const user = await this.prisma.sysUser.findUnique({
       where: {
         userId,
       },
     });
-    assert(this.authService.encrypt(oldPassword) === user.password, '验证失败：旧密码不正确！');
+    if (this.authService.encrypt(oldPassword) !== user.password) {
+      throw new BadRequestException('验证失败：旧密码不正确！');
+    }
     const res = await this.prisma.sysUser.update({
       where: {
         userId,

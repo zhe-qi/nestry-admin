@@ -1,5 +1,4 @@
-import * as assert from 'node:assert';
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { Response } from 'express';
 import { Prisma } from '@prisma/client';
 import { isNotEmpty } from 'class-validator';
@@ -148,15 +147,21 @@ export class DeptService {
         },
       },
     });
-    assert(!dept, '存在子部门,不允许删除!');
+    if (dept) {
+      throw new BadRequestException('存在子部门,不允许删除!');
+    }
     const dept1 = await this.prisma.sysRoleDept.findFirst({
       where: { deptId: { in: deptIds } },
     });
-    assert(!dept1, '部门已分配,不允许删除!');
+    if (dept1) {
+      throw new BadRequestException('部门已分配,不允许删除!');
+    }
     const dept2 = await this.prisma.sysUser.findFirst({
       where: { deptId: { in: deptIds } },
     });
-    assert(!dept2, '部门已分配,不允许删除!');
+    if (dept2) {
+      throw new BadRequestException('部门已分配,不允许删除!');
+    }
     return this.prisma.sysDept.deleteMany({
       where: {
         deptId: {
@@ -173,13 +178,19 @@ export class DeptService {
         parentId: deptId,
       },
     });
-    assert(!dept, '存在子部门,不允许删除!');
+    if (dept) {
+      throw new BadRequestException('存在子部门,不允许删除!');
+    }
     const dept1 = await this.prisma.sysRoleDept.findFirst({
       where: { deptId },
     });
-    assert(!dept1, '部门已分配,不允许删除!');
+    if (dept1) {
+      throw new BadRequestException('部门已分配角色,不允许删除!');
+    }
     const dept2 = await this.prisma.sysUser.findFirst({ where: { deptId } });
-    assert(!dept2, '部门已分配,不允许删除!');
+    if (dept2) {
+      return new BadRequestException('部门已分配用户,不允许删除!');
+    }
     return this.prisma.sysDept.deleteMany({
       where: {
         deptId,

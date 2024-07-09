@@ -20,7 +20,7 @@
 - 修改ExceptionsFilter、HttpExceptionsFilter，并添加更多的异常处理 [未开始]
 - 修改为passport全家桶 [未开始] [待定]
 - 从 express 替换至 fastify [未开始] [待定]
-- 添加 webpack 和 swc 提升随着项目扩大的热更和打包速度 [已完成]
+- 添加 swc 支持 [已完成]
 - 重构若依vue3前端部分，使用geeker admin，整合其他后台框架的有点例如pure admin，vben admin等 [未开始] [待定]
 - 密码加密从crypto改为bcrypt，添加Helmet [已完成]
 - redis修改为redis模块，redis services [未开始] [待定]
@@ -58,11 +58,4 @@ cd admin
 pnpm install
 
 pnpm dev
-```
-
-```json
-// 已改为webpack copy plugin
-// "assets": [
-//   { "include": "module/common/service/gen/gen-template", "outDir": "dist/src", "watchAssets": true }
-// ]
 ```

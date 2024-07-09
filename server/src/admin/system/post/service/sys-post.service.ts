@@ -1,4 +1,3 @@
-import * as assert from 'node:assert';
 import { Injectable } from '@nestjs/common';
 import { Response } from 'express';
 import { Prisma } from '@prisma/client';
@@ -111,7 +110,9 @@ export class PostService {
         },
       },
     });
-    assert(!post, '岗位已被分配,不允许删除!');
+    if (post) {
+      throw new Error('岗位已被分配,不允许删除!');
+    }
     return this.prisma.sysPost.deleteMany({
       where: {
         postId: {
@@ -128,7 +129,9 @@ export class PostService {
         postId,
       },
     });
-    assert(!post, '岗位已被分配,不允许删除!');
+    if (post) {
+      throw new Error('岗位已被分配,不允许删除!');
+    }
     return this.prisma.sysPost.delete({
       where: {
         postId,

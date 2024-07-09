@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { APP_FILTER } from '@nestjs/core';
-import { AssertionErrorFilter, AuthorizationFilter, BadRequestFilter, ForbiddenExceptionFilter, GlobalErrorFilter, MulterErrFilter, NotFoundErrFilter, PayloadTooLargeFilter, ThrottlerExceptionFilter, ValidationExceptionFilter } from '@/common/filter/global-error.filter';
+import { AuthorizationFilter, BadRequestFilter, ForbiddenExceptionFilter, GlobalErrorFilter, MulterErrFilter, NotFoundErrFilter, PayloadTooLargeFilter, ThrottlerExceptionFilter, ValidationExceptionFilter } from '@/common/filter/global-error.filter';
 
 @Module({
   providers: [
@@ -10,7 +10,6 @@ import { AssertionErrorFilter, AuthorizationFilter, BadRequestFilter, ForbiddenE
     { provide: APP_FILTER, useClass: PayloadTooLargeFilter },
     { provide: APP_FILTER, useClass: AuthorizationFilter },
     { provide: APP_FILTER, useClass: ForbiddenExceptionFilter },
-    { provide: APP_FILTER, useClass: AssertionErrorFilter },
     { provide: APP_FILTER, useClass: ValidationExceptionFilter },
     { provide: APP_FILTER, useClass: MulterErrFilter },
     { provide: APP_FILTER, useClass: NotFoundErrFilter },

@@ -1,7 +1,6 @@
 /* eslint-disable prefer-promise-reject-errors */
 /* eslint-disable no-async-promise-executor */
 /* eslint-disable no-console */
-import * as assert from 'node:assert';
 import { Transporter, createTransport } from 'nodemailer';
 import Mail from 'nodemailer/lib/mailer';
 import { isEmail } from 'class-validator';
@@ -40,7 +39,9 @@ export async function sendMail(options: Mail.Options & { to: string }) {
     const t = setTimeout(() => {
       reject('邮件发送失败:超时！');
     }, Config.mail.timeout);
-    assert(options.to.split(',').every(v => isEmail(v)), '邮箱格式不正确！');
+    if (!options.to.split(',').every(v => isEmail(v))) {
+      return reject('邮箱格式不正确！');
+    }
     options = {
       subject: '我是一封神奇的邮箱！',
       from: Config.mail.config.auth.user,

@@ -1,5 +1,4 @@
-import * as assert from 'node:assert';
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { Response } from 'express';
 import { Prisma } from '@prisma/client';
 import { isNotEmpty } from 'class-validator';
@@ -132,11 +131,15 @@ export class MenuService {
         },
       },
     });
-    assert(!menu, '存在子菜单,不允许删除!');
+    if (menu) {
+      throw new BadRequestException('存在子菜单,不允许删除!');
+    }
     const menu1 = await this.prisma.sysRoleMenu.findFirst({
       where: { menuId: { in: menuIds } },
     });
-    assert(!menu1, '菜单已被分配,不允许删除!');
+    if (menu1) {
+      throw new BadRequestException('菜单已被分配,不允许删除!');
+    }
     return this.prisma.sysMenu.deleteMany({
       where: {
         OR: [
@@ -162,11 +165,15 @@ export class MenuService {
         },
       },
     });
-    assert(!menu, '存在子菜单,不允许删除!');
+    if (menu) {
+      throw new BadRequestException('存在子菜单,不允许删除!');
+    }
     const menu1 = await this.prisma.sysRoleMenu.findFirst({
       where: { menuId },
     });
-    assert(!menu1, '菜单已被分配,不允许删除!');
+    if (menu1) {
+      throw new BadRequestException('菜单已被分配,不允许删除!');
+    }
     return this.prisma.sysMenu.deleteMany({
       where: {
         OR: [

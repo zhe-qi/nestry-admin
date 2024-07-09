@@ -1,4 +1,3 @@
-import * as assert from 'node:assert';
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { Response } from 'express';
 import { Prisma } from '@prisma/client';
@@ -287,9 +286,8 @@ export class RoleService {
         roleId,
       },
     });
-    // assert(userroles, '角色已被分配！');
     if (userroles) {
-      return;
+      throw new BadRequestException('角色已被分配！');
     }
     return this.prisma.$transaction(async (db) => {
       await db.sysRoleDept.deleteMany({

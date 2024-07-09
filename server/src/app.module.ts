@@ -10,14 +10,18 @@ import { TasksService } from './schedule';
 import { GlobalFiltersModule } from './module/filter/global-filters.module';
 import { AxiosModule } from './module/axios/axios.module';
 import { configuration } from './config/index';
+import { CaptchaModule } from './module/captcha/captcha.module';
+import { UploadModule } from './module/upload/axios.module';
+import { GenModule } from './module/gen/gen.module';
+import { SystemModule } from './module/system/system.module';
+import { PrismaService } from './module/prisma/prisma.service';
+import { PrismaModule } from './module/prisma/prisma.module';
+import { AuthModule } from './module/auth/auth.module';
 import { ThrottlerCustomGuard } from '@/common/guard/throttler-custom.guard';
 import { ValidationException } from '@/common/exception/validation';
 import { RoleGuard } from '@/common/guard/role.guard';
 import { PermissionGuard } from '@/common/guard/permission.guard';
-import { AuthService } from '@/module/common/service/auth/auth.service';
 import { AuthMiddleware } from '@/common/middleware/auth.middleware';
-import { CommonModule } from '@/module/common/common.module';
-import { AdminModule } from '@/admin/admin.module';
 import { RemoveThrottleHeadersInterceptor } from '@/common/interceptors/remove-throttle-headers.interceptor';
 
 import '@/common/utils/email';
@@ -51,15 +55,19 @@ import '@/common/utils/email';
     }),
     ScheduleModule.forRoot(),
     HttpModule,
-    AdminModule,
-    CommonModule,
     GlobalFiltersModule,
     AxiosModule,
+    CaptchaModule,
+    GenModule,
+    SystemModule,
+    UploadModule,
+    PrismaModule,
+    AuthModule,
   ],
   controllers: [],
   providers: [
+    PrismaService,
     TasksService,
-    AuthService,
     PermissionGuard,
     RoleGuard,
     { provide: APP_GUARD, useClass: ThrottlerCustomGuard },

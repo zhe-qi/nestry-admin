@@ -5,10 +5,7 @@
 </div>
 
 # 介绍
-
-> 注意，该项目属于fork二次开发，使用需谨慎  
-> 原作者 github: https://github.com/Carole007/carole-admin
-> 原作者演示地址：[https://carole.top](https://carole.top)
+临时文档地址：[https://zheqi.netlify.app/admin/](https://zheqi.netlify.app/admin/)
 
 ## 当前fork分支路线图
 
@@ -34,15 +31,12 @@
 
 不定期同步ruoyi-vue3和carole-admin的部分更新。
 
-临时文档地址：[https://carole.top/docs](https://carole.top/docs)
-
 docker 快速启动流程
 ```bash
 # /server 目录下
 pnpm install
 
 cp .env.example .env
-
 # 修改.env文件中的数据库和redis配置，从localhost切换到docker容器
 # 配置现在还有用的镜像，或者开魔法，失败后多试几次
 docker-compose up -d
@@ -57,3 +51,7 @@ pnpm install
 
 pnpm dev
 ```
+
+> 注意，该项目属于fork二次开发，使用需谨慎  
+> 原作者 github: https://github.com/Carole007/carole-admin
+> 原作者演示地址：[https://carole.top](https://carole.top)

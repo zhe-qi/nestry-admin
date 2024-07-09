@@ -56,7 +56,7 @@ export function configuration() {
     },
     upload: {
     // 文件上传的存储基路径，建议设置为绝对路径。
-      path: path.resolve(__dirname, '../../data'),
+      path: path.resolve(__dirname, '../_data'),
       config: {
         img: {
           fileSize: 2 * 1024 * 1024, // 单个图片文件大小限制。

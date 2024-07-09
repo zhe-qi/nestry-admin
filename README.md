@@ -51,7 +51,8 @@ docker-compose up -d
 
 # 运行结束后，执行下面的命令，记得查看docker容器有没有挂，如果挂了尝试重启一下
 
-# 切换到本地数据库，环境变量mysql的，执行，仅数据库初始化，docker-compose up后会自动创建数据库，db push会自动执行npx prisma db seed
+# 切换到本地数据库，环境变量mysql的，执行，仅数据库初始化，
+# docker-compose up后会自动创建数据库，db push会自动执行npx prisma db seed
 npx prisma db push
 
 cd admin

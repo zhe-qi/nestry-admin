@@ -1,5 +1,5 @@
 import { Response } from 'express';
-import * as ExcelJS from 'exceljs';
+import ExcelJS from 'exceljs';
 
 export async function exportTable(
   data: any[][],
@@ -11,14 +11,16 @@ export async function exportTable(
 
   const worksheet = workbook.addWorksheet(sheetName);
 
-  worksheet.columns = options.header.map((column) => {
-    const width = column.width;
-    return {
-      header: column.title,
-      key: column.dataIndex,
-      width: Number.isNaN(width) ? 16 : width,
-    };
-  });
+  if (options.header) {
+    worksheet.columns = options.header?.map((column) => {
+      const width = column.width;
+      return {
+        header: column.title,
+        key: column.dataIndex,
+        width: Number.isNaN(width) ? 16 : width,
+      };
+    });
+  }
 
   // 定义表头样式
   const headerStyle: Partial<ExcelJS.Style> = {

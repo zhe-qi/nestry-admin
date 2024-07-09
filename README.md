@@ -33,3 +33,25 @@
 不定期同步ruoyi-vue3和carole-admin的部分更新。
 
 临时文档地址：[https://carole.top/docs](https://carole.top/docs)
+
+快速启动
+```bash
+cd server
+
+pnpm install
+
+cp .env.example .env
+
+# 修改.env文件中的数据库和redis配置，从localhost切换到docker容器
+
+# 配置现在还有用的镜像，或者开魔法，失败后多试几次
+docker-compose up -d
+
+# 运行结束后，执行下面的命令，查看docker容器有没有挂，如果挂了尝试重启一下
+
+cd admin
+
+pnpm install
+
+pnpm dev
+```

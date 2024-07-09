@@ -45,9 +45,10 @@ cp .env.example .env
 
 # 运行结束后，执行下面的命令，记得查看docker容器有没有挂，如果挂了尝试重启一下
 # 切换到本地数据库，环境变量mysql的，执行，仅数据库初始化，
-# docker-compose up后会自动创建数据库，db push会自动执行npx prisma db seed
+# docker-compose up后会自动创建数据库
 npx prisma db push
 npx prisma generate
+npx prisma db seed
 
 pnpm dev
 

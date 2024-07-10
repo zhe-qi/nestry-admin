@@ -9,9 +9,9 @@ import archiver from 'archiver';
 import { Response } from 'express';
 import { ConfigService } from '@nestjs/config';
 import { ColumnInfo, Table } from './types';
+import { queryGenTableDto } from './dto/queryGenTableDto';
+import { queryDataBaseDto } from './dto/queryDatabaseDto';
 import { PrismaService } from '@/module/prisma/prisma.service';
-import { queryGenTableDto } from '@/module/gen/dto/queryGenTableDto';
-import { queryDataBaseDto } from '@/module/gen/dto/queryDatabaseDto';
 import { formatDate, nowDateTime, toPascalCase } from '@/common/utils';
 import { GenConstants } from '@/common/constant/gen';
 

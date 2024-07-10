@@ -12,7 +12,7 @@ import { AxiosModule } from './module/axios/axios.module';
 import { configuration } from './config/index';
 import { CaptchaModule } from './module/common/captcha/captcha.module';
 import { UploadModule } from './module/common/upload/axios.module';
-import { GenModule } from './module/gen/gen.module';
+import { GenModule } from './module/system/gen/gen.module';
 import { SystemModule } from './module/system/system.module';
 import { PrismaModule } from './module/prisma/prisma.module';
 import { AuthModule } from './module/system/auth/auth.module';

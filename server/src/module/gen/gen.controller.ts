@@ -27,7 +27,8 @@ export class GenController {
   @RequirePermission('tool:gen:query')
   @Get('/db/list')
   async listDbTable(@Query() q: queryDataBaseDto) {
-    return Result.TableData(await this.genService.listDbTable(q));
+    const res = await this.genService.listDbTable(q);
+    return Result.TableData(res);
   }
 
   @ApiOperation({ summary: '生成代码 返回压缩包' })

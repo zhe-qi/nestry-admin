@@ -10,7 +10,7 @@ export class ThrottlerCustomGuard extends ThrottlerGuard {
 
   protected generateKey(
     context: ExecutionContext,
-    suffix: string,
+    _suffix: string,
     name: string,
   ): string {
     const req = context.switchToHttp().getRequest();

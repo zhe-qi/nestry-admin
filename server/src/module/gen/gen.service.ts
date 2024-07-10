@@ -8,6 +8,7 @@ import * as Velocity from 'velocityjs';
 import archiver from 'archiver';
 import { Response } from 'express';
 import { ConfigService } from '@nestjs/config';
+import { ColumnInfo, Table } from './types';
 import { PrismaService } from '@/module/prisma/prisma.service';
 import { queryGenTableDto } from '@/module/gen/dto/queryGenTableDto';
 import { queryDataBaseDto } from '@/module/gen/dto/queryDatabaseDto';
@@ -102,7 +103,7 @@ export class GenService {
 
     return {
       rows: formattedRows,
-      total: totalResult[0]?.total ?? 0,
+      total: Number(totalResult[0]?.total ?? 0),
     };
   }
 

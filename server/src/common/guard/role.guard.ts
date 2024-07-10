@@ -14,7 +14,7 @@ export class RoleGuard implements CanActivate {
       context.getHandler(),
     ]);
     // 不需要鉴权
-    if (role === undefined) { return true; }
+    if (role == null) { return true; }
     // 调用鉴权
     return this.authService.hasRole(role, req.userId);
   }

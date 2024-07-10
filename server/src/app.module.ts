@@ -15,7 +15,7 @@ import { UploadModule } from './module/common/upload/axios.module';
 import { GenModule } from './module/gen/gen.module';
 import { SystemModule } from './module/system/system.module';
 import { PrismaModule } from './module/prisma/prisma.module';
-import { AuthModule } from './module/common/auth/auth.module';
+import { AuthModule } from './module/system/auth/auth.module';
 import { ThrottlerCustomGuard } from '@/common/guard/throttler-custom.guard';
 import { ValidationException } from '@/common/exception/validation';
 import { RoleGuard } from '@/common/guard/role.guard';

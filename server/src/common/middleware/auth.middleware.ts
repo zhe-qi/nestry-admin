@@ -2,7 +2,7 @@ import { Injectable, NestMiddleware } from '@nestjs/common';
 import { Request, Response } from 'express';
 import { Constants } from '@/common/constant/constants';
 import { AuthorizationException } from '@/common/exception/authorization';
-import { AuthService } from '@/module/common/auth/auth.service';
+import { AuthService } from '@/module/system/auth/auth.service';
 import { RedisService } from '@/module/redis/redis.service';
 
 @Injectable()

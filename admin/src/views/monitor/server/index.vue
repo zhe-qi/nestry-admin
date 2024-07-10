@@ -3,7 +3,11 @@
     <el-row>
       <el-col :span="12" class="card-box">
         <el-card>
-          <template #header><Cpu style="width: 1em; height: 1em; vertical-align: middle;" /> <span style="vertical-align: middle;">CPU</span></template>
+          <template #header>
+            <div class="flex items-center gap-1">
+              <Cpu style="width: 1em; height: 1em; vertical-align: middle;" /> <span style="vertical-align: middle;">CPU</span>
+            </div>
+          </template>
           <div class="el-table el-table--enable-row-hover el-table--medium">
             <table cellspacing="0" style="width: 100%;">
               <thead>
@@ -37,7 +41,11 @@
 
       <el-col :span="12" class="card-box">
         <el-card>
-          <template #header><Tickets style="width: 1em; height: 1em; vertical-align: middle;" /> <span style="vertical-align: middle;">内存</span></template>
+          <template #header>
+            <div class="flex items-center gap-1">
+              <Tickets style="width: 1em; height: 1em; vertical-align: middle;" /> <span style="vertical-align: middle;">内存</span>
+            </div>
+          </template>
           <div class="el-table el-table--enable-row-hover el-table--medium">
             <table cellspacing="0" style="width: 100%;">
               <thead>
@@ -76,7 +84,11 @@
 
       <el-col :span="24" class="card-box">
         <el-card>
-          <template #header><Monitor style="width: 1em; height: 1em; vertical-align: middle;" /> <span style="vertical-align: middle;">服务器信息</span></template>
+          <template #header>
+            <div class="flex items-center gap-1">
+              <Monitor style="width: 1em; height: 1em; vertical-align: middle;" /> <span style="vertical-align: middle;">服务器信息</span>
+            </div>
+          </template>
           <div class="el-table el-table--enable-row-hover el-table--medium">
             <table cellspacing="0" style="width: 100%;">
               <tbody>
@@ -100,7 +112,11 @@
 
       <el-col :span="24" class="card-box">
         <el-card>
-          <template #header><CoffeeCup style="width: 1em; height: 1em; vertical-align: middle;" /> <span style="vertical-align: middle;">NodeJs信息</span></template>
+          <template #header>
+            <div class="flex items-center gap-1">
+              <CoffeeCup style="width: 1em; height: 1em; vertical-align: middle;" /> <span style="vertical-align: middle;">NodeJs信息</span>
+            </div>
+          </template>
           <div class="el-table el-table--enable-row-hover el-table--medium">
             <table cellspacing="0" style="width: 100%;table-layout:fixed;">
               <tbody>
@@ -136,7 +152,11 @@
 
       <el-col :span="24" class="card-box">
         <el-card>
-          <template #header><MessageBox style="width: 1em; height: 1em; vertical-align: middle;" /> <span style="vertical-align: middle;">磁盘状态</span></template>
+          <template #header>
+            <div class="flex items-center gap-1">
+              <MessageBox style="width: 1em; height: 1em; vertical-align: middle;" /> <span style="vertical-align: middle;">磁盘状态</span>
+            </div>
+          </template>
           <div class="el-table el-table--enable-row-hover el-table--medium">
             <table cellspacing="0" style="width: 100%;">
               <thead>

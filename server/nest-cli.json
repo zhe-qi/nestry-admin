@@ -10,7 +10,7 @@
     },
     "typeCheck": true,
     "assets": [
-      { "include": "module/common/service/gen/gen-template", "watchAssets": true }
+      { "include": "module/gen/gen-template", "watchAssets": true }
     ]
   }
 }

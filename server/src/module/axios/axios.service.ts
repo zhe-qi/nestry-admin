@@ -18,7 +18,7 @@ export class AxiosService {
         ],
       });
       return response.data.addr;
-    } catch (error) {
+    } catch {
       return '未知';
     }
   }

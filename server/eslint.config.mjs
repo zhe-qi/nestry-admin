@@ -34,6 +34,8 @@ export default antfu({
     'no-case-declarations': 'off',
     // 关闭对未使用的表达式的检查
     'ts/no-unused-expressions': 'off',
+    // 关闭对使用不安全的函数类型的检查
+    'ts/no-unsafe-function-type': 'off',
   },
   ignores: ['**/prisma-client'],
 });

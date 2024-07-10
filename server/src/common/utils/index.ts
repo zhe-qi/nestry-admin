@@ -31,7 +31,7 @@ export const localDate = () => new Date(new Date().toLocaleString());
 export const createFolder = function (folder) {
   try {
     fs.accessSync(folder);
-  } catch (e) {
+  } catch {
     fs.mkdirSync(folder, { recursive: true });
   }
 };
@@ -43,11 +43,7 @@ export const createFolder = function (folder) {
  * @param iteratorFn - 异步任务的迭代函数，接受一个参数并返回一个Promise。
  * @returns - 返回一个Promise，当所有异步任务完成时解析为一个包含所有结果的数组。
  */
-export async function asyncPool<T, R>(
-  poolLimit: number,
-  iterable: T[],
-  iteratorFn: (item: T, iterable: T[]) => Promise<R>,
-): Promise<R[]> {
+export async function asyncPool<T, R>(poolLimit: number, iterable: T[], iteratorFn: (item: T, iterable: T[]) => Promise<R>): Promise<R[]> {
   let i = 0;
   const results: Promise<R>[] = [];
   const executing = new Set<Promise<R>>();

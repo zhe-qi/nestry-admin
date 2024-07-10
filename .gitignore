@@ -1,7 +1,10 @@
 # compiled output
-dist
-node_modules
-build
+/server/dist
+/admin/dist
+/server/node_modules
+/admin/node_modules
+/server/build
+/admin/build
 _upload
 
 # Logs

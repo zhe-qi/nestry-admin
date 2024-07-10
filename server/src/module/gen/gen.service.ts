@@ -640,7 +640,7 @@ function mkdir(dir) {
     if (!existsSync(dir)) {
       mkdirSync(dir, { recursive: true });
     }
-  } catch (e) {}
+  } catch {}
 }
 
 /** 写入文件数据，并且同时创建目录 */

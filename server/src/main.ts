@@ -21,15 +21,16 @@ async function bootstrap() {
   app.setGlobalPrefix(config.get('contextPath') || '/');
   app.enableCors();
 
-  // web 安全，防常见漏洞
-  // 注意： 开发环境如果开启 nest static module 需要将 crossOriginResourcePolicy 设置为 false 否则 静态资源 跨域不可访问
-  app.use(helmet({ crossOriginOpenerPolicy: { policy: 'same-origin-allow-popups' }, crossOriginResourcePolicy: false }));
-
   app.useGlobalPipes(new ValidationPipe({ transform: true, whitelist: true }));
   app.useGlobalFilters(new ExceptionsFilter());
   app.useGlobalFilters(new HttpExceptionsFilter());
 
   await configureSwagger(app, config);
+
+  app.use(helmet({
+    crossOriginOpenerPolicy: { policy: 'same-origin-allow-popups' },
+    crossOriginResourcePolicy: false,
+  }));
 
   await app.listen(config.get('port'));
 

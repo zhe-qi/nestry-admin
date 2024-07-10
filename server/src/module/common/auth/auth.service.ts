@@ -12,17 +12,17 @@ import type { MenuItem, RawItem } from './types';
 import { LoginBody } from './dto/LoginBody';
 import { PrismaService } from '@/module/prisma/prisma.service';
 import { AxiosService } from '@/module/axios/axios.service';
-import { redisUtils } from '@/common/utils/redisUtils';
 import { Constants } from '@/common/constant/constants';
 import { nowDateTime } from '@/common/utils';
 import { ValidationException } from '@/common/exception/validation';
+import { RedisService } from '@/module/redis/redis.service';
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly axiosService: AxiosService,
     private readonly prisma: PrismaService,
-
+    private readonly redis: RedisService,
     private readonly configService: ConfigService,
   ) {}
 
@@ -77,11 +77,7 @@ export class AuthService {
     const token = this.createToken(cacheInfo);
 
     // 存储token
-    await redisUtils.set(
-      Constants.LOGIN_TOKEN_KEY + cacheInfo.tokenId,
-      JSON.stringify(cacheInfo),
-      this.configService.get('token.expiresIn'),
-    );
+    await this.redis.set(Constants.LOGIN_TOKEN_KEY + cacheInfo.tokenId, JSON.stringify(cacheInfo), this.configService.get('token.expiresIn'));
 
     // 初始化用户信息存到reids缓存包括权限。。
     await this.refreshUserInfo(user.userId);
@@ -93,7 +89,7 @@ export class AuthService {
   async getUserInfo(userId: number) {
     // 如果redis有用户信息直接返回
     const userinfo: SysUser & { roles: string[], permissions: string[] }
-      = JSON.parse((await redisUtils.get(Constants.LOGIN_CACHE_TOKEN_KEY + userId))
+      = JSON.parse((await this.redis.get(Constants.LOGIN_CACHE_TOKEN_KEY + userId))
       || null);
     if (userinfo !== null) { return userinfo; }
     const user = await this.prisma.sysUser.findFirst({
@@ -119,11 +115,7 @@ export class AuthService {
       permissions,
     };
     // 存储到redis缓存，下次直接拿
-    await redisUtils.set(
-      Constants.LOGIN_CACHE_TOKEN_KEY + userId,
-      JSON.stringify(result),
-      this.configService.get('token.expiresIn'),
-    );
+    await this.redis.set(Constants.LOGIN_CACHE_TOKEN_KEY + userId, JSON.stringify(result), this.configService.get('token.expiresIn'));
     return result;
   }
 
@@ -152,11 +144,7 @@ export class AuthService {
       permissions,
     };
     // 存储到redis缓存，下次直接拿
-    await redisUtils.set(
-      Constants.LOGIN_CACHE_TOKEN_KEY + userId,
-      JSON.stringify(result),
-      this.configService.get('token.expiresIn'),
-    );
+    await this.redis.set(Constants.LOGIN_CACHE_TOKEN_KEY + userId, JSON.stringify(result), this.configService.get('token.expiresIn'));
     return true;
   }
 
@@ -285,11 +273,7 @@ export class AuthService {
       map[item[id]] = newItem;
 
       if (item[pid] === rootValue) {
-        this.handleRootItem(
-          item,
-          newItem,
-          result,
-        );
+        this.handleRootItem(item, newItem, result);
       } else {
         map[item[pid]] ? map[item[pid]].children.push(newItem) : map[item[pid]] = { children: [newItem] };
       }
@@ -308,11 +292,7 @@ export class AuthService {
     return result;
   }
 
-  handleRootItem(
-    item,
-    newItem,
-    result,
-  ) {
+  handleRootItem(item, newItem, result) {
     if (item.menuType === 'M') {
       Object.assign(newItem, {
         alwaysShow: true,
@@ -342,9 +322,9 @@ export class AuthService {
    * @desc 检查验证码是否正确
    */
   async validaCaptcha(uuid: string, code: string) {
-    const r = await redisUtils.get(Constants.CAPTCHA_CODE_KEY + uuid);
+    const r = await this.redis.get(Constants.CAPTCHA_CODE_KEY + uuid);
     if (r != code) {
-      redisUtils.del(Constants.CAPTCHA_CODE_KEY + uuid);
+      this.redis.del(Constants.CAPTCHA_CODE_KEY + uuid);
       return false;
     } else {
       return true;
@@ -360,29 +340,21 @@ export class AuthService {
 
   /** @desc 创建token */
   createToken(payload) {
-    return jwt.sign(
-      payload,
-      this.configService.get('token.secret'),
-      {
-        expiresIn: this.configService.get('token.expiresIn'),
-      },
-    );
+    return jwt.sign(payload, this.configService.get('token.secret'), {
+      expiresIn: this.configService.get('token.expiresIn'),
+    });
   }
 
   /** @desc 解析token */
   verifyToken(token: string) {
     return new Promise((resolve, reject) => {
-      jwt.verify(
-        token,
-        this.configService.get('token.secret'),
-        (err, data) => {
-          if (err) {
-            reject(err);
-          } else {
-            resolve(data);
-          }
-        },
-      );
+      jwt.verify(token, this.configService.get('token.secret'), (err, data) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(data);
+        }
+      });
     });
   }
 
@@ -408,7 +380,7 @@ export class AuthService {
         const clientIp = requestIp.getClientIp(req) || req.ip;
         loginInfo.loginLocation = await this.axiosService.ipToCity(clientIp);
       }
-    } catch (e) {}
+    } catch {}
 
     const agent = req.headers['user-agent'];
 
@@ -416,14 +388,14 @@ export class AuthService {
       const d = bowser.parse(agent);
       loginInfo.os = `${d.os.name} ${d.os.versionName}`;
       loginInfo.browser = `${d.browser.name} ${d.browser?.version?.split('.')?.[0]}` || '';
-    } catch (e) {}
+    } catch {}
 
     return loginInfo;
   }
 
   /** @desc 验证验证码 */
   async validateCaptcha(uuid: string, code: string): Promise<boolean> {
-    const enable = await redisUtils.get(`${Constants.SYS_CONFIG_KEY}sys.account.captchaEnabled`);
+    const enable = await this.redis.get(`${Constants.SYS_CONFIG_KEY}sys.account.captchaEnabled`);
     const captchaEnabled: boolean = enable == '' ? true : enable === 'true';
     if (captchaEnabled) {
       if (!uuid || !code) {
@@ -441,7 +413,7 @@ export class AuthService {
 
   /** @desc 检查黑名单ip */
   async checkBlacklistedIP(reqIp: string, loginInfo: any): Promise<void> {
-    const ips = (await redisUtils.get(`${Constants.SYS_CONFIG_KEY}sys.login.blackIPList`)).split(',');
+    const ips = (await this.redis.get(`${Constants.SYS_CONFIG_KEY}sys.login.blackIPList`)).split(',');
     if (ips.length) {
       const isBlack = ips.includes(reqIp);
       if (isBlack) {

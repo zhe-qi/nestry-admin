@@ -39,6 +39,7 @@
     "@nestjs/schedule": "^4.1.0",
     "@nestjs/serve-static": "^4.0.2",
     "@nestjs/swagger": "^7.4.0",
+    "@nestjs/terminus": "^10.2.3",
     "@nestjs/throttler": "^5.2.0",
     "@prisma/client": "^5.16.2",
     "archiver": "^7.0.1",

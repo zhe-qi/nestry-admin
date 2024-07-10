@@ -5,14 +5,14 @@ import { Throttle } from '@nestjs/throttler';
 import { ConfigService } from '@nestjs/config';
 import CaptchaImageVo from './vo/CaptchaImageVo';
 import { createMath, createText } from '@/common/utils/captcha';
-import { redisUtils } from '@/common/utils/redisUtils';
 import Result from '@/common/utils/result';
 import { Constants } from '@/common/constant/constants';
+import { RedisService } from '@/module/redis/redis.service';
 
 @ApiTags('验证码模块')
 @Controller('/captchaImage')
 export class CaptchaController {
-  constructor(private readonly configService: ConfigService) {}
+  constructor(private readonly configService: ConfigService, private readonly redis: RedisService) {}
 
   @ApiOperation({
     summary: '获取验证码',
@@ -35,7 +35,7 @@ export class CaptchaController {
     // 根据配置的是math还是text自动调用方法生成数据
     const captchaInfo = map[this.configService.get('captcha.mode')]();
     // 是否开启验证码
-    const enable = await redisUtils.get(`${Constants.SYS_CONFIG_KEY}sys.account.captchaEnabled`);
+    const enable = await this.redis.get(`${Constants.SYS_CONFIG_KEY}sys.account.captchaEnabled`);
     const captchaEnabled: boolean = enable == '' ? true : enable === 'true';
     const data = {
       captchaEnabled,
@@ -43,13 +43,9 @@ export class CaptchaController {
       uuid: randomUUID(),
     };
     try {
-      await redisUtils.set(
-        Constants.CAPTCHA_CODE_KEY + data.uuid,
-        captchaInfo.text.toLowerCase(),
-        this.configService.get('captcha.expiresIn'),
-      );
+      await this.redis.set(Constants.CAPTCHA_CODE_KEY + data.uuid, captchaInfo.text.toLowerCase(), this.configService.get('captcha.expiresIn'));
       return data;
-    } catch (err) {
+    } catch {
       return Result.Error('生成验证码错误，请重试');
     }
   }

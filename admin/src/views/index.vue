@@ -17,16 +17,20 @@
           <li>支持接口限流</li>
           <li>高效率开发，使用代码生成器可以一键生成前后端代码。</li>
         </ul>
-
         <p>
           <b>当前版本:</b> <span>v{{ version }}</span>
         </p>
         <p>
-          <el-tag type="danger">&yen;免费开源</el-tag>
+          <el-tag type="danger">免费开源</el-tag>
         </p>
         <p>
-          <el-button type="primary" plain @click="goTarget('https://github.com/zhe-qi/carole-admin/tree/master')"> <svg-icon
-              icon-class="github" />github</el-button>
+          <el-button type="primary" plain @click="goTarget('https://github.com/zhe-qi/carole-admin/tree/master')"> 
+            <div class="flex items-center gap-1">
+              <svg-icon
+              icon-class="github" />
+              <div>github</div>
+            </div>
+          </el-button>
         </p>
       </el-col>
 

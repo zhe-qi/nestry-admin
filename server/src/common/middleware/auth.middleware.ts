@@ -3,17 +3,13 @@ import { Request, Response } from 'express';
 import { Constants } from '@/common/constant/constants';
 import { AuthorizationException } from '@/common/exception/authorization';
 import { AuthService } from '@/module/common/auth/auth.service';
-import { redisUtils } from '@/common/utils/redisUtils';
+import { RedisService } from '@/module/redis/redis.service';
 
 @Injectable()
 export class AuthMiddleware implements NestMiddleware {
-  constructor(private authService: AuthService) {}
+  constructor(private authService: AuthService, private readonly redis: RedisService) {}
 
-  async use(
-    req: Request & { userId: number, token: string, user: any },
-    _res: Response,
-    next: () => void,
-  ) {
+  async use(req: Request & { userId: number, token: string, user: any }, _res: Response, next: () => void) {
     const token = this.extractToken(req);
     try {
       const { userId, tokenId } = await this.verifyToken(token);
@@ -26,7 +22,7 @@ export class AuthMiddleware implements NestMiddleware {
         userInfo,
       );
       next();
-    } catch (error) {
+    } catch {
       throw new AuthorizationException('无效的token！');
     }
   }
@@ -44,14 +40,14 @@ export class AuthMiddleware implements NestMiddleware {
   }
 
   private async validateToken(tokenId: string, _userId: number): Promise<void> {
-    const tokenExists = await redisUtils.get(Constants.LOGIN_TOKEN_KEY + tokenId);
+    const tokenExists = await this.redis.get(Constants.LOGIN_TOKEN_KEY + tokenId);
     if (!tokenExists) {
       throw new AuthorizationException('无效的token！');
     }
   }
 
   private async getUserInfo(userId: number): Promise<any> {
-    const userInfo = await redisUtils.get(Constants.LOGIN_CACHE_TOKEN_KEY + userId);
+    const userInfo = await this.redis.get(Constants.LOGIN_CACHE_TOKEN_KEY + userId);
     if (!userInfo) {
       throw new AuthorizationException('无效的token！');
     }

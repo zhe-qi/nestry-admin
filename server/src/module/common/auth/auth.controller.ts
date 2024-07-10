@@ -5,12 +5,12 @@ import { AuthService } from './auth.service';
 import { LoginBody } from './dto/LoginBody';
 import Result from '@/common/utils/result';
 import { Constants } from '@/common/constant/constants';
-import { redisUtils } from '@/common/utils/redisUtils';
+import { RedisService } from '@/module/redis/redis.service';
 
 @ApiTags('Auth')
 @Controller()
 export class AuthController {
-  constructor(private authService: AuthService) {}
+  constructor(private authService: AuthService, private readonly redis: RedisService) {}
 
   @Throttle({
     default: {
@@ -38,8 +38,8 @@ export class AuthController {
   @Post('/logout')
   async logout(@Headers('authorization') token: string) {
     try {
-      await redisUtils.del(Constants.LOGIN_TOKEN_KEY + token.slice(7));
-    } catch (error) {
+      await this.redis.del(Constants.LOGIN_TOKEN_KEY + token.slice(7));
+    } catch {
     } finally {
       Result.ok();
     }

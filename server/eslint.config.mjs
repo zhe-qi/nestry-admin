@@ -21,7 +21,7 @@ export default antfu({
     // 要求如果语句占用多行，则必须使用大括号包围，单行语句可以省略大括号
     'curly': ['error', 'multi-line'],
     // 要求如果函数参数数量至少为3，则参数必须每个占一行
-    'function-paren-newline': ['error', { minItems: 3 }],
+    'function-paren-newline': ['error', { minItems: 4 }],
     // 要求在对象字面量、导入声明、导出声明中，如果是单行，则不允许在大括号内换行
     'object-curly-newline': ['error', { ImportDeclaration: 'never', ExportDeclaration: 'never' }],
     // 配置大括号风格
@@ -30,6 +30,10 @@ export default antfu({
     'style/brace-style': ['error', '1tbs', { allowSingleLine: true }],
     // 关闭对在Node.js中优先使用全局Buffer对象的检查
     'node/prefer-global/buffer': 'off',
+    // 关闭case必须有大括号包围的检查
+    'no-case-declarations': 'off',
+    // 关闭对未使用的表达式的检查
+    'ts/no-unused-expressions': 'off',
   },
   ignores: ['**/prisma-client'],
 });

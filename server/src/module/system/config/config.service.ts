@@ -5,12 +5,12 @@ import { isNotEmpty } from 'class-validator';
 import { CreateSysConfigDto, QuerySysConfigDto, UpdateSysConfigDto } from './dto';
 import { exportTable } from '@/common/utils/export';
 import { PrismaService } from '@/module/prisma/prisma.service';
-import { redisUtils } from '@/common/utils/redisUtils';
 import { Constants } from '@/common/constant/constants';
+import { RedisService } from '@/module/redis/redis.service';
 
 @Injectable()
 export class ConfigService {
-  constructor(private prisma: PrismaService) {
+  constructor(private prisma: PrismaService, private readonly redis: RedisService) {
     this.initSysConfigData();
   }
 
@@ -23,7 +23,7 @@ export class ConfigService {
       },
     });
     for (const item of configData) {
-      await redisUtils.set(Constants.SYS_CONFIG_KEY + item.configKey, item.configValue);
+      await this.redis.set(Constants.SYS_CONFIG_KEY + item.configKey, item.configValue);
     }
     // eslint-disable-next-line no-console
     console.log('系统配置信息初始化完成！');
@@ -100,7 +100,7 @@ export class ConfigService {
     const d = await this.prisma.sysConfig.create({
       data: sysConfig,
     });
-    await redisUtils.set(Constants.SYS_CONFIG_KEY + sysConfig.configKey, sysConfig.configValue);
+    await this.redis.set(Constants.SYS_CONFIG_KEY + sysConfig.configKey, sysConfig.configValue);
     return d;
   }
 
@@ -116,7 +116,7 @@ export class ConfigService {
       },
       data: sysConfig,
     });
-    await redisUtils.set(Constants.SYS_CONFIG_KEY + sysConfig.configKey, sysConfig.configValue);
+    await this.redis.set(Constants.SYS_CONFIG_KEY + sysConfig.configKey, sysConfig.configValue);
     return true;
   }
 

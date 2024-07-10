@@ -4,14 +4,15 @@ import { Throttle } from '@nestjs/throttler';
 import { Constants } from '@/common/constant/constants';
 import Result from '@/common/utils/result';
 import { RequirePermission } from '@/common/decorator/require-premission.decorator';
-import { redisUtils } from '@/common/utils/redisUtils';
 import { getServerInfo } from '@/common/utils/systemInfo';
+import { RedisService } from '@/module/redis/redis.service';
 
 @ApiTags('系统监控')
 @ApiBearerAuth()
 @Controller('/monitor')
 export class monitorController {
-  constructor() {}
+  constructor(private readonly redis: RedisService) {}
+
   @ApiOperation({ summary: '获取redis信息' })
   @Throttle({
     default: {
@@ -21,7 +22,7 @@ export class monitorController {
   })
   @Get('/cache')
   async getCacheInfo() {
-    return Result.ok(await redisUtils.getRedisInfo());
+    return Result.ok(await this.redis.getRedisInfo());
   }
 
   @ApiOperation({ summary: '获取服务器信息' })
@@ -46,14 +47,14 @@ export class monitorController {
   @RequirePermission('monitor:online:query')
   @Get('/online/list')
   async getOnlineList(@Query() { ipaddr = '', userName = '' }) {
-    const tokens = await redisUtils.scanStream(`${Constants.LOGIN_TOKEN_KEY}*`);
+    const tokens = await this.redis.scanStream(`${Constants.LOGIN_TOKEN_KEY}*`);
     if (!tokens.length) {
       return Result.TableData({
         rows: [],
         total: 0,
       });
     }
-    let userList = (await redisUtils.mget(tokens)).map(v => JSON.parse(v));
+    let userList = (await this.redis.mget(tokens)).map(v => JSON.parse(v));
     userList = userList.filter(v => v.loginLocation.includes(ipaddr) && v.userName.includes(userName));
     userList.sort((a, b) => +new Date(b.loginTime) - +new Date(a.loginTime));
     return Result.TableData({
@@ -73,11 +74,11 @@ export class monitorController {
   @Delete('/online/:tokenId')
   async forceLogout(@Param('tokenId', ParseArrayPipe) tokenIds: string[]) {
     for (const tokenId of tokenIds) {
-      const user = JSON.parse((await redisUtils.get(Constants.LOGIN_TOKEN_KEY + tokenId)) || null);
+      const user = JSON.parse((await this.redis.get(Constants.LOGIN_TOKEN_KEY + tokenId)) || null);
       if (user) {
         // 不可强退超级管理员
         if (user.userId === 1) { return Result.Error('不可强退超级管理员！'); }
-        await redisUtils.del(Constants.LOGIN_TOKEN_KEY + tokenId);
+        await this.redis.del(Constants.LOGIN_TOKEN_KEY + tokenId);
       }
     }
     return Result.ok('操作成功！');

@@ -48,14 +48,12 @@ export function configuration() {
     },
     // Redis数据库连接配置。
     redis: {
-      // Redis服务器地址。
-      host: process.env.REDIS_HOST || 'localhost',
-      // Redis服务器端口。
-      port: Number.parseInt(process.env.REDIS_PORT ?? '6379'),
       // 使用的Redis数据库索引。
       db: 5,
       // Redis连接密码（如果有）。
       password: null,
+      // url
+      url: process.env.REDIS_URL,
     },
     // 文件上传配置。
     file: {

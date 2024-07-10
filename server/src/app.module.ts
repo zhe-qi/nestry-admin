@@ -14,7 +14,6 @@ import { CaptchaModule } from './module/common/captcha/captcha.module';
 import { UploadModule } from './module/common/upload/axios.module';
 import { GenModule } from './module/gen/gen.module';
 import { SystemModule } from './module/system/system.module';
-import { PrismaService } from './module/prisma/prisma.service';
 import { PrismaModule } from './module/prisma/prisma.module';
 import { AuthModule } from './module/common/auth/auth.module';
 import { ThrottlerCustomGuard } from '@/common/guard/throttler-custom.guard';
@@ -23,6 +22,8 @@ import { RoleGuard } from '@/common/guard/role.guard';
 import { PermissionGuard } from '@/common/guard/permission.guard';
 import { AuthMiddleware } from '@/common/middleware/auth.middleware';
 import { RemoveThrottleHeadersInterceptor } from '@/common/interceptors/remove-throttle-headers.interceptor';
+import { RedisModule } from '@/module/redis';
+import { RedisService } from '@/module/redis/redis.service';
 
 import '@/common/utils/email';
 
@@ -36,11 +37,17 @@ import '@/common/utils/email';
     ThrottlerModule.forRootAsync({
       inject: [ConfigService],
       useFactory: (config: ConfigService) => {
-        config.get('redis');
+        const url = new URL(config.get('redis.url'));
         return {
           throttlers: [{ name: 'default', ttl: config.get('rateLimit.ttl'), limit: config.get('rateLimit.limit') }],
           storage: config.get('rateLimit.storage') === 'redis'
-          && new ThrottlerStorageRedisService({ ...config.get<ReturnType<typeof configuration>['redis']>('redis'), disconnectTimeout: 60 * 5 * 1000 }),
+          && new ThrottlerStorageRedisService({
+            db: config.get('redis.db'),
+            host: url.hostname,
+            port: Number.parseInt(url.port),
+            password: config.get('redis.password'),
+            disconnectTimeout: 60 * 5 * 1000,
+          }),
         };
       },
     }),
@@ -51,6 +58,20 @@ import '@/common/utils/email';
           rootPath: config.get('file.location'),
           serveRoot: config.get('file.serveRoot'),
         }];
+      },
+    }),
+    RedisModule.forRootAsync({
+      inject: [ConfigService],
+      useFactory: (config: ConfigService) => {
+        return {
+          type: 'single',
+          url: config.get('redis.url'),
+          options: {
+            ...(config.get('redis.password') ?? {}),
+            db: config.get('redis.db') ?? 0,
+            disconnectTimeout: 60 * 5 * 1000,
+          },
+        };
       },
     }),
     ScheduleModule.forRoot(),
@@ -66,27 +87,23 @@ import '@/common/utils/email';
   ],
   controllers: [],
   providers: [
-    PrismaService,
-    TasksService,
-    PermissionGuard,
-    RoleGuard,
-    { provide: APP_GUARD, useClass: ThrottlerCustomGuard },
-    { provide: APP_GUARD, useClass: PermissionGuard },
-    { provide: APP_GUARD, useClass: RoleGuard },
     {
       provide: APP_PIPE,
       useFactory: () => new ValidationPipe({ whitelist: true, exceptionFactory }),
     },
+    { provide: APP_GUARD, useClass: ThrottlerCustomGuard },
+    { provide: APP_GUARD, useClass: PermissionGuard },
+    { provide: APP_GUARD, useClass: RoleGuard },
     { provide: APP_INTERCEPTOR, useClass: RemoveThrottleHeadersInterceptor },
+    TasksService,
+    PermissionGuard,
+    RoleGuard,
+    RedisService,
   ],
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
-    consumer.apply(AuthMiddleware).exclude(
-      '/login',
-      '/logout',
-      '/captchaImage',
-    ).forRoutes('*');
+    consumer.apply(AuthMiddleware).exclude('/login', '/logout', '/captchaImage').forRoutes('*');
   }
 }
 

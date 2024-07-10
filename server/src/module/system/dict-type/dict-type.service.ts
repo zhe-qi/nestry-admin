@@ -9,12 +9,12 @@ import { PrismaService } from '@/module/prisma/prisma.service';
 import { DictDataService } from '@/module/system/dict-data/dict-data.service';
 import { ValidationException } from '@/common/exception/validation';
 import { exportTable } from '@/common/utils/export';
-import { redisUtils } from '@/common/utils/redisUtils';
 import { Constants } from '@/common/constant/constants';
+import { RedisService } from '@/module/redis/redis.service';
 
 @Injectable()
 export class SysDictTypeService {
-  constructor(private prisma: PrismaService, private dictDataService: DictDataService) {}
+  constructor(private prisma: PrismaService, private dictDataService: DictDataService, private readonly redis: RedisService) {}
 
   // 查询字典类型列表
   async selectDictTypeList(q: queryDictTypeDto) {
@@ -71,11 +71,7 @@ export class SysDictTypeService {
     const res = await this.prisma.sysDictType.create({
       data: dictType,
     });
-    await redisUtils.set(Constants.SYS_DICT_KEY + dictType.dictType, JSON.stringify(
-      [],
-      null,
-      2,
-    ));
+    await this.redis.set(Constants.SYS_DICT_KEY + dictType.dictType, JSON.stringify([], null, 2));
     return res;
   }
 
@@ -139,7 +135,7 @@ export class SysDictTypeService {
       },
     });
     for (const k of dictTypes) {
-      await redisUtils.del(k);
+      await this.redis.del(k);
     }
     return res;
   }

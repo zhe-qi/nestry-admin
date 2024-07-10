@@ -6,8 +6,6 @@ import helmet from 'helmet';
 import { ConfigService } from '@nestjs/config';
 import { ValidationPipe } from '@nestjs/common';
 import { AppModule } from './app.module';
-import { ExceptionsFilter } from '@/common/filter/exceptions-filter';
-import { HttpExceptionsFilter } from '@/common/filter/http-exceptions-filter';
 
 declare const module: any;
 
@@ -22,8 +20,6 @@ async function bootstrap() {
   app.enableCors();
 
   app.useGlobalPipes(new ValidationPipe({ transform: true, whitelist: true }));
-  app.useGlobalFilters(new ExceptionsFilter());
-  app.useGlobalFilters(new HttpExceptionsFilter());
 
   await configureSwagger(app, config);
 
@@ -55,10 +51,6 @@ async function configureSwagger(app: NestExpressApplication, config: ConfigServi
       .addBearerAuth()
       .build();
     const document = SwaggerModule.createDocument(app, options);
-    SwaggerModule.setup(
-      `${config.get('contextPath').replace(/\/$/, '')}${config.get('swagger.prefix')}`,
-      app,
-      document,
-    );
+    SwaggerModule.setup(`${config.get('contextPath').replace(/\/$/, '')}${config.get('swagger.prefix')}`, app, document);
   }
 }

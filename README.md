@@ -20,7 +20,6 @@
 - 密码加密从crypto改为bcrypt，添加Helmet [已完成]
 - 从node-xlsx迁移到exceljs [已完成]
 - 从直接导入config迁移到@nestjs/config [已完成]
-- 修改ExceptionsFilter、HttpExceptionsFilter，并添加更多的异常处理 [已完成]
 - 重构上传模块 [已完成]
 
 - 修改为passport全家桶 [未开始] [待定]

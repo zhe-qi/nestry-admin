@@ -8,12 +8,12 @@ import { AuthService } from '@/module/common/auth/auth.service';
 import { exportTable } from '@/common/utils/export';
 import { PrismaService } from '@/module/prisma/prisma.service';
 import Result from '@/common/utils/result';
-import { redisUtils } from '@/common/utils/redisUtils';
 import { Constants } from '@/common/constant/constants';
+import { RedisService } from '@/module/redis/redis.service';
 
 @Injectable()
 export class UserService {
-  constructor(private prisma: PrismaService, private authService: AuthService) {}
+  constructor(private readonly prisma: PrismaService, private authService: AuthService, private readonly redis: RedisService) {}
 
   /** @description 查询用户所有 */
   async selectUserAll() {
@@ -146,7 +146,7 @@ export class UserService {
     });
     // 如果为禁用状态，我们把用户的token删除，禁用账户！
     if (status === '0') {
-      await redisUtils.del(Constants.LOGIN_TOKEN_KEY + userId);
+      await this.redis.del(Constants.LOGIN_TOKEN_KEY + userId);
     }
     return Result.ok();
   }
@@ -163,7 +163,7 @@ export class UserService {
         password: sysUser.password,
       },
     });
-    await redisUtils.del(Constants.LOGIN_TOKEN_KEY + sysUser.userId);
+    await this.redis.del(Constants.LOGIN_TOKEN_KEY + sysUser.userId);
     return res;
   }
 
@@ -179,7 +179,7 @@ export class UserService {
     });
     // 如果为禁用状态，我们把用户的token删除，禁用账户！
     if (sysUser.status === '0') {
-      await redisUtils.del(Constants.LOGIN_TOKEN_KEY + sysUser.userId);
+      await this.redis.del(Constants.LOGIN_TOKEN_KEY + sysUser.userId);
     }
     return res;
   }
@@ -195,7 +195,7 @@ export class UserService {
       // 删除用户
       const res = await db.sysUser.deleteMany({ where: { userId: { in: userIds } } });
       // 并行清空用户的登录token
-      await Promise.all(userIds.map(id => redisUtils.del(Constants.LOGIN_TOKEN_KEY + id)));
+      await Promise.all(userIds.map(id => this.redis.del(Constants.LOGIN_TOKEN_KEY + id)));
       return res;
     });
   }
@@ -207,7 +207,7 @@ export class UserService {
       await Promise.all([
         db.sysUserPost.deleteMany({ where: { userId } }),
         db.sysUserRole.deleteMany({ where: { userId } }),
-        redisUtils.del(Constants.LOGIN_TOKEN_KEY + userId), // 将redis操作也并行执行
+        this.redis.del(Constants.LOGIN_TOKEN_KEY + userId), // 将redis操作也并行执行
       ]);
       // 最后删除用户本身，确保前置依赖被清除
       return db.sysUser.delete({ where: { userId } });
@@ -331,11 +331,7 @@ export class UserService {
   }
 
   /** 修改密码 */
-  async updateUserPwd(
-    userId: number,
-    oldPassword: string,
-    newPassword: string,
-  ) {
+  async updateUserPwd(userId: number, oldPassword: string, newPassword: string) {
     if (!isNotEmpty(oldPassword) || !isNotEmpty(newPassword)) {
       throw new BadRequestException('请检查参数！');
     }
@@ -358,7 +354,7 @@ export class UserService {
         password: this.authService.encrypt(newPassword),
       },
     });
-    await redisUtils.del(Constants.LOGIN_TOKEN_KEY + userId);
+    await this.redis.del(Constants.LOGIN_TOKEN_KEY + userId);
     return res;
   }
 }

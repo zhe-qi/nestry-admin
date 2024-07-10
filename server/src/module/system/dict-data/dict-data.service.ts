@@ -7,13 +7,13 @@ import { queryDictDataDto } from './dto/queryDictDataDto';
 import { CreateDictDataDto } from './dto/createDictDataDto';
 import { updateDictDataDto } from './dto/updateDictDataDto';
 import { PrismaService } from '@/module/prisma/prisma.service';
-import { redisUtils } from '@/common/utils/redisUtils';
 import { Constants } from '@/common/constant/constants';
 import { exportTable } from '@/common/utils/export';
+import { RedisService } from '@/module/redis/redis.service';
 
 @Injectable()
 export class DictDataService implements OnModuleInit {
-  constructor(private prisma: PrismaService) {}
+  constructor(private prisma: PrismaService, private readonly redis: RedisService) {}
   onModuleInit() {
     this.initSysDictData();
   }
@@ -22,11 +22,7 @@ export class DictDataService implements OnModuleInit {
   async initSysDictData() {
     const dictData = groupBy(await this.prisma.sysDictData.findMany(), 'dictType');
     for (const dictKey in dictData) {
-      await redisUtils.set(Constants.SYS_DICT_KEY + dictKey, JSON.stringify(
-        dictData[dictKey],
-        null,
-        2,
-      ));
+      await this.redis.set(Constants.SYS_DICT_KEY + dictKey, JSON.stringify(dictData[dictKey], null, 2));
     }
     // eslint-disable-next-line no-console
     console.log('字典信息初始化完毕！');
@@ -39,11 +35,7 @@ export class DictDataService implements OnModuleInit {
         dictType,
       },
     });
-    return await redisUtils.set(Constants.SYS_DICT_KEY + dictType, JSON.stringify(
-      dictDatas,
-      null,
-      2,
-    ));
+    return await this.redis.set(Constants.SYS_DICT_KEY + dictType, JSON.stringify(dictDatas, null, 2));
   }
 
   // 查询字典数据列表
@@ -95,7 +87,7 @@ export class DictDataService implements OnModuleInit {
 
   // 根据字典类型查询字典数据信息
   async selectDictDataByDictType(dictType: string) {
-    return JSON.parse((await redisUtils.get(Constants.SYS_DICT_KEY + dictType)) || null);
+    return JSON.parse((await this.redis.get(Constants.SYS_DICT_KEY + dictType)) || null);
   }
 
   // 新增字典数据

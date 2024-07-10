@@ -2,7 +2,7 @@ import { Body, Controller, Delete, Get, Inject, Param, ParseIntPipe, Post, Put, 
 import { ApiBearerAuth, ApiBody, ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { Response } from 'express';
 import { SysConfig } from '@prisma/client';
-import { ConfigService } from './sys-config.service';
+import { ConfigService } from './config.service';
 import { CreateSysConfigDto, QuerySysConfigDto, UpdateSysConfigDto } from './dto/index';
 import { ParseIntArrayPipe } from '@/common/pipe/parse-int-array.pipe';
 import Result from '@/common/utils/result';
@@ -13,7 +13,7 @@ import { TableDataInfo } from '@/common/domain/table';
 @ApiTags('参数配置')
 @ApiBearerAuth()
 @Controller('system/config')
-export class SysConfigController {
+export class ConfigController {
   constructor(private readonly configService: ConfigService) {}
 
   @ApiOperation({ summary: '查询参数配置列表' })

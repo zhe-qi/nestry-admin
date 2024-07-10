@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 
-import { ConfigService } from './config/sys-config.service';
+import { ConfigService } from './config/config.service';
 import { DeptService } from './dept/dept.service';
 import { SysDictTypeService } from './dict-type/dict-type.service';
 import { DictDataService } from './dict-data/dict-data.service';
@@ -21,6 +21,7 @@ import { UserController } from './user/user.controller';
 import { PostController } from './post/post.controller';
 import { NoticeController } from './notice/notice.controller';
 import { LogininforController } from './logininfor/logininfor.controller';
+import { ConfigController } from './config/config.controller';
 
 @Module({
   providers: [
@@ -46,6 +47,7 @@ import { LogininforController } from './logininfor/logininfor.controller';
     PostController,
     NoticeController,
     LogininforController,
+    ConfigController,
   ],
 })
 export class SystemModule {}

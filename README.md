@@ -1,15 +1,17 @@
 <div  align="center">
  <img src="admin/public/nest.svg" alt="68747470733a2f2f6e6573746a732e636f6d2f6c6f676f2d736d616c6c2d6772616469656e742e37363631363430352e737667" style="width: 25%;" />
- <h1>全栈管理系统</h1>
-    <h3 >一款基于Nestjs+Vue前后端分离的仿若依后台框架，后端基于carole-admin</h3>
+ <h1>nestry-admin全栈管理系统</h1>
+ <h3 >一款基于Nestjs+Vue前后端分离的仿若依后台框架</h3>
 </div>
 
 # 介绍
+**该项目长期维护，且永久开源免费**
+
 临时文档地址：[https://zheqi.netlify.app/admin/](https://zheqi.netlify.app/admin/)
 
 ## 当前fork分支路线图
 
-> 当前版本不稳定，请勿上生产环境
+> 当前版本快速迭代中，不是很稳定，且更新频繁，请勿上生产环境！！！
 
 - 持续优化代码性能，代码结构，优化若依UI，解耦代码 [持续进行中]
 - 添加 DockerFile 和 DockerCompose [已完成]
@@ -36,28 +38,33 @@
 # 安装最新版mysql和redis并运行，建议使用docker安装
 
 # /server 目录下
+
+# 安装依赖
 pnpm install
 
+# 复制一份环境变量
 cp .env.example .env
-# 修改.env文件中的数据库和redis配置，从localhost切换到docker容器
-# 配置现在还有用的镜像，或者开魔法，失败后多试几次
-# docker-compose up -d
 
-# 运行结束后，执行下面的命令，记得查看docker容器有没有挂，如果挂了尝试重启一下
-# 切换到本地数据库，环境变量mysql的，执行，仅数据库初始化，
-# docker-compose up后会自动创建数据库
+# prisma 确保有环境变量mysql地址结尾的数据库，使用docker启动自动创建
+# 生成表和字段
 npx prisma db push
+# 生成客户端ts类型和代码
 npx prisma generate
+# 初始化数据 db push + db seed 等同于 source init.sql
 npx prisma db seed
 
+# 基于swc编译ts，比tsc快20倍
 pnpm dev
 
 # /admin 目录下
+
+# 安装依赖
 pnpm install
 
+# 启动
 pnpm dev
 ```
 
-> 注意，该项目属于fork二次开发，使用需谨慎  
-> 原作者 github: https://github.com/Carole007/carole-admin
+> 注意，该项目属于fork二次开发后改动量巨大所以迁移出来，详细可以对比两个项目的代码  
+> 原作者 github: https://github.com/Carole007/carole-admin  
 > 原作者演示地址：[https://carole.top](https://carole.top)

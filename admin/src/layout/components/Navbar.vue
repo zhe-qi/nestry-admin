@@ -84,9 +84,6 @@ function logout() {
     })
   }).catch(() => { });
 }
-function gotoGithub() {
-  window.open('https://github.com/Carole007/carole-admin')
-}
 
 const emits = defineEmits(['setLayout'])
 function setLayout() {

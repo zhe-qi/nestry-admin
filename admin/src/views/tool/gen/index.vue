@@ -242,14 +242,7 @@ function handleGenTable(row) {
     proxy.$modal.msgError("请选择要生成的数据");
     return;
   }
-  proxy.$download.zip("/tool/gen/batchGenCode?tables=" + tbNames, "carole.zip");
- /*  if (row.genType === "1") {
-    genCode(row.tableName).then(response => {
-      proxy.$modal.msgSuccess("成功生成到自定义路径：" + row.genPath);
-    });
-  } else {
-    proxy.$download.zip("/tool/gen/batchGenCode?tables=" + tbNames, "carole.zip");
-  } */
+  proxy.$download.zip("/tool/gen/batchGenCode?tables=" + tbNames, "nestry-admin.zip");
 }
 /** 同步数据库操作 */
 function handleSynchDb(row) {

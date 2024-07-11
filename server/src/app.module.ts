@@ -6,7 +6,6 @@ import { MiddlewareConsumer, Module, NestModule, ValidationError, ValidationPipe
 import { HttpModule } from '@nestjs/axios';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { ServeStaticModule } from '@nestjs/serve-static';
-import { TasksService } from './schedule';
 import { GlobalFiltersModule } from './module/common/filter/global-filters.module';
 import { AxiosModule } from './module/axios/axios.module';
 import { configuration } from './config/index';
@@ -24,6 +23,7 @@ import { AuthMiddleware } from '@/common/middleware/auth.middleware';
 import { RemoveThrottleHeadersInterceptor } from '@/common/interceptors/remove-throttle-headers.interceptor';
 import { RedisModule } from '@/module/redis';
 import { RedisService } from '@/module/redis/redis.service';
+import { TasksService } from '@/module/tasks/tasks.service';
 
 import '@/common/utils/email';
 
@@ -95,10 +95,10 @@ import '@/common/utils/email';
     { provide: APP_GUARD, useClass: PermissionGuard },
     { provide: APP_GUARD, useClass: RoleGuard },
     { provide: APP_INTERCEPTOR, useClass: RemoveThrottleHeadersInterceptor },
-    TasksService,
     PermissionGuard,
     RoleGuard,
     RedisService,
+    TasksService,
   ],
 })
 export class AppModule implements NestModule {

@@ -11,7 +11,6 @@ import { PostService } from './post/post.service';
 import { NoticeService } from './notice/notice.service';
 import { LogininforService } from './logininfor/logininfor.service';
 
-import { monitorController } from './monitor/monitor.controller';
 import { DeptController } from './dept/dept.controller';
 import { DictTypeController } from './dict-type/dict-type.controller';
 import { DictDataController } from './dict-data/dict-data.controller';
@@ -37,7 +36,6 @@ import { ConfigController } from './config/config.controller';
     LogininforService,
   ],
   controllers: [
-    monitorController,
     DeptController,
     DictTypeController,
     DictDataController,

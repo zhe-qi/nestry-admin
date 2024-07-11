@@ -14,3 +14,4 @@ export * from './sysConfigData';
 export * from './sysLogininforData';
 export * from './sysDictTypeData';
 export * from './sysNoticeData';
+export * from './jobData';

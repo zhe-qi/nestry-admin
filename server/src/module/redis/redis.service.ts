@@ -63,8 +63,9 @@ export class RedisService {
   }
 
   /* 删除操作 */
-  async del(key: string): Promise<number> {
-    return this.redis.del(key);
+  async del(keys: string | string[]): Promise<number> {
+    if (typeof keys === 'string') { keys = [keys]; }
+    return await this.redis.del(...keys);
   }
 
   /* 设置过期时间 */
@@ -74,7 +75,7 @@ export class RedisService {
 
   /* 获取所有 key */
   async keys(key?: string) {
-    return await this.redis.keys(key || '*');
+    return await this.redis.keys(key);
   }
 
   /* --------------------- hash 相关 -------------------------- */

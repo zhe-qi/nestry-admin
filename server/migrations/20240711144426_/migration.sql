@@ -1,4 +1,19 @@
 -- CreateTable
+CREATE TABLE `sys_upload` (
+    `upload_id` CHAR(64) NOT NULL,
+    `size` INTEGER UNSIGNED NULL,
+    `file_name` VARCHAR(100) NULL,
+    `new_file_name` VARCHAR(100) NULL,
+    `url` VARCHAR(500) NULL,
+    `ext` VARCHAR(50) NULL,
+    `status` CHAR(1) NULL DEFAULT '0',
+    `create_time` DATETIME NOT NULL DEFAULT NOW(),
+    `update_time` TIMESTAMP(0) NOT NULL DEFAULT NOW() ON UPDATE NOW(),
+
+    PRIMARY KEY (`upload_id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
 CREATE TABLE `gen_table` (
     `table_id` INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
     `table_name` VARCHAR(200) NULL DEFAULT '',
@@ -278,4 +293,37 @@ CREATE TABLE `sys_user_role` (
 
     INDEX `sys_user_role_role_id_idx`(`role_id`),
     PRIMARY KEY (`user_id`, `role_id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
+CREATE TABLE `sys_job` (
+    `job_id` INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
+    `job_name` VARCHAR(64) NOT NULL DEFAULT '',
+    `job_group` VARCHAR(64) NOT NULL DEFAULT 'DEFAULT',
+    `invoke_target` VARCHAR(500) NOT NULL,
+    `cron_expression` VARCHAR(255) NOT NULL DEFAULT '',
+    `misfire_policy` VARCHAR(20) NOT NULL DEFAULT '3',
+    `concurrent` CHAR(1) NOT NULL DEFAULT '1',
+    `status` CHAR(1) NOT NULL DEFAULT '0',
+    `create_by` VARCHAR(64) NULL DEFAULT '',
+    `create_time` VARCHAR(25) NOT NULL,
+    `update_by` VARCHAR(64) NULL DEFAULT '',
+    `update_time` VARCHAR(25) NULL,
+    `remark` VARCHAR(500) NULL DEFAULT '',
+
+    PRIMARY KEY (`job_id`)
+) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+
+-- CreateTable
+CREATE TABLE `sys_job_log` (
+    `job_log_id` INTEGER UNSIGNED NOT NULL AUTO_INCREMENT,
+    `job_name` VARCHAR(64) NOT NULL,
+    `job_group` VARCHAR(64) NOT NULL,
+    `invoke_target` VARCHAR(500) NOT NULL,
+    `job_message` VARCHAR(500) NULL,
+    `status` CHAR(1) NOT NULL DEFAULT '0',
+    `exception_info` VARCHAR(2000) NULL DEFAULT '',
+    `create_time` VARCHAR(25) NOT NULL,
+
+    PRIMARY KEY (`job_log_id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;

@@ -1,36 +1,39 @@
 import { PrismaClient } from '@prisma/client';
-import * as bcrypt from 'bcrypt';
-import { genTableColumn, genTableData, sysConfigData, sysDeptData, sysDictData, sysDictTypeData, sysLogininforData, sysMenuData, sysNoticeData, sysPostData, sysRoleData, sysRoleDeptData, sysRoleMenuData, sysUserData, sysUserPostData, sysUserRoleData } from './data';
+import { genTableColumn, genTableData, jobData, sysConfigData, sysDeptData, sysDictData, sysDictTypeData, sysLogininforData, sysMenuData, sysNoticeData, sysPostData, sysRoleData, sysRoleDeptData, sysRoleMenuData, sysUserData, sysUserPostData, sysUserRoleData } from './data';
 
 const prisma = new PrismaClient();
 
 async function main() {
-  const _sysUserData = sysUserData.map((item) => {
-    return {
-      ...item,
-      password: bcrypt.hashSync(item.password, bcrypt.genSaltSync(10)),
-    };
-  });
-
   // 禁用外键检查
   await prisma.$executeRaw`SET FOREIGN_KEY_CHECKS = 0;`;
 
-  await prisma.genTable.createMany({ data: genTableData });
-  await prisma.genTableColumn.createMany({ data: genTableColumn });
-  await prisma.sysConfig.createMany({ data: sysConfigData });
-  await prisma.sysDept.createMany({ data: sysDeptData });
-  await prisma.sysDictData.createMany({ data: sysDictData });
-  await prisma.sysDictType.createMany({ data: sysDictTypeData });
-  await prisma.sysLogininfor.createMany({ data: sysLogininforData });
-  await prisma.sysMenu.createMany({ data: sysMenuData });
-  await prisma.sysNotice.createMany({ data: sysNoticeData });
-  await prisma.sysPost.createMany({ data: sysPostData });
-  await prisma.sysRole.createMany({ data: sysRoleData });
-  await prisma.sysRoleDept.createMany({ data: sysRoleDeptData });
-  await prisma.sysRoleMenu.createMany({ data: sysRoleMenuData });
-  await prisma.sysUser.createMany({ data: _sysUserData });
-  await prisma.sysUserRole.createMany({ data: sysUserRoleData });
-  await prisma.sysUserPost.createMany({ data: sysUserPostData });
+  const operations = [
+    prisma.genTable.createMany({ data: genTableData }),
+    prisma.genTableColumn.createMany({ data: genTableColumn }),
+    prisma.sysConfig.createMany({ data: sysConfigData }),
+    prisma.sysDept.createMany({ data: sysDeptData }),
+    prisma.sysDictData.createMany({ data: sysDictData }),
+    prisma.sysDictType.createMany({ data: sysDictTypeData }),
+    prisma.sysLogininfor.createMany({ data: sysLogininforData }),
+    prisma.sysMenu.createMany({ data: sysMenuData }),
+    prisma.sysNotice.createMany({ data: sysNoticeData }),
+    prisma.sysPost.createMany({ data: sysPostData }),
+    prisma.sysRole.createMany({ data: sysRoleData }),
+    prisma.sysRoleDept.createMany({ data: sysRoleDeptData }),
+    prisma.sysRoleMenu.createMany({ data: sysRoleMenuData }),
+    prisma.sysUser.createMany({ data: sysUserData }),
+    prisma.sysUserRole.createMany({ data: sysUserRoleData }),
+    prisma.sysUserPost.createMany({ data: sysUserPostData }),
+    prisma.sysJob.createMany({ data: jobData }),
+  ];
+
+  Promise.allSettled(operations).then((results) => {
+    results.forEach((result, index) => {
+      if (result.status === 'rejected') {
+        console.error(`Operation ${index + 1} failed:`, result.reason);
+      }
+    });
+  });
 
   // 启用外键检查
   await prisma.$executeRaw`SET FOREIGN_KEY_CHECKS = 1;`;

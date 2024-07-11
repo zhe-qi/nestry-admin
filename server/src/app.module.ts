@@ -14,6 +14,11 @@ import { GenModule } from './module/gen/gen.module';
 import { SystemModule } from './module/system/system.module';
 import { PrismaModule } from './module/prisma/prisma.module';
 import { AuthModule } from './module/system/auth/auth.module';
+import { ServerModule } from './module/monitor/server/server.module';
+import { RedisService } from './module/redis/redis.service';
+import { TasksService } from './module/tasks/tasks.service';
+import { CacheModule } from './module/monitor/cache/cache.module';
+import { OnlineModule } from './module/monitor/online/online.module';
 import { ThrottlerCustomGuard } from '@/common/guard/throttler-custom.guard';
 import { ValidationException } from '@/common/exception/validation';
 import { RoleGuard } from '@/common/guard/role.guard';
@@ -21,8 +26,6 @@ import { PermissionGuard } from '@/common/guard/permission.guard';
 import { AuthMiddleware } from '@/common/middleware/auth.middleware';
 import { RemoveThrottleHeadersInterceptor } from '@/common/interceptors/remove-throttle-headers.interceptor';
 import { RedisModule } from '@/module/redis';
-import { RedisService } from '@/module/redis/redis.service';
-import { TasksService } from '@/module/tasks/tasks.service';
 
 import { AuthorizationFilter, BadRequestFilter, ForbiddenExceptionFilter, GlobalErrorFilter, MulterErrFilter, NotFoundErrFilter, PayloadTooLargeFilter, ThrottlerExceptionFilter, ValidationExceptionFilter } from '@/common/filter/global-error.filter';
 
@@ -84,6 +87,9 @@ import '@/common/utils/email';
     UploadModule,
     PrismaModule,
     AuthModule,
+    ServerModule,
+    CacheModule,
+    OnlineModule,
   ],
   controllers: [],
   providers: [

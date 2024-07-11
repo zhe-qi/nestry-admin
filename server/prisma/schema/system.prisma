@@ -1,3 +1,4 @@
+// 全局参数配置表
 model SysConfig {
   configId    Int     @id @default(autoincrement()) @map("config_id")
   configName  String? @default("") @map("config_name") @db.VarChar(100)
@@ -13,6 +14,7 @@ model SysConfig {
   @@map("sys_config")
 }
 
+// 部门表
 model SysDept {
   deptId     Int           @id @default(autoincrement()) @map("dept_id") @db.UnsignedInt
   parentId   Int?          @default(0) @map("parent_id") @db.UnsignedInt
@@ -33,6 +35,7 @@ model SysDept {
   @@map("sys_dept")
 }
 
+// 字典数据表
 model SysDictData {
   dictCode    Int          @id @default(autoincrement()) @map("dict_code") @db.UnsignedInt
   dictSort    Int?         @default(0) @map("dict_sort")
@@ -54,6 +57,7 @@ model SysDictData {
   @@map("sys_dict_data")
 }
 
+// 字典类型表
 model SysDictType {
   dictId     Int           @id @default(autoincrement()) @map("dict_id") @db.UnsignedInt
   dictName   String?       @default("") @map("dict_name") @db.VarChar(100)
@@ -69,6 +73,7 @@ model SysDictType {
   @@map("sys_dict_type")
 }
 
+// 登录日志表
 model SysLogininfor {
   infoId        Int     @id @default(autoincrement()) @map("info_id") @db.UnsignedInt
   userName      String? @default("") @map("user_name") @db.VarChar(50)
@@ -85,6 +90,7 @@ model SysLogininfor {
   @@map("sys_logininfor")
 }
 
+// 操作日志记录表
 model SysMenu {
   menuId     Int           @id @default(autoincrement()) @map("menu_id") @db.UnsignedInt
   menuName   String        @map("menu_name") @db.VarChar(50)
@@ -110,6 +116,7 @@ model SysMenu {
   @@map("sys_menu")
 }
 
+// 通知公告表
 model SysNotice {
   noticeId      Int     @id @default(autoincrement()) @map("notice_id")
   noticeTitle   String  @map("notice_title") @db.VarChar(50)
@@ -125,6 +132,7 @@ model SysNotice {
   @@map("sys_notice")
 }
 
+// 岗位信息表
 model SysPost {
   postId     Int           @id @default(autoincrement()) @map("post_id") @db.UnsignedInt
   postCode   String        @map("post_code") @db.VarChar(64)
@@ -141,6 +149,7 @@ model SysPost {
   @@map("sys_post")
 }
 
+// 用户和岗位关联表
 model SysUserPost {
   userId Int     @map("user_id") @db.UnsignedInt
   postId Int     @map("post_id") @db.UnsignedInt
@@ -152,6 +161,7 @@ model SysUserPost {
   @@map("sys_user_post")
 }
 
+// 角色和部门关联表
 model SysRoleDept {
   roleId Int     @map("role_id") @db.UnsignedInt
   deptId Int     @map("dept_id") @db.UnsignedInt
@@ -163,6 +173,7 @@ model SysRoleDept {
   @@map("sys_role_dept")
 }
 
+// 角色和菜单关联表
 model SysRoleMenu {
   roleId Int     @map("role_id") @db.UnsignedInt
   menuId Int     @map("menu_id") @db.UnsignedInt
@@ -174,6 +185,7 @@ model SysRoleMenu {
   @@map("sys_role_menu")
 }
 
+// 用户信息表
 model SysUser {
   userId      Int           @id @default(autoincrement()) @map("user_id") @db.UnsignedInt
   deptId      Int?          @map("dept_id") @db.UnsignedInt
@@ -201,6 +213,7 @@ model SysUser {
   @@map("sys_user")
 }
 
+// 角色信息表
 model SysRole {
   roleId            Int           @id @default(autoincrement()) @map("role_id") @db.UnsignedInt
   roleName          String        @map("role_name") @db.VarChar(30)
@@ -222,6 +235,7 @@ model SysRole {
   @@map("sys_role")
 }
 
+// 用户和角色关联表
 model SysUserRole {
   userId Int     @map("user_id") @db.UnsignedInt
   roleId Int     @map("role_id") @db.UnsignedInt
@@ -231,4 +245,37 @@ model SysUserRole {
   @@id([userId, roleId])
   @@index([roleId])
   @@map("sys_user_role")
+}
+
+// 定时任务调度表
+model SysJob {
+  jobId           Int     @id @default(autoincrement()) @map("job_id") @db.UnsignedInt
+  jobName         String  @default("") @map("job_name") @db.VarChar(64)
+  jobGroup        String  @default("DEFAULT") @map("job_group") @db.VarChar(64)
+  invokeTarget    String  @map("invoke_target") @db.VarChar(500)
+  cronExpression  String  @default("") @map("cron_expression") @db.VarChar(255)
+  misfirePolicy   String  @default("3") @map("misfire_policy") @db.VarChar(20)
+  concurrent      String  @default("1") @map("concurrent") @db.Char(1)
+  status          String  @default("0") @map("status") @db.Char(1)
+  createBy        String?  @default("") @map("create_by") @db.VarChar(64)
+  createTime      String  @map("create_time") @db.VarChar(25)
+  updateBy        String?  @default("") @map("update_by") @db.VarChar(64)
+  updateTime      String?  @map("update_time") @db.VarChar(25)
+  remark          String?  @default("") @map("remark") @db.VarChar(500)
+
+  @@map("sys_job")
+}
+
+// 定时任务调度日志表
+model SysJobLog {
+  jobLogId      Int     @id @default(autoincrement()) @map("job_log_id") @db.UnsignedInt
+  jobName       String  @map("job_name") @db.VarChar(64)
+  jobGroup      String  @map("job_group") @db.VarChar(64)
+  invokeTarget  String  @map("invoke_target") @db.VarChar(500)
+  jobMessage    String? @map("job_message") @db.VarChar(500)
+  status        String  @default("0") @map("status") @db.Char(1)
+  exceptionInfo String? @default("") @map("exception_info") @db.VarChar(2000)
+  createTime    String  @map("create_time") @db.VarChar(25)
+
+  @@map("sys_job_log")
 }

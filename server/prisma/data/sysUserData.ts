@@ -1,4 +1,7 @@
-export const sysUserData = [
+import * as bcrypt from 'bcrypt';
+import { SysUser } from '@prisma/client';
+
+export const sysUserData: SysUser[] = [
   {
     userId: 1,
     deptId: 103,
@@ -9,7 +12,7 @@ export const sysUserData = [
     phonenumber: '18888888888',
     sex: '0',
     avatar: '',
-    password: '123456',
+    password: bcrypt.hashSync('123456', bcrypt.genSaltSync(10)),
     status: '1',
     loginIp: '127.0.0.1',
     loginDate: '2023-12-21 15:19:31',

@@ -18,8 +18,8 @@ importers:
         specifier: 10.11.0
         version: 10.11.0(vue@3.4.31)
       axios:
-        specifier: 0.27.2
-        version: 0.27.2
+        specifier: 1.7.2
+        version: 1.7.2
       echarts:
         specifier: 5.5.1
         version: 5.5.1
@@ -30,11 +30,11 @@ importers:
         specifier: 2.0.5
         version: 2.0.5
       fuse.js:
-        specifier: 6.6.2
-        version: 6.6.2
+        specifier: 7.0.0
+        version: 7.0.0
       highlight.js:
-        specifier: ^11.9.0
-        version: 11.9.0
+        specifier: ^11.10.0
+        version: 11.10.0
       js-cookie:
         specifier: 3.0.5
         version: 3.0.5
@@ -59,7 +59,7 @@ importers:
     devDependencies:
       '@vitejs/plugin-vue':
         specifier: 5.0.5
-        version: 5.0.5(vite@5.3.3(@types/node@20.14.9)(sass@1.77.6))(vue@3.4.31)
+        version: 5.0.5(vite@5.3.3(@types/node@20.14.9)(sass@1.77.7))(vue@3.4.31)
       '@vue/compiler-sfc':
         specifier: 3.4.31
         version: 3.4.31
@@ -70,8 +70,8 @@ importers:
         specifier: ^8.4.39
         version: 8.4.39
       sass:
-        specifier: 1.77.6
-        version: 1.77.6
+        specifier: 1.77.7
+        version: 1.77.7
       tailwindcss:
         specifier: ^3.4.4
         version: 3.4.4
@@ -83,13 +83,13 @@ importers:
         version: 1.0.1
       vite:
         specifier: 5.3.3
-        version: 5.3.3(@types/node@20.14.9)(sass@1.77.6)
+        version: 5.3.3(@types/node@20.14.9)(sass@1.77.7)
       vite-plugin-compression:
         specifier: 0.5.1
-        version: 0.5.1(vite@5.3.3(@types/node@20.14.9)(sass@1.77.6))
+        version: 0.5.1(vite@5.3.3(@types/node@20.14.9)(sass@1.77.7))
       vite-plugin-svg-icons:
         specifier: 2.0.1
-        version: 2.0.1(vite@5.3.3(@types/node@20.14.9)(sass@1.77.6))
+        version: 2.0.1(vite@5.3.3(@types/node@20.14.9)(sass@1.77.7))
 
 packages:
 
@@ -588,8 +588,8 @@ packages:
     resolution: {integrity: sha512-wvUjBtSGN7+7SjNpq/9M2Tg350UZD3q62IFZLbRAR1bSMlCo1ZaeW+BJ+D090e4hIIZLBcTDWe4Mh4jvUDajzQ==}
     engines: {node: '>= 0.4'}
 
-  axios@0.27.2:
-    resolution: {integrity: sha512-t+yRIyySRTp/wua5xEr+z1q60QmLq8ABsS5O9Me1AsE5dfKqgnCFzwiCZZ/cGNd1lq4/7akDWMxdhVlucjmnOQ==}
+  axios@1.7.2:
+    resolution: {integrity: sha512-2A8QhOMrbomlDuiLeK9XibIBzuHeRcqqNOHp0Cyp5EoJ1IFDh+XZH3A6BkXtv0K4gFGCI0Y4BM7B1wOEi0Rmgw==}
 
   balanced-match@1.0.2:
     resolution: {integrity: sha512-3oSeUO0TMV67hN1AmbXsK4yaqU7tjiHlbxRDZOpH0KW9+CeX4bRAaX0Anxt0tx2MrpRpWwQaPwIlISEJhYU5Pw==}
@@ -1005,8 +1005,8 @@ packages:
   functions-have-names@1.2.3:
     resolution: {integrity: sha512-xckBUXyTIqT97tq2x2AMb+g163b5JFysYk0x4qxNFwbfQkmNZoiRHb6sPzI9/QV33WeuvVYBUIiD4NzNIyqaRQ==}
 
-  fuse.js@6.6.2:
-    resolution: {integrity: sha512-cJaJkxCCxC8qIIcPBF9yGxY0W/tVZS3uEISDxhYIdtk8OL93pe+6Zj7LjCqVV4dzbqcriOZ+kQ/NE4RXZHsIGA==}
+  fuse.js@7.0.0:
+    resolution: {integrity: sha512-14F4hBIxqKvD4Zz/XjDc3y94mNZN6pRv3U13Udo0lNLCWRBUsrMv2xwcF/y/Z5sV6+FQW+/ow68cHpm4sunt8Q==}
     engines: {node: '>=10'}
 
   get-intrinsic@1.2.4:
@@ -1098,8 +1098,8 @@ packages:
     resolution: {integrity: sha512-F/1DnUGPopORZi0ni+CvrCgHQ5FyEAHRLSApuYWMmrbSwoN2Mn/7k+Gl38gJnR7yyDZk6WLXwiGod1JOWNDKGw==}
     hasBin: true
 
-  highlight.js@11.9.0:
-    resolution: {integrity: sha512-fJ7cW7fQGCYAkgv4CPfwFHrfd/cLS4Hau96JuJ+ZTOWhjnhoeN1ub1tFmALm/+lW5z4WCAuAV9bm05AP0mS6Gw==}
+  highlight.js@11.10.0:
+    resolution: {integrity: sha512-SYVnVFswQER+zu1laSya563s+F8VDGt7o35d4utbamowvUNLLMovFqwCLSocpZTz3MgaSRA1IbqRWZv97dtErQ==}
     engines: {node: '>=12.0.0'}
 
   htmlparser2@3.10.1:
@@ -1617,6 +1617,9 @@ packages:
     resolution: {integrity: sha512-spBB5sgC4cv2YcW03f/IAUN1pgDJWNWD8FzkyY4mArLUMJW+KlQhlmUdKAHQuPfb00Jl5xIfImeOsf6YL8QK7Q==}
     engines: {node: '>=0.10.0'}
 
+  proxy-from-env@1.1.0:
+    resolution: {integrity: sha512-D+zkORCbA9f1tdWRK0RaCR3GPv50cMxcrz4X8k5LTSUD1Dkw47mKJEZQNunItRTkWwgtaUSo1RVFRIG9ZXiFYg==}
+
   query-string@4.3.4:
     resolution: {integrity: sha512-O2XLNDBIg1DnTOa+2XrIwSiXEV8h2KImXUnjhhn2+UsvZ+Es2uyd5CCRTNQlDGbzUQOW3aYCBx9rVA6dzsiY7Q==}
     engines: {node: '>=0.10.0'}
@@ -1699,8 +1702,8 @@ packages:
   safe-regex@1.1.0:
     resolution: {integrity: sha512-aJXcif4xnaNUzvUuC5gcb46oTS7zvg4jpMTnuqtrEPlR3vFr4pxtdTwaF1Qs3Enjn9HK+ZlwQui+a7z0SywIzg==}
 
-  sass@1.77.6:
-    resolution: {integrity: sha512-ByXE1oLD79GVq9Ht1PeHWCPMPB8XHpBuz1r85oByKHjZY6qV6rWnQovQzXJXuQ/XyE1Oj3iPk3lo28uzaRA2/Q==}
+  sass@1.77.7:
+    resolution: {integrity: sha512-9ywH75cO+rLjbrZ6en3Gp8qAMwPGBapFtlsMJoDTkcMU/bSe5a6cjKVUn5Jr4Gzg5GbP3HE8cm+02pLCgcoMow==}
     engines: {node: '>=14.0.0'}
     hasBin: true
 
@@ -2306,9 +2309,9 @@ snapshots:
 
   '@types/web-bluetooth@0.0.20': {}
 
-  '@vitejs/plugin-vue@5.0.5(vite@5.3.3(@types/node@20.14.9)(sass@1.77.6))(vue@3.4.31)':
+  '@vitejs/plugin-vue@5.0.5(vite@5.3.3(@types/node@20.14.9)(sass@1.77.7))(vue@3.4.31)':
     dependencies:
-      vite: 5.3.3(@types/node@20.14.9)(sass@1.77.6)
+      vite: 5.3.3(@types/node@20.14.9)(sass@1.77.7)
       vue: 3.4.31
 
   '@vue/compiler-core@3.4.31':
@@ -2482,10 +2485,11 @@ snapshots:
     dependencies:
       possible-typed-array-names: 1.0.0
 
-  axios@0.27.2:
+  axios@1.7.2:
     dependencies:
       follow-redirects: 1.15.6
       form-data: 4.0.0
+      proxy-from-env: 1.1.0
     transitivePeerDependencies:
       - debug
 
@@ -3027,7 +3031,7 @@ snapshots:
 
   functions-have-names@1.2.3: {}
 
-  fuse.js@6.6.2: {}
+  fuse.js@7.0.0: {}
 
   get-intrinsic@1.2.4:
     dependencies:
@@ -3120,7 +3124,7 @@ snapshots:
 
   he@1.2.0: {}
 
-  highlight.js@11.9.0: {}
+  highlight.js@11.10.0: {}
 
   htmlparser2@3.10.1:
     dependencies:
@@ -3605,6 +3609,8 @@ snapshots:
       posthtml-parser: 0.2.1
       posthtml-render: 1.4.0
 
+  proxy-from-env@1.1.0: {}
+
   query-string@4.3.4:
     dependencies:
       object-assign: 4.1.1
@@ -3720,7 +3726,7 @@ snapshots:
     dependencies:
       ret: 0.1.15
 
-  sass@1.77.6:
+  sass@1.77.7:
     dependencies:
       chokidar: 3.6.0
       immutable: 4.3.6
@@ -4114,16 +4120,16 @@ snapshots:
 
   vary@1.1.2: {}
 
-  vite-plugin-compression@0.5.1(vite@5.3.3(@types/node@20.14.9)(sass@1.77.6)):
+  vite-plugin-compression@0.5.1(vite@5.3.3(@types/node@20.14.9)(sass@1.77.7)):
     dependencies:
       chalk: 4.1.2
       debug: 4.3.5
       fs-extra: 10.1.0
-      vite: 5.3.3(@types/node@20.14.9)(sass@1.77.6)
+      vite: 5.3.3(@types/node@20.14.9)(sass@1.77.7)
     transitivePeerDependencies:
       - supports-color
 
-  vite-plugin-svg-icons@2.0.1(vite@5.3.3(@types/node@20.14.9)(sass@1.77.6)):
+  vite-plugin-svg-icons@2.0.1(vite@5.3.3(@types/node@20.14.9)(sass@1.77.7)):
     dependencies:
       '@types/svgo': 2.6.4
       cors: 2.8.5
@@ -4133,11 +4139,11 @@ snapshots:
       pathe: 0.2.0
       svg-baker: 1.7.0
       svgo: 2.8.0
-      vite: 5.3.3(@types/node@20.14.9)(sass@1.77.6)
+      vite: 5.3.3(@types/node@20.14.9)(sass@1.77.7)
     transitivePeerDependencies:
       - supports-color
 
-  vite@5.3.3(@types/node@20.14.9)(sass@1.77.6):
+  vite@5.3.3(@types/node@20.14.9)(sass@1.77.7):
     dependencies:
       esbuild: 0.21.5
       postcss: 8.4.39
@@ -4145,7 +4151,7 @@ snapshots:
     optionalDependencies:
       '@types/node': 20.14.9
       fsevents: 2.3.3
-      sass: 1.77.6
+      sass: 1.77.7
 
   vue-cropper@1.1.1: {}
 

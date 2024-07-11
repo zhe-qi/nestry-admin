@@ -1,4 +1,4 @@
-import { APP_GUARD, APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core';
+import { APP_FILTER, APP_GUARD, APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core';
 import { ThrottlerModule } from '@nestjs/throttler';
 import { ScheduleModule } from '@nestjs/schedule';
 import { ThrottlerStorageRedisService } from 'nestjs-throttler-storage-redis';
@@ -6,7 +6,6 @@ import { MiddlewareConsumer, Module, NestModule, ValidationError, ValidationPipe
 import { HttpModule } from '@nestjs/axios';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { ServeStaticModule } from '@nestjs/serve-static';
-import { GlobalFiltersModule } from './module/common/filter/global-filters.module';
 import { AxiosModule } from './module/axios/axios.module';
 import { configuration } from './config/index';
 import { CaptchaModule } from './module/common/captcha/captcha.module';
@@ -24,6 +23,8 @@ import { RemoveThrottleHeadersInterceptor } from '@/common/interceptors/remove-t
 import { RedisModule } from '@/module/redis';
 import { RedisService } from '@/module/redis/redis.service';
 import { TasksService } from '@/module/tasks/tasks.service';
+
+import { AuthorizationFilter, BadRequestFilter, ForbiddenExceptionFilter, GlobalErrorFilter, MulterErrFilter, NotFoundErrFilter, PayloadTooLargeFilter, ThrottlerExceptionFilter, ValidationExceptionFilter } from '@/common/filter/global-error.filter';
 
 import '@/common/utils/email';
 
@@ -76,7 +77,6 @@ import '@/common/utils/email';
     }),
     ScheduleModule.forRoot(),
     HttpModule,
-    GlobalFiltersModule,
     AxiosModule,
     CaptchaModule,
     GenModule,
@@ -99,6 +99,15 @@ import '@/common/utils/email';
     RoleGuard,
     RedisService,
     TasksService,
+    { provide: APP_FILTER, useClass: GlobalErrorFilter },
+    { provide: APP_FILTER, useClass: BadRequestFilter },
+    { provide: APP_FILTER, useClass: ThrottlerExceptionFilter },
+    { provide: APP_FILTER, useClass: PayloadTooLargeFilter },
+    { provide: APP_FILTER, useClass: AuthorizationFilter },
+    { provide: APP_FILTER, useClass: ForbiddenExceptionFilter },
+    { provide: APP_FILTER, useClass: ValidationExceptionFilter },
+    { provide: APP_FILTER, useClass: MulterErrFilter },
+    { provide: APP_FILTER, useClass: NotFoundErrFilter },
   ],
 })
 export class AppModule implements NestModule {

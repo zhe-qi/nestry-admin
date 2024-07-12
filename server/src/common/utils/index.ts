@@ -4,6 +4,7 @@ import utc from 'dayjs/plugin/utc';
 import timezone from 'dayjs/plugin/timezone';
 import 'dayjs/locale/zh-cn';
 import { camelCase } from 'lodash';
+import { isNotEmpty } from 'class-validator';
 
 day.extend(utc);
 day.extend(timezone);
@@ -108,4 +109,20 @@ export function tree(
 /** @desc 转换为camelCase并且首字母大写 */
 export function toPascalCase(str) {
   return str[0].toUpperCase() + camelCase(str).slice(1);
+}
+
+// 全局通用处理函数，用于构建查询条件
+export function buildQueryCondition<T, R>(q: T, conditions: Record<string, any>): R {
+  const queryCondition: Record<string, any> = {};
+
+  Object.entries(conditions).forEach(([key, value]) => {
+    if (q[key] !== undefined && q[key] !== null && q[key] !== '') {
+      const condition = value(q[key]);
+      if (condition !== undefined) {
+        queryCondition[key] = condition;
+      }
+    }
+  });
+
+  return queryCondition as R;
 }

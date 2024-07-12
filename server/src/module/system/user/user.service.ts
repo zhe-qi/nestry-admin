@@ -10,6 +10,7 @@ import { PrismaService } from '@/module/prisma/prisma.service';
 import Result from '@/common/utils/result';
 import { Constants } from '@/common/constant/constants';
 import { RedisService } from '@/module/redis/redis.service';
+import { buildQueryCondition } from '@/common/utils';
 
 @Injectable()
 export class UserService {
@@ -22,17 +23,23 @@ export class UserService {
 
   /** @description 分页查询用户列表 */
   async selectUserList(q: QuerySysUserDto) {
-    const queryCondition: Prisma.SysUserWhereInput = {};
+    // 定义查询条件的处理规则
+    const conditions = {
+      deptId: () => ({ equals: q.deptId }),
+      userName: () => ({ contains: q.userName }),
+      nickName: () => ({ contains: q.nickName }),
+      userType: () => ({ equals: q.userType }),
+      email: () => ({ contains: q.email }),
+      phonenumber: () => ({ contains: q.phonenumber }),
+      sex: () => ({ equals: q.sex }),
+      avatar: () => ({ equals: q.avatar }),
+      password: () => ({ equals: q.password }),
+      status: () => ({ equals: q.status }),
+      loginIp: () => ({ equals: q.loginIp }),
+    };
 
-    // 使用循环简化重复的条件赋值
-    const fields = ['deptId', 'userName', 'nickName', 'userType', 'email', 'phonenumber', 'sex', 'avatar', 'password', 'status', 'loginIp'];
-    fields.forEach((field) => {
-      if (isNotEmpty(q[field])) {
-        queryCondition[field] = field === 'userName' || field === 'nickName' || field === 'email' || field === 'phonenumber'
-          ? { contains: q[field] }
-          : { equals: q[field] };
-      }
-    });
+    // 使用全局通用处理函数构建查询条件
+    const queryCondition = buildQueryCondition<QuerySysUserDto, Prisma.SysUserWhereInput>(q, conditions);
 
     // 处理日期范围查询条件
     const dateRanges = {

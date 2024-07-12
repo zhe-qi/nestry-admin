@@ -16,9 +16,9 @@ import { PrismaModule } from './module/prisma/prisma.module';
 import { AuthModule } from './module/system/auth/auth.module';
 import { ServerModule } from './module/monitor/server/server.module';
 import { RedisService } from './module/redis/redis.service';
-import { TasksService } from './module/tasks/tasks.service';
 import { CacheModule } from './module/monitor/cache/cache.module';
 import { OnlineModule } from './module/monitor/online/online.module';
+import { JobModule } from './module/monitor/job/job.module';
 import { ThrottlerCustomGuard } from '@/common/guard/throttler-custom.guard';
 import { ValidationException } from '@/common/exception/validation';
 import { RoleGuard } from '@/common/guard/role.guard';
@@ -90,6 +90,7 @@ import '@/common/utils/email';
     ServerModule,
     CacheModule,
     OnlineModule,
+    JobModule,
   ],
   controllers: [],
   providers: [
@@ -104,7 +105,6 @@ import '@/common/utils/email';
     PermissionGuard,
     RoleGuard,
     RedisService,
-    TasksService,
     { provide: APP_FILTER, useClass: GlobalErrorFilter },
     { provide: APP_FILTER, useClass: BadRequestFilter },
     { provide: APP_FILTER, useClass: ThrottlerExceptionFilter },

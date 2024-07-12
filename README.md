@@ -9,9 +9,11 @@
 
 临时文档地址：[https://zheqi.netlify.app/admin/](https://zheqi.netlify.app/admin/)
 
-## 当前fork分支路线图
+## 当前fork分支路线图（不包含第一版发布更改）
 
 > 当前版本快速迭代中，不是很稳定，且更新频繁，请勿上生产环境！！！
+
+进行中的任务代表未完成的任务，很可能包含bug和一部分未完成功能
 
 - 持续优化代码性能，代码结构，优化若依UI，解耦代码 [持续进行中]
 - 添加 DockerFile 和 DockerCompose [已完成]
@@ -23,6 +25,9 @@
 - 重构上传模块 [已完成]
 - redis修改为redis模块，redis services [已完成]
 
+- 添加定时任务页面 [开发中]
+- 添加自动类型推导IsNumber直接从DTO类型中获取 [未开始] [待定]
+- 近一步简化CRUD的代码，规范CRUD的代码结构，抽离复用函数 [未开始]
 - 修改为passport全家桶 [未开始] [待定]
 - 从 express 替换至 fastify [未开始] [待定]
 - 优化模板引擎，优化模板 [未开始]
@@ -35,6 +40,11 @@
 如果有好的想法或者建议，欢迎提出issue，加入到任务队列
 
 不定期同步ruoyi-vue3和carole-admin的部分更新。
+
+！！！ 导出excel函数在 controller不能在最后一个，否则报错500，情况未知
+
+TODO: 
+1. 修复前端部分页面sass混入报错
 
 本地快速启动流程
 ```bash

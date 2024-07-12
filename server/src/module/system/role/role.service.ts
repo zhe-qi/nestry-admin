@@ -6,6 +6,7 @@ import { CreateSysRoleDto, QueryAllocatedListDto, QuerySysRoleDto, UpdateSysRole
 import { exportTable } from '@/common/utils/export';
 import { PrismaService } from '@/module/prisma/prisma.service';
 import { AuthService } from '@/module/system/auth/auth.service';
+import { buildQueryCondition } from '@/common/utils';
 
 @Injectable()
 export class RoleService {
@@ -18,60 +19,29 @@ export class RoleService {
 
   /** @description 分页查询角色管理列表 */
   async selectRoleList(q: QuerySysRoleDto) {
-    const queryCondition: Prisma.SysRoleWhereInput = {};
-    if (isNotEmpty(q.roleName)) {
-      queryCondition.roleName = {
-        contains: q.roleName,
-      };
+    // 定义一个映射关系，将条件字段映射到处理函数
+    const conditions = {
+      roleName: () => ({ contains: q.roleName }),
+      roleKey: () => ({ contains: q.roleKey }),
+      roleSort: () => ({ equals: q.roleSort }),
+      dataScope: () => ({ equals: q.dataScope }),
+      menuCheckStrictly: () => ({ equals: q.menuCheckStrictly }),
+      deptCheckStrictly: () => ({ equals: q.deptCheckStrictly }),
+      status: () => ({ equals: q.status }),
+      beginCreateTime: () => q.params.endCreateTime ? { lte: q.params.endCreateTime, gte: q.params.beginCreateTime } : undefined,
+      beginUpdateTime: () => q.params.endUpdateTime ? { lte: q.params.endUpdateTime, gte: q.params.beginUpdateTime } : undefined,
+    };
+
+    const queryCondition = buildQueryCondition<QuerySysRoleDto, Prisma.SysRoleWhereInput>(q, conditions);
+
+    // 特殊处理时间范围条件，因为它们依赖于两个字段
+    if (isNotEmpty(q.params.beginCreateTime) && isNotEmpty(q.params.endCreateTime)) {
+      queryCondition.createTime = conditions.beginCreateTime();
     }
-    if (isNotEmpty(q.roleKey)) {
-      queryCondition.roleKey = {
-        contains: q.roleKey,
-      };
+    if (isNotEmpty(q.params.beginUpdateTime) && isNotEmpty(q.params.endUpdateTime)) {
+      queryCondition.updateTime = conditions.beginUpdateTime();
     }
-    if (isNotEmpty(q.roleSort)) {
-      queryCondition.roleSort = {
-        equals: q.roleSort,
-      };
-    }
-    if (isNotEmpty(q.dataScope)) {
-      queryCondition.dataScope = {
-        equals: q.dataScope,
-      };
-    }
-    if (isNotEmpty(q.menuCheckStrictly)) {
-      queryCondition.menuCheckStrictly = {
-        equals: q.menuCheckStrictly,
-      };
-    }
-    if (isNotEmpty(q.deptCheckStrictly)) {
-      queryCondition.deptCheckStrictly = {
-        equals: q.deptCheckStrictly,
-      };
-    }
-    if (isNotEmpty(q.status)) {
-      queryCondition.status = {
-        equals: q.status,
-      };
-    }
-    if (
-      isNotEmpty(q.params.beginCreateTime)
-      && isNotEmpty(q.params.endCreateTime)
-    ) {
-      queryCondition.createTime = {
-        lte: q.params.endCreateTime,
-        gte: q.params.beginCreateTime,
-      };
-    }
-    if (
-      isNotEmpty(q.params.beginUpdateTime)
-      && isNotEmpty(q.params.endUpdateTime)
-    ) {
-      queryCondition.updateTime = {
-        lte: q.params.endUpdateTime,
-        gte: q.params.beginUpdateTime,
-      };
-    }
+
     return {
       rows: await this.prisma.sysRole.findMany({
         skip: (q.pageNum - 1) * q.pageSize,

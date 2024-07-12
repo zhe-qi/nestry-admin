@@ -306,7 +306,7 @@ CREATE TABLE `sys_job` (
     `concurrent` CHAR(1) NOT NULL DEFAULT '1',
     `status` CHAR(1) NOT NULL DEFAULT '0',
     `create_by` VARCHAR(64) NULL DEFAULT '',
-    `create_time` VARCHAR(25) NOT NULL,
+    `create_time` VARCHAR(25) NULL,
     `update_by` VARCHAR(64) NULL DEFAULT '',
     `update_time` VARCHAR(25) NULL,
     `remark` VARCHAR(500) NULL DEFAULT '',
@@ -323,7 +323,7 @@ CREATE TABLE `sys_job_log` (
     `job_message` VARCHAR(500) NULL,
     `status` CHAR(1) NOT NULL DEFAULT '0',
     `exception_info` VARCHAR(2000) NULL DEFAULT '',
-    `create_time` VARCHAR(25) NOT NULL,
+    `create_time` VARCHAR(25) NULL,
 
     PRIMARY KEY (`job_log_id`)
 ) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;

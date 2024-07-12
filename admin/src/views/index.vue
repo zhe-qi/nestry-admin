@@ -8,7 +8,9 @@
           前端基于<el-link type="primary" href='https://github.com/yangzongzhuan/RuoYi-Vue3'>若依</el-link>。
           后端基于<el-link type="primary" href='https://github.com/Carole007/carole-admin'>carole-admin 二次开发</el-link>。
         </p>
-        <p><el-link type="primary" href="https://github.com/Carole007/carole-admin?tab=readme-ov-file#%E6%96%87%E6%A1%A3" icon="document">查看文档</el-link></p>
+        <p><el-link type="primary"
+            href="https://github.com/Carole007/carole-admin?tab=readme-ov-file#%E6%96%87%E6%A1%A3"
+            icon="document">查看文档</el-link></p>
         <ul style="list-style: circle;padding-left: 15px;">
           <li>前端采用Vue3、Element-Plus、Vite。</li>
           <li>后端采用Nest、Prisma、Redis &amp; Jwt。</li>
@@ -24,10 +26,9 @@
           <el-tag type="danger">免费开源</el-tag>
         </p>
         <p>
-          <el-button type="primary" plain @click="goTarget('https://github.com/zhe-qi/carole-admin/tree/master')"> 
+          <el-button type="primary" plain @click="goTarget('https://github.com/zhe-qi/carole-admin/tree/master')">
             <div class="flex items-center gap-1">
-              <svg-icon
-              icon-class="github" />
+              <svg-icon icon-class="github" />
               <div>github</div>
             </div>
           </el-button>
@@ -129,14 +130,16 @@ function goTarget(url) {
     margin: 0;
   }
 
-  font-family: "open sans",
-  "Helvetica Neue",
-  Helvetica,
-  Arial,
-  sans-serif;
-  font-size: 13px;
-  color: #676a6c;
-  overflow-x: hidden;
+  & {
+    font-family: "open sans",
+      "Helvetica Neue",
+      Helvetica,
+      Arial,
+      sans-serif;
+    font-size: 13px;
+    color: #676a6c;
+    overflow-x: hidden;
+  }
 
   ul {
     list-style-type: none;

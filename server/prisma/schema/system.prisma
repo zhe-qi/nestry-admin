@@ -249,19 +249,19 @@ model SysUserRole {
 
 // 定时任务调度表
 model SysJob {
-  jobId           Int     @id @default(autoincrement()) @map("job_id") @db.UnsignedInt
-  jobName         String  @default("") @map("job_name") @db.VarChar(64)
-  jobGroup        String  @default("DEFAULT") @map("job_group") @db.VarChar(64)
-  invokeTarget    String  @map("invoke_target") @db.VarChar(500)
-  cronExpression  String  @default("") @map("cron_expression") @db.VarChar(255)
-  misfirePolicy   String  @default("3") @map("misfire_policy") @db.VarChar(20)
-  concurrent      String  @default("1") @map("concurrent") @db.Char(1)
-  status          String  @default("0") @map("status") @db.Char(1)
-  createBy        String?  @default("") @map("create_by") @db.VarChar(64)
-  createTime      String  @map("create_time") @db.VarChar(25)
-  updateBy        String?  @default("") @map("update_by") @db.VarChar(64)
-  updateTime      String?  @map("update_time") @db.VarChar(25)
-  remark          String?  @default("") @map("remark") @db.VarChar(500)
+  jobId          Int     @id @default(autoincrement()) @map("job_id") @db.UnsignedInt
+  jobName        String  @default("") @map("job_name") @db.VarChar(64)
+  jobGroup       String  @default("DEFAULT") @map("job_group") @db.VarChar(64)
+  invokeTarget   String  @map("invoke_target") @db.VarChar(500)
+  cronExpression String  @default("") @map("cron_expression") @db.VarChar(255)
+  misfirePolicy  String  @default("3") @map("misfire_policy") @db.VarChar(20)
+  concurrent     String  @default("1") @map("concurrent") @db.Char(1)
+  status         String  @default("0") @map("status") @db.Char(1)
+  createBy       String? @default("") @map("create_by") @db.VarChar(64)
+  createTime     String?  @map("create_time") @db.VarChar(25)
+  updateBy       String? @default("") @map("update_by") @db.VarChar(64)
+  updateTime     String? @map("update_time") @db.VarChar(25)
+  remark         String? @default("") @map("remark") @db.VarChar(500)
 
   @@map("sys_job")
 }
@@ -275,7 +275,7 @@ model SysJobLog {
   jobMessage    String? @map("job_message") @db.VarChar(500)
   status        String  @default("0") @map("status") @db.Char(1)
   exceptionInfo String? @default("") @map("exception_info") @db.VarChar(2000)
-  createTime    String  @map("create_time") @db.VarChar(25)
+  createTime    String? @map("create_time") @db.VarChar(25)
 
   @@map("sys_job_log")
 }

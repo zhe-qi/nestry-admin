@@ -7,6 +7,7 @@ import { exportTable } from '@/common/utils/export';
 import { PrismaService } from '@/module/prisma/prisma.service';
 import { Constants } from '@/common/constant/constants';
 import { RedisService } from '@/module/redis/redis.service';
+import { addDateRangeConditions, buildQueryCondition } from '@/common/utils';
 
 @Injectable()
 export class ConfigService {
@@ -36,39 +37,24 @@ export class ConfigService {
 
   /** @description 分页查询参数配置列表 */
   async selectConfigList(q: QuerySysConfigDto) {
-    const queryCondition: Prisma.SysConfigWhereInput = {};
-
-    // 映射QuerySysConfigDto到Prisma.SysConfigWhereInput的属性
-    const conditionsMap = {
-      configId: 'equals',
-      configName: 'contains',
-      configKey: 'contains',
-      configValue: 'equals',
-      configType: 'equals',
-      createBy: 'equals',
-      updateBy: 'equals',
+    const conditions = {
+      configId: () => ({ equals: q.configId }),
+      configName: () => ({ contains: q.configName }),
+      configKey: () => ({ contains: q.configKey }),
+      configValue: () => ({ equals: q.configValue }),
+      configType: () => ({ equals: q.configType }),
+      createBy: () => ({ equals: q.createBy }),
+      updateBy: () => ({ equals: q.updateBy }),
     };
 
-    // 遍历映射，应用非空检查和条件赋值
-    Object.entries(conditionsMap).forEach(([key, condition]) => {
-      if (isNotEmpty(q[key])) {
-        queryCondition[key] = { [condition]: q[key] };
-      }
-    });
+    const queryCondition = buildQueryCondition<QuerySysConfigDto, Prisma.SysConfigWhereInput>(q, conditions);
 
-    // 处理时间范围条件
-    if (isNotEmpty(q.params.beginCreateTime) && isNotEmpty(q.params.endCreateTime)) {
-      queryCondition.createTime = {
-        gte: q.params.beginCreateTime,
-        lte: q.params.endCreateTime,
-      };
-    }
-    if (isNotEmpty(q.params.beginUpdateTime) && isNotEmpty(q.params.endUpdateTime)) {
-      queryCondition.updateTime = {
-        gte: q.params.beginUpdateTime,
-        lte: q.params.endUpdateTime,
-      };
-    }
+    const dateRanges: Record<string, [string, string]> = {
+      createTime: ['beginCreateTime', 'endCreateTime'],
+      updateTime: ['beginUpdateTime', 'endUpdateTime'],
+    };
+
+    addDateRangeConditions(queryCondition, q.params, dateRanges);
 
     return {
       rows: await this.prisma.sysConfig.findMany({

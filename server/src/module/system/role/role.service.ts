@@ -6,7 +6,7 @@ import { CreateSysRoleDto, QueryAllocatedListDto, QuerySysRoleDto, UpdateSysRole
 import { exportTable } from '@/common/utils/export';
 import { PrismaService } from '@/module/prisma/prisma.service';
 import { AuthService } from '@/module/system/auth/auth.service';
-import { buildQueryCondition } from '@/common/utils';
+import { addDateRangeConditions, buildQueryCondition } from '@/common/utils';
 
 @Injectable()
 export class RoleService {
@@ -28,19 +28,16 @@ export class RoleService {
       menuCheckStrictly: () => ({ equals: q.menuCheckStrictly }),
       deptCheckStrictly: () => ({ equals: q.deptCheckStrictly }),
       status: () => ({ equals: q.status }),
-      beginCreateTime: () => q.params.endCreateTime ? { lte: q.params.endCreateTime, gte: q.params.beginCreateTime } : undefined,
-      beginUpdateTime: () => q.params.endUpdateTime ? { lte: q.params.endUpdateTime, gte: q.params.beginUpdateTime } : undefined,
     };
 
     const queryCondition = buildQueryCondition<QuerySysRoleDto, Prisma.SysRoleWhereInput>(q, conditions);
 
-    // 特殊处理时间范围条件，因为它们依赖于两个字段
-    if (isNotEmpty(q.params.beginCreateTime) && isNotEmpty(q.params.endCreateTime)) {
-      queryCondition.createTime = conditions.beginCreateTime();
-    }
-    if (isNotEmpty(q.params.beginUpdateTime) && isNotEmpty(q.params.endUpdateTime)) {
-      queryCondition.updateTime = conditions.beginUpdateTime();
-    }
+    const dateRanges: Record<string, [string, string]> = {
+      createTime: ['beginCreateTime', 'endCreateTime'],
+      updateTime: ['beginUpdateTime', 'endUpdateTime'],
+    };
+
+    addDateRangeConditions(queryCondition, q.params, dateRanges);
 
     return {
       rows: await this.prisma.sysRole.findMany({

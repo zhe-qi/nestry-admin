@@ -11,6 +11,7 @@ import { ValidationException } from '@/common/exception/validation';
 import { exportTable } from '@/common/utils/export';
 import { Constants } from '@/common/constant/constants';
 import { RedisService } from '@/module/redis/redis.service';
+import { addDateRangeConditions, buildQueryCondition } from '@/common/utils';
 
 @Injectable()
 export class SysDictTypeService {
@@ -18,28 +19,21 @@ export class SysDictTypeService {
 
   // 查询字典类型列表
   async selectDictTypeList(q: queryDictTypeDto) {
-    const queryCondition: Prisma.SysDictTypeWhereInput = {};
-    if (isNotEmpty(q.dictType)) {
-      queryCondition.dictType = {
-        contains: q.dictType,
-      };
-    }
-    if (isNotEmpty(q.dictName)) {
-      queryCondition.dictName = {
-        contains: q.dictName,
-      };
-    }
-    if (isNotEmpty(q.status)) {
-      queryCondition.status = {
-        equals: q.status,
-      };
-    }
-    if (isNotEmpty(q.params?.beginTime) && isNotEmpty(q.params?.endTime)) {
-      queryCondition.createTime = {
-        gte: q.params.beginTime,
-        lte: q.params.endTime,
-      };
-    }
+    const conditions = {
+      dictType: () => ({ contains: q.dictType }),
+      dictName: () => ({ contains: q.dictName }),
+      status: () => ({ equals: q.status }),
+    };
+
+    const queryCondition = buildQueryCondition<queryDictTypeDto, Prisma.SysDictTypeWhereInput>(q, conditions);
+
+    const dateRanges: Record<string, [string, string]> = {
+      createTime: ['beginCreateTime', 'endCreateTime'],
+      updateTime: ['beginUpdateTime', 'endUpdateTime'],
+    };
+
+    addDateRangeConditions(queryCondition, q.params, dateRanges);
+
     return {
       rows: await this.prisma.sysDictType.findMany({
         skip: (q.pageNum - 1) * q.pageSize,

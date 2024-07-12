@@ -3,7 +3,7 @@ import { Response } from 'express';
 import { Prisma } from '@prisma/client';
 import { isNotEmpty } from 'class-validator';
 import { CreateSysMenuDto, QuerySysMenuDto, UpdateSysMenuDto } from './dto';
-import { tree } from '@/common/utils';
+import { buildQueryCondition, tree } from '@/common/utils';
 import { exportTable } from '@/common/utils/export';
 import { PrismaService } from '@/module/prisma/prisma.service';
 
@@ -17,67 +17,23 @@ export class MenuService {
 
   /** @description 查询菜单管理列表 */
   async selectMenuList(q: QuerySysMenuDto) {
-    const queryCondition: Prisma.SysMenuWhereInput = {};
-    if (isNotEmpty(q.menuName)) {
-      queryCondition.menuName = {
-        contains: q.menuName,
-      };
-    }
-    if (isNotEmpty(q.orderNum)) {
-      queryCondition.orderNum = {
-        equals: q.orderNum,
-      };
-    }
-    if (isNotEmpty(q.path)) {
-      queryCondition.path = {
-        equals: q.path,
-      };
-    }
-    if (isNotEmpty(q.component)) {
-      queryCondition.component = {
-        equals: q.component,
-      };
-    }
-    if (isNotEmpty(q.query)) {
-      queryCondition.query = {
-        equals: q.query,
-      };
-    }
-    if (isNotEmpty(q.isFrame)) {
-      queryCondition.isFrame = {
-        equals: q.isFrame,
-      };
-    }
-    if (isNotEmpty(q.isCache)) {
-      queryCondition.isCache = {
-        equals: q.isCache,
-      };
-    }
-    if (isNotEmpty(q.menuType)) {
-      queryCondition.menuType = {
-        equals: q.menuType,
-      };
-    }
-    if (isNotEmpty(q.visible)) {
-      queryCondition.visible = {
-        equals: q.visible,
-      };
-    }
-    if (isNotEmpty(q.status)) {
-      queryCondition.status = {
-        equals: q.status,
-      };
-    }
-    if (isNotEmpty(q.perms)) {
-      queryCondition.perms = {
-        equals: q.perms,
-      };
-    }
-    if (isNotEmpty(q.icon)) {
-      queryCondition.icon = {
-        equals: q.icon,
-      };
-    }
+    const conditions = {
+      menuName: () => ({ contains: q.menuName }),
+      orderNum: () => ({ equals: q.orderNum }),
+      path: () => ({ equals: q.path }),
+      component: () => ({ equals: q.component }),
+      query: () => ({ equals: q.query }),
+      isFrame: () => ({ equals: q.isFrame }),
+      isCache: () => ({ equals: q.isCache }),
+      menuType: () => ({ equals: q.menuType }),
+      visible: () => ({ equals: q.visible }),
+      status: () => ({ equals: q.status }),
+      perms: () => ({ equals: q.perms }),
+      icon: () => ({ equals: q.icon }),
+    };
+
+    const queryCondition = buildQueryCondition<QuerySysMenuDto, Prisma.SysMenuWhereInput>(q, conditions);
+
     return this.prisma.sysMenu.findMany({
       where: queryCondition,
       orderBy: {

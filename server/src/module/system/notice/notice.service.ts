@@ -5,6 +5,7 @@ import { isNotEmpty } from 'class-validator';
 import { CreateSysNoticeDto, QuerySysNoticeDto, UpdateSysNoticeDto } from './dto';
 import { exportTable } from '@/common/utils/export';
 import { PrismaService } from '@/module/prisma/prisma.service';
+import { buildQueryCondition } from '@/common/utils';
 
 @Injectable()
 export class NoticeService {
@@ -16,22 +17,14 @@ export class NoticeService {
 
   /** @description 分页查询通知公告表列表 */
   async selectNoticeList(q: QuerySysNoticeDto) {
-    const queryCondition: Prisma.SysNoticeWhereInput = {};
-    if (isNotEmpty(q.noticeTitle)) {
-      queryCondition.noticeTitle = {
-        equals: q.noticeTitle,
-      };
-    }
-    if (isNotEmpty(q.noticeType)) {
-      queryCondition.noticeType = {
-        equals: q.noticeType,
-      };
-    }
-    if (isNotEmpty(q.status)) {
-      queryCondition.status = {
-        equals: q.status,
-      };
-    }
+    const conditions = {
+      noticeTitle: () => ({ contains: q.noticeTitle }),
+      noticeType: () => ({ equals: q.noticeType }),
+      status: () => ({ equals: q.status }),
+    };
+
+    const queryCondition = buildQueryCondition<QuerySysNoticeDto, Prisma.SysNoticeWhereInput>(q, conditions);
+
     return {
       rows: await this.prisma.sysNotice.findMany({
         skip: (q.pageNum - 1) * q.pageSize,

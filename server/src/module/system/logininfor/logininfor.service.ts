@@ -5,6 +5,7 @@ import { isNotEmpty } from 'class-validator';
 import { CreateSysLogininforDto, QuerySysLogininforDto, UpdateSysLogininforDto } from './dto';
 import { exportTable } from '@/common/utils/export';
 import { PrismaService } from '@/module/prisma/prisma.service';
+import { addDateRangeConditions, buildQueryCondition } from '@/common/utils';
 
 @Injectable()
 export class LogininforService {
@@ -16,52 +17,26 @@ export class LogininforService {
 
   /** @description 分页查询登录日志列表 */
   async selectLogininforList(q: QuerySysLogininforDto) {
-    const queryCondition: Prisma.SysLogininforWhereInput = {};
     const order: 'asc' | 'desc' = q.isAsc === 'ascending' ? 'asc' : 'desc';
-    if (isNotEmpty(q.userName)) {
-      queryCondition.userName = {
-        contains: q.userName,
-      };
-    }
-    if (isNotEmpty(q.ipaddr)) {
-      queryCondition.ipaddr = {
-        contains: q.ipaddr,
-      };
-    }
-    if (isNotEmpty(q.loginLocation)) {
-      queryCondition.loginLocation = {
-        equals: q.loginLocation,
-      };
-    }
-    if (isNotEmpty(q.browser)) {
-      queryCondition.browser = {
-        equals: q.browser,
-      };
-    }
-    if (isNotEmpty(q.os)) {
-      queryCondition.os = {
-        equals: q.os,
-      };
-    }
-    if (isNotEmpty(q.status)) {
-      queryCondition.status = {
-        equals: q.status,
-      };
-    }
-    if (isNotEmpty(q.msg)) {
-      queryCondition.msg = {
-        equals: q.msg,
-      };
-    }
-    if (
-      isNotEmpty(q.params.beginLoginTime)
-      && isNotEmpty(q.params.endLoginTime)
-    ) {
-      queryCondition.loginTime = {
-        lte: q.params.endLoginTime,
-        gte: q.params.beginLoginTime,
-      };
-    }
+
+    const conditions = {
+      userName: () => ({ contains: q.userName }),
+      ipaddr: () => ({ contains: q.ipaddr }),
+      loginLocation: () => ({ equals: q.loginLocation }),
+      browser: () => ({ equals: q.browser }),
+      os: () => ({ equals: q.os }),
+      status: () => ({ equals: q.status }),
+      msg: () => ({ equals: q.msg }),
+    };
+
+    const queryCondition = buildQueryCondition<QuerySysLogininforDto, Prisma.SysLogininforWhereInput>(q, conditions);
+
+    const dateRanges: Record<string, [string, string]> = {
+      loginTime: ['beginLoginTime', 'endLoginTime'],
+    };
+
+    addDateRangeConditions(queryCondition, q.params, dateRanges);
+
     return {
       rows: await this.prisma.sysLogininfor.findMany({
         skip: (q.pageNum - 1) * q.pageSize,

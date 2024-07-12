@@ -3,7 +3,7 @@ import { Response } from 'express';
 import { Prisma } from '@prisma/client';
 import { isNotEmpty } from 'class-validator';
 import { CreateSysDeptDto, QuerySysDeptDto, UpdateSysDeptDto } from './dto';
-import { tree } from '@/common/utils';
+import { addDateRangeConditions, buildQueryCondition, tree } from '@/common/utils';
 import { exportTable } from '@/common/utils/export';
 import { PrismaService } from '@/module/prisma/prisma.service';
 
@@ -12,80 +12,29 @@ export class DeptService {
   constructor(private prisma: PrismaService) {}
   /** @description 分页查询部门管理列表 */
   async selectDeptList(q: QuerySysDeptDto) {
-    const queryCondition: Prisma.SysDeptWhereInput = {};
-    if (isNotEmpty(q.deptId)) {
-      queryCondition.deptId = {
-        equals: q.deptId,
-      };
-    }
-    if (isNotEmpty(q.parentId)) {
-      queryCondition.parentId = {
-        equals: q.parentId,
-      };
-    }
-    if (isNotEmpty(q.ancestors)) {
-      queryCondition.ancestors = {
-        equals: q.ancestors,
-      };
-    }
-    if (isNotEmpty(q.deptName)) {
-      queryCondition.deptName = {
-        contains: q.deptName,
-      };
-    }
-    if (isNotEmpty(q.orderNum)) {
-      queryCondition.orderNum = {
-        equals: q.orderNum,
-      };
-    }
-    if (isNotEmpty(q.leader)) {
-      queryCondition.leader = {
-        equals: q.leader,
-      };
-    }
-    if (isNotEmpty(q.phone)) {
-      queryCondition.phone = {
-        equals: q.phone,
-      };
-    }
-    if (isNotEmpty(q.email)) {
-      queryCondition.email = {
-        equals: q.email,
-      };
-    }
-    if (isNotEmpty(q.status)) {
-      queryCondition.status = {
-        equals: q.status,
-      };
-    }
-    if (isNotEmpty(q.createBy)) {
-      queryCondition.createBy = {
-        equals: q.createBy,
-      };
-    }
-    if (
-      isNotEmpty(q.params.beginCreateTime)
-      && isNotEmpty(q.params.endCreateTime)
-    ) {
-      queryCondition.createTime = {
-        lte: q.params.endCreateTime,
-        gte: q.params.beginCreateTime,
-      };
-    }
-    if (isNotEmpty(q.updateBy)) {
-      queryCondition.updateBy = {
-        equals: q.updateBy,
-      };
-    }
-    if (
-      isNotEmpty(q.params.beginUpdateTime)
-      && isNotEmpty(q.params.endUpdateTime)
-    ) {
-      queryCondition.updateTime = {
-        lte: q.params.endUpdateTime,
-        gte: q.params.beginUpdateTime,
-      };
-    }
+    const conditions = {
+      deptId: () => ({ equals: q.deptId }),
+      parentId: () => ({ equals: q.parentId }),
+      ancestors: () => ({ contains: q.ancestors }),
+      deptName: () => ({ contains: q.deptName }),
+      orderNum: () => ({ equals: q.orderNum }),
+      leader: () => ({ equals: q.leader }),
+      phone: () => ({ equals: q.phone }),
+      email: () => ({ equals: q.email }),
+      status: () => ({ equals: q.status }),
+      createBy: () => ({ equals: q.createBy }),
+      updateBy: () => ({ equals: q.updateBy }),
+    };
+
+    const queryCondition = buildQueryCondition<QuerySysDeptDto, Prisma.SysDeptWhereInput>(q, conditions);
+
+    const dateRanges: Record<string, [string, string]> = {
+      createTime: ['beginCreateTime', 'endCreateTime'],
+      updateTime: ['beginUpdateTime', 'endUpdateTime'],
+    };
+
+    addDateRangeConditions(queryCondition, q.params, dateRanges);
+
     return await this.prisma.sysDept.findMany({
       where: queryCondition,
     });

@@ -7,6 +7,7 @@ import { Response } from 'express';
 import { CreateSysJobDto, QueryJobDto, UpdateSysJobDto } from './dto';
 import { PrismaService } from '@/module/prisma/prisma.service';
 import { exportTable } from '@/common/utils/export';
+import { buildQueryCondition } from '@/common/utils';
 
 @Injectable()
 export class JobService {
@@ -15,20 +16,14 @@ export class JobService {
   constructor(private prisma: PrismaService, private scheduler: SchedulerRegistry) {}
 
   async selectJobList(q: QueryJobDto) {
-    const queryCondition: Prisma.SysJobWhereInput = {};
     const conditions = {
       jobName: () => ({ contains: q.jobName }),
       jobGroup: () => ({ contains: q.jobGroup }),
       status: () => ({ equals: q.status }),
     };
-    Object.entries(conditions).forEach(([key, value]) => {
-      if (isNotEmpty(q[key])) {
-        const condition = value();
-        if (condition) {
-          queryCondition[key] = condition;
-        }
-      }
-    });
+
+    const queryCondition = buildQueryCondition<QueryJobDto, Prisma.SysJobWhereInput>(q, conditions);
+
     return {
       rows: await this.prisma.sysJob.findMany({
         skip: (q.pageNum - 1) * q.pageSize,

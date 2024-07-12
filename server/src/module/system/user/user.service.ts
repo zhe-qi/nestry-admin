@@ -10,7 +10,7 @@ import { PrismaService } from '@/module/prisma/prisma.service';
 import Result from '@/common/utils/result';
 import { Constants } from '@/common/constant/constants';
 import { RedisService } from '@/module/redis/redis.service';
-import { buildQueryCondition } from '@/common/utils';
+import { addDateRangeConditions, buildQueryCondition } from '@/common/utils';
 
 @Injectable()
 export class UserService {
@@ -42,20 +42,14 @@ export class UserService {
     const queryCondition = buildQueryCondition<QuerySysUserDto, Prisma.SysUserWhereInput>(q, conditions);
 
     // 处理日期范围查询条件
-    const dateRanges = {
+    const dateRanges: Record<string, [string, string]> = {
       loginDate: ['beginLoginDate', 'endLoginDate'],
       createTime: ['beginCreateTime', 'endCreateTime'],
       updateTime: ['beginUpdateTime', 'endUpdateTime'],
     };
 
-    Object.entries(dateRanges).forEach(([field, [begin, end]]) => {
-      if (isNotEmpty(q.params[begin]) && isNotEmpty(q.params[end])) {
-        queryCondition[field] = {
-          gte: q.params[begin],
-          lte: q.params[end],
-        };
-      }
-    });
+    // 调用封装的日期范围查询条件处理函数
+    addDateRangeConditions(queryCondition, q.params, dateRanges);
 
     // 查询结果
     const rows = await this.prisma.sysUser.findMany({

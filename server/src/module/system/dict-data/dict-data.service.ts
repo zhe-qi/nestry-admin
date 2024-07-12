@@ -10,6 +10,7 @@ import { PrismaService } from '@/module/prisma/prisma.service';
 import { Constants } from '@/common/constant/constants';
 import { exportTable } from '@/common/utils/export';
 import { RedisService } from '@/module/redis/redis.service';
+import { buildQueryCondition } from '@/common/utils';
 
 @Injectable()
 export class DictDataService implements OnModuleInit {
@@ -40,22 +41,14 @@ export class DictDataService implements OnModuleInit {
 
   // 查询字典数据列表
   async selectDictDataList(q: queryDictDataDto) {
-    const queryCondition: Prisma.SysDictDataWhereInput = {};
-    if (isNotEmpty(q.dictType)) {
-      queryCondition.dictType = {
-        equals: q.dictType,
-      };
-    }
-    if (isNotEmpty(q.dictLabel)) {
-      queryCondition.dictLabel = {
-        contains: q.dictLabel,
-      };
-    }
-    if (isNotEmpty(q.status)) {
-      queryCondition.status = {
-        equals: q.status,
-      };
-    }
+    const conditions = {
+      dictType: () => ({ equals: q.dictType }),
+      dictLabel: () => ({ contains: q.dictLabel }),
+      status: () => ({ equals: q.status }),
+    };
+
+    const queryCondition = buildQueryCondition<queryDictDataDto, Prisma.SysDictDataWhereInput>(q, conditions);
+
     return {
       rows: await this.prisma.sysDictData.findMany({
         skip: (q.pageNum - 1) * q.pageSize,

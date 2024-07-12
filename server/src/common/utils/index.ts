@@ -126,3 +126,15 @@ export function buildQueryCondition<T, R>(q: T, conditions: Record<string, any>)
 
   return queryCondition as R;
 }
+
+// 封装日期范围查询条件处理函数
+export function addDateRangeConditions(queryCondition: Record<string, any>, params: Record<string, any>, dateRanges: Record<string, [string, string]>) {
+  Object.entries(dateRanges).forEach(([field, [begin, end]]) => {
+    if (isNotEmpty(params[begin]) && isNotEmpty(params[end])) {
+      queryCondition[field] = {
+        gte: params[begin],
+        lte: params[end],
+      };
+    }
+  });
+}

@@ -5,6 +5,7 @@ import { isNotEmpty } from 'class-validator';
 import { CreateSysPostDto, QuerySysPostDto, UpdateSysPostDto } from './dto';
 import { exportTable } from '@/common/utils/export';
 import { PrismaService } from '@/module/prisma/prisma.service';
+import { addDateRangeConditions, buildQueryCondition } from '@/common/utils';
 
 @Injectable()
 export class PostService {
@@ -16,45 +17,24 @@ export class PostService {
 
   /** @description 分页查询岗位信息表列表 */
   async selectPostList(q: QuerySysPostDto) {
-    const queryCondition: Prisma.SysPostWhereInput = {};
-    if (isNotEmpty(q.postCode)) {
-      queryCondition.postCode = {
-        equals: q.postCode,
-      };
-    }
-    if (isNotEmpty(q.postName)) {
-      queryCondition.postName = {
-        contains: q.postName,
-      };
-    }
-    if (isNotEmpty(q.postSort)) {
-      queryCondition.postSort = {
-        equals: q.postSort,
-      };
-    }
-    if (isNotEmpty(q.status)) {
-      queryCondition.status = {
-        equals: q.status,
-      };
-    }
-    if (
-      isNotEmpty(q.params.beginCreateTime)
-      && isNotEmpty(q.params.endCreateTime)
-    ) {
-      queryCondition.createTime = {
-        lte: q.params.endCreateTime,
-        gte: q.params.beginCreateTime,
-      };
-    }
-    if (
-      isNotEmpty(q.params.beginUpdateTime)
-      && isNotEmpty(q.params.endUpdateTime)
-    ) {
-      queryCondition.updateTime = {
-        lte: q.params.endUpdateTime,
-        gte: q.params.beginUpdateTime,
-      };
-    }
+    const conditions = {
+      postCode: () => ({ equals: q.postCode }),
+      postName: () => ({ contains: q.postName }),
+      postSort: () => ({ equals: q.postSort }),
+      status: () => ({ equals: q.status }),
+    };
+
+    const queryCondition = buildQueryCondition<QuerySysPostDto, Prisma.SysPostWhereInput>(q, conditions);
+
+    // 定义日期范围查询条件
+    const dateRanges: Record<string, [string, string]> = {
+      createTime: ['beginCreateTime', 'endCreateTime'],
+      updateTime: ['beginUpdateTime', 'endUpdateTime'],
+    };
+
+    // 调用封装的日期范围查询条件处理函数
+    addDateRangeConditions(queryCondition, q.params, dateRanges);
+
     return {
       rows: await this.prisma.sysPost.findMany({
         skip: (q.pageNum - 1) * q.pageSize,

@@ -3,7 +3,7 @@ import { ApiBearerAuth, ApiBody, ApiOperation, ApiQuery, ApiResponse, ApiTags } 
 import { SysJob } from '@prisma/client';
 import { Response } from 'express';
 import { JobService } from './job.service';
-import { CreateSysJobDto, QueryJobDto, UpdateSysJobDto } from './dto';
+import { ChangeSysJobStatusDto, CreateSysJobDto, QueryJobDto, UpdateSysJobDto } from './dto';
 import { RequirePermission } from '@/common/decorator/require-premission.decorator';
 import Result from '@/common/utils/result';
 import { TableDataInfo } from '@/common/domain/table';
@@ -73,5 +73,13 @@ export class JobController {
   @Delete('/:jobId')
   async removeRole(@Param('jobId') jobId: number) {
     return Result.ok(await this.jobService.deleteJob(jobId));
+  }
+
+  @ApiOperation({ summary: '修改定时任务状态' })
+  @ApiResponse({ type: Result<any> })
+  @RequirePermission('monitor:job:edit')
+  @Put('/changeStatus')
+  async changeStatus(@Body() job: ChangeSysJobStatusDto) {
+    return Result.ok(await this.jobService.changeStatus(job));
   }
 }

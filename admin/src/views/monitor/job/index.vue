@@ -108,23 +108,13 @@
                ></el-switch>
             </template>
          </el-table-column>
-         <el-table-column label="操作" align="center" width="200" class-name="small-padding fixed-width">
+         <el-table-column label="操作" align="center" width="370" class-name="small-padding fixed-width">
             <template #default="scope">
-               <el-tooltip content="修改" placement="top">
-                  <el-button link type="primary" icon="Edit" @click="handleUpdate(scope.row)" v-hasPermi="['monitor:job:edit']"></el-button>
-               </el-tooltip>
-               <el-tooltip content="删除" placement="top">
-                  <el-button link type="primary" icon="Delete" @click="handleDelete(scope.row)" v-hasPermi="['monitor:job:remove']"></el-button>
-               </el-tooltip>
-               <el-tooltip content="执行一次" placement="top">
-                  <el-button link type="primary" icon="CaretRight" @click="handleRun(scope.row)" v-hasPermi="['monitor:job:changeStatus']"></el-button>
-               </el-tooltip>
-               <el-tooltip content="任务详细" placement="top">
-                  <el-button link type="primary" icon="View" @click="handleView(scope.row)" v-hasPermi="['monitor:job:query']"></el-button>
-               </el-tooltip>
-               <el-tooltip content="调度日志" placement="top">
-                  <el-button link type="primary" icon="Operation" @click="handleJobLog(scope.row)" v-hasPermi="['monitor:job:query']"></el-button>
-               </el-tooltip>
+               <el-button link type="primary" icon="Edit" @click="handleUpdate(scope.row)" v-hasPermi="['monitor:job:edit']">修改</el-button>
+               <el-button link type="primary" icon="Delete" @click="handleDelete(scope.row)" v-hasPermi="['monitor:job:remove']">删除</el-button>
+               <el-button link type="primary" icon="CaretRight" @click="handleRun(scope.row)" v-hasPermi="['monitor:job:changeStatus']">执行一次</el-button>
+               <el-button link type="primary" icon="View" @click="handleView(scope.row)" v-hasPermi="['monitor:job:query']">详情</el-button>
+               <el-button link type="primary" icon="Operation" @click="handleJobLog(scope.row)" v-hasPermi="['monitor:job:query']">日志</el-button>
             </template>
          </el-table-column>
       </el-table>

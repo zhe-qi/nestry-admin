@@ -111,7 +111,7 @@ export function toPascalCase(str) {
   return str[0].toUpperCase() + camelCase(str).slice(1);
 }
 
-// 全局通用处理函数，用于构建查询条件
+/** @desc 全局通用处理函数，用于构建查询条件 */
 export function buildQueryCondition<T, R>(q: T, conditions: Record<string, any>): R {
   const queryCondition: Record<string, any> = {};
 
@@ -127,7 +127,7 @@ export function buildQueryCondition<T, R>(q: T, conditions: Record<string, any>)
   return queryCondition as R;
 }
 
-// 封装日期范围查询条件处理函数
+/** @desc 封装日期范围查询条件处理函数 */
 export function addDateRangeConditions(queryCondition: Record<string, any>, params: Record<string, any>, dateRanges: Record<string, [string, string]>) {
   Object.entries(dateRanges).forEach(([field, [begin, end]]) => {
     if (isNotEmpty(params[begin]) && isNotEmpty(params[end])) {

@@ -1,4 +1,3 @@
-import { Prisma } from '@prisma/client';
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
 import { Transform } from 'class-transformer';
@@ -96,5 +95,17 @@ export class UpdateSysJobDto extends BaseDomain {
   @ApiProperty({ description: '状态（0正常 1暂停）' })
   @IsOptional()
   @IsString()
+  status: string;
+}
+
+export class ChangeSysJobStatusDto {
+  @ApiProperty({ description: '任务ID' })
+  @IsNotEmpty({ message: '任务ID不能为空' })
+  @Transform(v => +v.value)
+  jobId: number;
+
+  @ApiProperty({ description: '状态（0正常 1暂停）' })
+  @IsNotEmpty({ message: '状态不能为空' })
+  @Transform(v => `${v.value}`)
   status: string;
 }

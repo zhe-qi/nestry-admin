@@ -4,7 +4,7 @@ import { isNotEmpty } from 'class-validator';
 import { SchedulerRegistry } from '@nestjs/schedule';
 import { CronJob } from 'cron';
 import { Response } from 'express';
-import { CreateSysJobDto, QueryJobDto, UpdateSysJobDto } from './dto';
+import { ChangeSysJobStatusDto, CreateSysJobDto, QueryJobDto, UpdateSysJobDto } from './dto';
 import { PrismaService } from '@/module/prisma/prisma.service';
 import { exportTable } from '@/common/utils/export';
 import { buildQueryCondition } from '@/common/utils';
@@ -48,14 +48,14 @@ export class JobService {
     return this.prisma.sysJob.create({ data: job });
   }
 
-  async updateJob(job: UpdateSysJobDto) {
-    for (const key in job) {
-      !isNotEmpty(job[key]) && delete job[key];
+  async updateJob(sysJob: UpdateSysJobDto) {
+    for (const key in sysJob) {
+      !isNotEmpty(sysJob[key]) && delete sysJob[key];
     }
 
     return this.prisma.sysJob.update({
-      where: { jobId: job.jobId },
-      data: job,
+      where: { jobId: sysJob.jobId },
+      data: sysJob,
     });
   }
 
@@ -83,6 +83,13 @@ export class JobService {
       Object.values(v));
     data.unshift(title);
     exportTable(data, res);
+  }
+
+  async changeStatus(sysJob: ChangeSysJobStatusDto) {
+    return this.prisma.sysJob.update({
+      where: { jobId: sysJob.jobId },
+      data: { status: sysJob.status },
+    });
   }
 
   /**

@@ -3,7 +3,7 @@ import * as si from 'systeminformation';
 import dayjs from 'dayjs';
 
 // 获取cpu
-async function getCpu(): Promise<void | {
+export async function getCpu(): Promise<void | {
   cpuNum: number
   sys: string
   used: string
@@ -26,7 +26,7 @@ async function getCpu(): Promise<void | {
 }
 
 // 获取系统内存
-async function getSysMemory() {
+export async function getSysMemory() {
   const totalMemory = os.totalmem();
   const freeMemory = os.freemem();
   const usedMemory = totalMemory - freeMemory;
@@ -39,7 +39,7 @@ async function getSysMemory() {
 }
 
 // 获取系统信息
-async function getSystemInfo() {
+export async function getSystemInfo() {
   const info = await si.osInfo();
   const ip = await si.networkGatewayDefault();
   return {
@@ -56,7 +56,7 @@ async function getSystemInfo() {
   };
 }
 
-async function getDickInfo() {
+export async function getDickInfo() {
   return (await si.fsSize()).map(v => ({
     dirName: v.fs,
     sysTypeName: v.type,
@@ -69,7 +69,7 @@ async function getDickInfo() {
 }
 
 // 获取当前项目的信息
-async function getProject() {
+export async function getProject() {
   const mem = process.memoryUsage();
   for (const k in mem) {
     mem[k] = formatMemory(mem[k], 'MB');
@@ -95,7 +95,7 @@ async function getProject() {
 }
 
 // 秒转换为 `天 小时 分钟`
-function formatTime(seconds) {
+export function formatTime(seconds) {
   const days = Math.floor(seconds / (24 * 60 * 60));
   const hours = Math.floor((seconds % (24 * 60 * 60)) / (60 * 60));
   const minutes = Math.floor((seconds % (60 * 60)) / 60);
@@ -103,7 +103,7 @@ function formatTime(seconds) {
 }
 
 // 格式化内存单位GB
-function formatMemory(memory, unit = 'GB') {
+export function formatMemory(memory, unit = 'GB') {
   const type = {
     GB: 1024 * 1024 * 1024,
     MB: 1024 * 1024,
@@ -112,7 +112,7 @@ function formatMemory(memory, unit = 'GB') {
 }
 
 // 获取以上全部信息
-async function getServerInfo() {
+export async function getServerInfo() {
   const data = await Promise.all([
     getProject(),
     getSystemInfo(),
@@ -128,5 +128,3 @@ async function getServerInfo() {
     sysFiles: data[4],
   };
 }
-
-export { getProject, getSystemInfo, getSysMemory, getCpu, getDickInfo, getServerInfo };

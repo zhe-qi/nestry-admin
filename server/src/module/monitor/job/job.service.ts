@@ -8,6 +8,7 @@ import { ChangeSysJobStatusDto, CreateSysJobDto, QueryJobDto, UpdateSysJobDto } 
 import { PrismaService } from '@/module/prisma/prisma.service';
 import { exportTable } from '@/common/utils/export';
 import { buildQueryCondition } from '@/common/utils';
+import { Constants } from '@/common/constant/constants';
 
 @Injectable()
 export class JobService implements OnModuleInit {
@@ -18,7 +19,7 @@ export class JobService implements OnModuleInit {
 
   // 查找所有状态为1的任务，并启动
   async startAllJob() {
-    const jobs = await this.prisma.sysJob.findMany({ where: { status: '0' } });
+    const jobs = await this.prisma.sysJob.findMany({ where: { status: Constants.SUCCESS } });
 
     jobs.forEach((job) => {
       try {
@@ -72,7 +73,7 @@ export class JobService implements OnModuleInit {
         return new BadRequestException(`任务执行失败, ${error}`);
       }
 
-      job.status = '1';
+      job.status = Constants.FAIL;
 
       const res = await this.prisma.sysJob.create({ data: job });
 
@@ -83,7 +84,7 @@ export class JobService implements OnModuleInit {
 
     const { invokeTarget, status, cronExpression, misfirePolicy } = res;
 
-    if (misfirePolicy === '3' || status === '1') { return res; }
+    if (misfirePolicy === '3' || status === Constants.FAIL) { return res; }
 
     try {
       const cronJob = new CronJob(cronExpression, this[invokeTarget]);
@@ -110,7 +111,7 @@ export class JobService implements OnModuleInit {
         return new BadRequestException(`任务执行失败, ${error}`);
       }
 
-      job.status = '1';
+      job.status = Constants.FAIL;
 
       const res = await this.prisma.sysJob.update({
         where: { jobId: job.jobId },
@@ -135,7 +136,7 @@ export class JobService implements OnModuleInit {
 
     this.scheduler.deleteCronJob(invokeTarget);
 
-    if (misfirePolicy === '3' || status === '1') { return res; }
+    if (misfirePolicy === '3' || status === Constants.FAIL) { return res; }
 
     const cronJob = new CronJob(cronExpression, this[invokeTarget]);
 
@@ -196,10 +197,14 @@ export class JobService implements OnModuleInit {
 
     const scheduledJob = this.scheduler.getCronJob(invokeTarget);
 
-    if (status === '1') {
-      scheduledJob.stop();
-    } else {
-      scheduledJob.start();
+    try {
+      if (status === Constants.FAIL) {
+        scheduledJob.stop();
+      } else {
+        scheduledJob.start();
+      }
+    } catch (err) {
+      return new BadRequestException(`任务状态修改失败, ${err}`);
     }
 
     return res;

@@ -3,7 +3,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { TableDataInfo } from '@/common/domain/table';
 
 /**
- * vo 示例
+ * vo 的一个示例，效果可以去swagger查看
  *
  * 1. 找到prisma生成的类型，然后ts定位进去
  * 2. 复制到这里，然后让ai根据ts类型一键补齐注释

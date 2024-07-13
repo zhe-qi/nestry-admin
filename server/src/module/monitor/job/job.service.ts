@@ -5,6 +5,7 @@ import { SchedulerRegistry } from '@nestjs/schedule';
 import { CronJob } from 'cron';
 import { Response } from 'express';
 import { ChangeSysJobStatusDto, CreateSysJobDto, QueryJobDto, UpdateSysJobDto } from './dto';
+import * as TaskHandlers from './taskHandlers';
 import { PrismaService } from '@/module/prisma/prisma.service';
 import { exportTable } from '@/common/utils/export';
 import { buildQueryCondition } from '@/common/utils';
@@ -25,7 +26,7 @@ export class JobService implements OnModuleInit {
       try {
         const { invokeTarget, cronExpression } = job;
 
-        const cronJob = new CronJob(cronExpression, this[invokeTarget]);
+        const cronJob = new CronJob(cronExpression, TaskHandlers[invokeTarget]);
 
         this.scheduler.addCronJob(invokeTarget, cronJob);
 
@@ -62,87 +63,28 @@ export class JobService implements OnModuleInit {
   }
 
   async addJob(job: CreateSysJobDto) {
-    for (const key in job) {
-      !isNotEmpty(job[key]) && delete job[key];
-    }
+    this.cleanJobData(job);
 
-    if (job.misfirePolicy === '2') {
-      try {
-        this[job.invokeTarget]();
-      } catch (error) {
-        return new BadRequestException(`任务执行失败, ${error}`);
-      }
-
-      job.status = Constants.FAIL;
-
-      const res = await this.prisma.sysJob.create({ data: job });
-
-      return res;
-    }
+    await this.executeJobAction(job);
 
     const res = await this.prisma.sysJob.create({ data: job });
 
-    const { invokeTarget, status, cronExpression, misfirePolicy } = res;
-
-    if (misfirePolicy === '3' || status === Constants.FAIL) { return res; }
-
-    try {
-      const cronJob = new CronJob(cronExpression, this[invokeTarget]);
-
-      this.scheduler.addCronJob(invokeTarget, cronJob);
-
-      cronJob.start();
-    } catch (err) {
-      return new BadRequestException(`任务创建失败, ${err}`);
-    }
+    await this.manageCronJob(res, 'create');
 
     return res;
   }
 
   async updateJob(job: UpdateSysJobDto) {
-    for (const key in job) {
-      !isNotEmpty(job[key]) && delete job[key];
-    }
+    this.cleanJobData(job);
 
-    if (job.misfirePolicy === '2') {
-      try {
-        this[job.invokeTarget]();
-      } catch (error) {
-        return new BadRequestException(`任务执行失败, ${error}`);
-      }
-
-      job.status = Constants.FAIL;
-
-      const res = await this.prisma.sysJob.update({
-        where: { jobId: job.jobId },
-        data: job,
-      });
-
-      return res;
-    }
+    await this.executeJobAction(job);
 
     const res = await this.prisma.sysJob.update({
       where: { jobId: job.jobId },
       data: job,
     });
 
-    const { invokeTarget, status, cronExpression, misfirePolicy } = res;
-
-    const scheduledJob = this.scheduler.getCronJob(invokeTarget);
-
-    if (scheduledJob) {
-      scheduledJob.stop();
-    }
-
-    this.scheduler.deleteCronJob(invokeTarget);
-
-    if (misfirePolicy === '3' || status === Constants.FAIL) { return res; }
-
-    const cronJob = new CronJob(cronExpression, this[invokeTarget]);
-
-    this.scheduler.addCronJob(invokeTarget, cronJob);
-
-    cronJob.start();
+    await this.manageCronJob(res, 'update');
 
     return res;
   }
@@ -210,8 +152,49 @@ export class JobService implements OnModuleInit {
     return res;
   }
 
-  async testJob() {
-    // eslint-disable-next-line no-console
-    console.log('testJob');
+  private cleanJobData(job: any): void {
+    for (const key in job) {
+      if (!isNotEmpty(job[key])) {
+        delete job[key];
+      }
+    }
+  }
+
+  private async executeJobAction(job: any): Promise<void> {
+    if (job.misfirePolicy === '2') {
+      try {
+        await this[job.invokeTarget]();
+        job.status = Constants.FAIL;
+      } catch (error) {
+        throw new BadRequestException(`任务执行失败, ${error}`);
+      }
+    }
+  }
+
+  private async manageCronJob(job: any, action: 'create' | 'update'): Promise<void> {
+    const { invokeTarget, cronExpression, misfirePolicy, status } = job;
+
+    if (misfirePolicy === '3' || status === Constants.FAIL) {
+      return;
+    }
+
+    try {
+      let cronJob: CronJob<any, any>;
+
+      try {
+        cronJob = this.scheduler.getCronJob(invokeTarget);
+      } catch {}
+
+      if (action === 'update' && cronJob) {
+        cronJob.stop();
+        this.scheduler.deleteCronJob(invokeTarget);
+      }
+
+      cronJob = new CronJob(cronExpression, TaskHandlers[invokeTarget]);
+      this.scheduler.addCronJob(invokeTarget, cronJob);
+      cronJob.start();
+    } catch (error) {
+      throw new BadRequestException(`任务${action === 'create' ? '创建' : '更新'}失败, ${error}`);
+    }
   }
 }

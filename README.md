@@ -18,7 +18,7 @@
 - 持续优化代码性能，代码结构，优化若依UI，解耦代码 [持续进行中]
 - 添加 DockerFile 和 DockerCompose [已完成]
 - 添加基于npx prisma db push，和 seed.ts 的数据库初始化脚本 [已完成]
-- 添加 swc 支持 [已完成]
+- 添加 swc 和 webpack 支持 [已完成]
 - 密码加密从crypto改为bcrypt，添加Helmet [已完成]
 - 从node-xlsx迁移到exceljs [已完成]
 - 从直接导入config迁移到@nestjs/config [已完成]
@@ -41,6 +41,8 @@
 不定期同步ruoyi-vue3和carole-admin的部分更新。
 
 ！！！ 导出excel函数在 controller不能在最后一个，否则报错500，情况未知
+
+定时任务测试案例，添加调用方法为`testJob`，表达式为 `* * * * * *`，可以发现每秒都在执行控制台输出
 
 TODO: 
 1. 修复前端部分页面sass混入报错

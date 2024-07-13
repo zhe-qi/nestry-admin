@@ -14,7 +14,7 @@ export class AuthController {
 
   @Throttle({
     default: {
-      limit: 8,
+      limit: 20,
       ttl: 1000 * 60 * 60,
     },
   })
@@ -31,7 +31,7 @@ export class AuthController {
   @ApiOperation({ summary: '退出登录' })
   @Throttle({
     default: {
-      limit: 8,
+      limit: 20,
       ttl: 1000 * 60 * 60,
     },
   })

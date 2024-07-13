@@ -184,6 +184,7 @@ export class AuthService {
        left join sys_user u on ur.user_id = u.user_id
       where u.user_id = ${userId} and m.menu_type in ('M', 'C') and m.status = 1  and ro.status = 1
       order by m.parent_id, m.order_num`;
+
       return this.MenuTree(
         r,
         'menuId',
@@ -247,16 +248,18 @@ export class AuthService {
 
   /** @desc 菜单树形化 */
   MenuTree(
-    arr: RawItem[] = [],
-    id: string = 'id',
-    pid: string = 'pid',
-    rootValue: string | number = 0,
-  ): MenuItem[] {
-    const result: MenuItem[] = [];
-    const map: Record<string, MenuItem> = {};
+    arr = [],
+    id = 'id',
+    pid = 'pid',
+    rootValue = 0,
+  ) {
+    const result = [];
+    const map = new Map();
 
-    arr.forEach((item) => {
-      const newItem: MenuItem = {
+    for (const item of arr) {
+      const itemId = item[id];
+      const itemPid = item[pid];
+      const menuItem = map.get(itemId) || {
         component: item.component,
         hidden: item.visible == 0,
         name: capitalize(item.path?.replaceAll('/', '')),
@@ -270,24 +273,63 @@ export class AuthService {
         children: [],
       };
 
-      map[item[id]] = newItem;
-
-      if (item[pid] === rootValue) {
-        this.handleRootItem(item, newItem, result);
+      if (itemPid == rootValue && item.menuType === 'M') {
+        Object.assign(menuItem, {
+          alwaysShow: true,
+          component: menuItem.component || 'Layout',
+          redirect: 'noRedirect',
+          path: `/${menuItem.path || menuItem.path}`,
+        });
+        result.push(menuItem);
+      } else if (itemPid == rootValue && item.menuType === 'C') {
+        const topMenu = {
+          component: 'Layout',
+          hidden: item.visible == 0,
+          name: item.path,
+          path: item.path,
+          meta: {
+            icon: item.icon,
+            link: item.isFrame == '1',
+            noCache: item.isCache == 0,
+            title: item.menuName,
+          },
+          children: item.isFrame == '1'
+            ? []
+            : [{
+              component: item.component,
+              hidden: item.visible == 0,
+              name: capitalize(item.path?.replaceAll('/', '')),
+              path: item.path,
+              meta: {
+                icon: item.icon,
+                link: null,
+                noCache: item.isCache == 0,
+                title: item.menuName,
+              },
+            }],
+        };
+        result.unshift(topMenu);
       } else {
-        map[item[pid]] ? map[item[pid]].children.push(newItem) : map[item[pid]] = { children: [newItem] };
+        if (!map.has(itemPid)) {
+          map.set(itemPid, { children: [] });
+        }
+        map.get(itemPid).children.push(menuItem);
       }
-    });
 
-    Object.values(map).forEach((item) => {
-      if (!item.children.length) {
-        delete item.children;
+      map.set(itemId, menuItem);
+    }
+
+    for (const menuItem of map.values()) {
+      if (menuItem.children.length) {
+        Object.assign(menuItem, {
+          alwaysShow: true,
+          redirect: 'noRedirect',
+          component: menuItem.component || 'ParentView',
+        });
       } else {
-        item.alwaysShow = true;
-        item.redirect = 'noRedirect';
-        item.component = item.component || 'ParentView';
+        delete menuItem.children;
       }
-    });
+    }
 
     return result;
   }

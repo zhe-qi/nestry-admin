@@ -228,9 +228,13 @@ export class UpdateSysUserDto extends BaseDomain {
   @IsOptional()
   roleIds?: number[];
 
-  @ApiProperty({ description: '部门ids' })
+  @ApiProperty({ description: '岗位ids' })
   @IsOptional()
   postIds?: number[];
+
+  @ApiProperty({ description: '部门id' })
+  @IsOptional()
+  deptId?: number;
 }
 
 /** @description 更新用户状态 */

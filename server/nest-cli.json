@@ -8,9 +8,6 @@
       "type": "swc",
       "options": {}
     },
-    "typeCheck": true,
-    "assets": [
-      { "include": "module/gen/gen-template", "watchAssets": true }
-    ]
+    "typeCheck": true
   }
 }

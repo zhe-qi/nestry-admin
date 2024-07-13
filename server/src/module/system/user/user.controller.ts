@@ -18,11 +18,7 @@ import { PrismaService } from '@/module/prisma/prisma.service';
 @ApiBearerAuth()
 @Controller('system/user')
 export class UserController {
-  constructor(
-    private userService: UserService,
-    private deptService: DeptService,
-    private prisma: PrismaService,
-  ) {}
+  constructor(private userService: UserService, private deptService: DeptService, private prisma: PrismaService) {}
 
   @ApiOperation({ summary: '获取岗位和角色选择' })
   @RequirePermission('system:user:add')
@@ -132,16 +128,8 @@ export class UserController {
 
   @ApiOperation({ summary: '修改个人密码' })
   @Put('/profile/updatePwd')
-  async updateUserPwd(
-  @Req() req, @Query('oldPassword')
-    oldPassword: string, @Query('newPassword')
-    newPassword: string,
-  ) {
-    await this.userService.updateUserPwd(
-      req.userId,
-      oldPassword,
-      newPassword,
-    );
+  async updateUserPwd(@Req() req, @Query('oldPassword') oldPassword: string, @Query('newPassword') newPassword: string) {
+    await this.userService.updateUserPwd(req.userId, oldPassword, newPassword);
     return Result.ok();
   }
 

@@ -2,8 +2,8 @@ import { ArgumentsHost, BadRequestException, Catch, ExceptionFilter, ForbiddenEx
 import { Response } from 'express';
 import { MulterError } from 'multer';
 import { ThrottlerException } from '@nestjs/throttler';
+import Result from '../utils/result';
 import { ValidationException } from '@/common/exception/validation';
-import Result from '@/common/utils/Result';
 import { AuthorizationException } from '@/common/exception/authorization';
 
 /**

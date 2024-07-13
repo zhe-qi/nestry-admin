@@ -26,7 +26,6 @@
 - redis修改为redis模块，redis services [已完成]
 
 - 添加定时任务页面 [开发中]
-- 添加自动类型推导IsNumber直接从DTO类型中获取 [未开始] [待定]
 - 近一步简化CRUD的代码，规范CRUD的代码结构，抽离复用函数 [未开始]
 - 修改为passport全家桶 [未开始] [待定]
 - 从 express 替换至 fastify [未开始] [待定]

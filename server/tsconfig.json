@@ -9,6 +9,7 @@
     "paths": {
       "@/*": ["src/*"]
     },
+    "types": ["node", "@types/webpack-env"],
     "strictBindCallApply": false,
     "strictNullChecks": false,
     "noFallthroughCasesInSwitch": false,

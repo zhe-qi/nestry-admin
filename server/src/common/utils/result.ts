@@ -164,8 +164,6 @@ export default class Result<T> {
 
   /**
    * 创建一个表示表格数据的结果对象
-   * @param data 包含行数据和总数的对象
-   * @returns 返回一个表格数据的结果对象
    */
   static TableData<L = any>(data: { rows: L[], total: number }) {
     return new TableDataInfo<L>(

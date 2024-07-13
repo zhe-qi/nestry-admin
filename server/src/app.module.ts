@@ -26,7 +26,6 @@ import { PermissionGuard } from '@/common/guard/permission.guard';
 import { AuthMiddleware } from '@/common/middleware/auth.middleware';
 import { RemoveThrottleHeadersInterceptor } from '@/common/interceptors/remove-throttle-headers.interceptor';
 import { RedisModule } from '@/module/redis';
-
 import { AuthorizationFilter, BadRequestFilter, ForbiddenExceptionFilter, GlobalErrorFilter, MulterErrFilter, NotFoundErrFilter, PayloadTooLargeFilter, ThrottlerExceptionFilter, ValidationExceptionFilter } from '@/common/filter/global-error.filter';
 
 import '@/common/utils/email';

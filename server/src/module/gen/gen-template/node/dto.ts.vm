@@ -10,7 +10,7 @@ export class Query${className}Dto extends QueryDomain {
   #foreach($column in $columns)
     #set($type=$column.javaType.toLowerCase())
     #if($column.query && $column.queryType != "BETWEEN")
-      @ApiProperty({ description: "$column.columnComment", require: false })
+      @ApiProperty({ description: "$column.columnComment" })
       @IsOptional()
       #if($column.javaType == "Number")
       @Transform((v) => +v.value)
@@ -26,10 +26,10 @@ export class Create${className}Dto #if(${hasBaseDomain}) extends BaseDomain #end
     #set($type=$column.javaType.toLowerCase())
     #if($column.columnName != $pkColumn.columnName || !$pkColumn.increment)
       #if($column.required)
-      @ApiProperty({ description: "$column.columnComment", required:true })
+      @ApiProperty({ description: "$column.columnComment" })
       @IsNotEmpty({ message: "$column.columnComment不能为空" })
       #else
-      @ApiProperty({ description: "$column.columnComment", required: false })
+      @ApiProperty({ description: "$column.columnComment" })
       @IsOptional()
       #end
       #if($column.javaType == "Number")
@@ -60,10 +60,10 @@ export class Update${className}Dto #if(${hasBaseDomain}) extends BaseDomain #end
     #end
     #if($column.columnName != $pkColumn.columnName && $column.edit)
       #if($column.required)
-      @ApiProperty({ description: "$column.columnComment", required:true })
+      @ApiProperty({ description: "$column.columnComment" })
       @IsNotEmpty({ message: "$column.columnComment不能为空" })
       #else
-      @ApiProperty({ description: "$column.columnComment", required: false })
+      @ApiProperty({ description: "$column.columnComment" })
       @IsOptional()
       #end
       #if($column.javaType == "Number")

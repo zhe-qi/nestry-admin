@@ -14,27 +14,27 @@
                   </div>
                   <ul class="list-group list-group-striped">
                      <li class="list-group-item">
-                        <svg-icon icon-class="user" />用户名称
-                        <div class="pull-right">{{ state.user.userName }}</div>
+                        <div class="item-left"><svg-icon icon-class="user" />用户名称</div>
+                        <div class="">{{ state.user.userName }}</div>
                      </li>
                      <li class="list-group-item">
-                        <svg-icon icon-class="phone" />手机号码
+                        <div class="item-left"><svg-icon icon-class="phone" />手机号码</div>
                         <div class="pull-right">{{ state.user.phonenumber }}</div>
                      </li>
                      <li class="list-group-item">
-                        <svg-icon icon-class="email" />用户邮箱
+                        <div class="item-left"><svg-icon icon-class="email" />用户邮箱</div>
                         <div class="pull-right">{{ state.user.email }}</div>
                      </li>
                      <li class="list-group-item">
-                        <svg-icon icon-class="tree" />所属部门
+                        <div class="item-left"><svg-icon icon-class="tree" />所属部门</div>
                         <div class="pull-right" v-if="state.user.dept">{{ state.user.dept.deptName }} / {{ state.postGroup }}</div>
                      </li>
                      <li class="list-group-item">
-                        <svg-icon icon-class="peoples" />所属角色
+                        <div class="item-left"><svg-icon icon-class="peoples" />所属角色</div>
                         <div class="pull-right">{{ state.roleGroup }}</div>
                      </li>
                      <li class="list-group-item">
-                        <svg-icon icon-class="date" />创建日期
+                        <div class="item-left"><svg-icon icon-class="date" />创建日期</div>
                         <div class="pull-right">{{ state.user.createTime }}</div>
                      </li>
                   </ul>
@@ -85,3 +85,13 @@ function getUser() {
 
 getUser();
 </script>
+
+<style scoped lang="scss">
+.item-left {
+   @apply flex items-center gap-2 text-zinc-700 text-sm;
+}
+
+.list-group-item {
+   @apply flex justify-between;
+}
+</style>

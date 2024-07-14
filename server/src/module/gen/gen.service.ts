@@ -12,7 +12,7 @@ import { ColumnInfo, Table } from './types';
 import { queryGenTableDto } from './dto/queryGenTableDto';
 import { queryDataBaseDto } from './dto/queryDatabaseDto';
 import { PrismaService } from '@/module/prisma/prisma.service';
-import { formatDate, nowDateTime, toPascalCase } from '@/common/utils';
+import { addDateRangeConditions, buildQueryCondition, formatDate, nowDateTime, toPascalCase } from '@/common/utils';
 import { GenConstants } from '@/common/constant/gen';
 
 @Injectable()
@@ -21,16 +21,23 @@ export class GenService {
 
   // 查询生成表数据
   async listTable(q: queryGenTableDto) {
-    const queryCondition: Prisma.GenTableWhereInput = {};
+    // const queryCondition: Prisma.GenTableWhereInput = {};
 
-    // 使用对象属性的动态赋值来简化条件判断和赋值
-    ['tableName', 'tableComment'].forEach((key) => {
-      if (isNotEmpty(q[key])) {
-        queryCondition[key] = {
-          contains: q[key],
-        };
-      }
-    });
+    // // 使用对象属性的动态赋值来简化条件判断和赋值
+    // ['tableName', 'tableComment'].forEach((key) => {
+    //   if (isNotEmpty(q[key])) {
+    //     queryCondition[key] = {
+    //       contains: q[key],
+    //     };
+    //   }
+    // });
+
+    const conditions = {
+      tableName: () => ({ contains: q.tableName }),
+      tableComment: () => ({ contains: q.tableComment }),
+    };
+
+    const queryCondition = buildQueryCondition<queryGenTableDto, Prisma.GenTableWhereInput>(q, conditions);
 
     // 对于时间范围的特殊处理，保持不变以确保逻辑的准确性
     if (isNotEmpty(q.params.beginTime) && isNotEmpty(q.params.endTime)) {
@@ -39,6 +46,12 @@ export class GenService {
         lte: q.params.endTime,
       };
     }
+
+    const dataRange: Record<string, [string, string]> = {
+      createTime: ['beginTime', 'endTime'],
+    };
+
+    addDateRangeConditions(queryCondition, q, dataRange);
 
     const [rows, total] = await this.prisma.$transaction([
       this.prisma.genTable.findMany({
@@ -259,14 +272,7 @@ export class GenService {
 
   // 预览生成代码
   async previewTable(tableId: number) {
-    try {
-      this.readTemplates();
-    } catch (error) {
-      // eslint-disable-next-line no-console
-      console.log(error);
-    }
     const info = await this.getTableInfoById(tableId);
-    this.prepareTableInfo(info);
     const data = this.prepareTemplateData(info);
     const templates = this.readTemplates();
     const renderedTemplates = this.renderTemplates(templates, data);
@@ -515,13 +521,13 @@ export class GenService {
     const { isPk, isIncrement, isRequired, isInsert, isEdit, isList, isQuery } = column;
     return {
       ...column,
-      pk: Boolean(isPk),
-      increment: Boolean(isIncrement),
-      required: Boolean(isRequired),
-      insert: Boolean(isInsert),
-      edit: Boolean(isEdit),
-      list: Boolean(isList),
-      query: Boolean(isQuery),
+      pk: isPk === '1',
+      increment: isIncrement === '1',
+      required: isRequired === '1',
+      insert: isInsert === '1',
+      edit: isEdit === '1',
+      list: isList === '1',
+      query: isQuery === '1',
     };
   }
 

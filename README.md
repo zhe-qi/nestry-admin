@@ -24,8 +24,9 @@
 - 从直接导入config迁移到@nestjs/config [已完成]
 - 重构上传模块 [已完成]
 - redis修改为redis模块，redis services [已完成]
+- 添加定时任务页面 [已完成]
 
-- 添加定时任务页面 [开发中]
+- 添加定时任务日志页面 [进行中]
 - 近一步简化CRUD的代码，规范CRUD的代码结构，抽离复用函数 [未开始]
 - 修改为passport全家桶 [未开始] [待定]
 - 从 express 替换至 fastify [未开始] [待定]
@@ -43,6 +44,10 @@
 ！！！ 导出excel函数在 controller不能在最后一个，否则报错500，情况未知
 
 定时任务测试案例，添加调用方法为`testJob`，表达式为 `* * * * * *`，可以发现每秒都在执行控制台输出
+
+优化模板引擎方案：
+  1. 使用模板字符串 或者 handlebars
+  2. 生成module、service、controller、dto 和 prisma schema 同时保留sql生成
 
 TODO: 
 1. 修复前端部分页面sass混入报错

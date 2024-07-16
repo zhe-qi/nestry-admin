@@ -7,7 +7,7 @@
 # 介绍
 **该项目长期维护，且永久开源免费**
 
-> !Node.js版本尽量大于LTS版本，新版更安全同时性能更好
+> !Node.js版本尽量大于等于LTS版本，新版更安全同时性能更好
 
 临时文档地址：[https://zheqi.netlify.app/admin/](https://zheqi.netlify.app/admin/)
 
@@ -39,9 +39,11 @@
 - 进行性能测试 [未开始]
 - 投入生产环境 [未开始]
 
-如果有好的想法或者建议，欢迎提出issue，加入到任务队列
+如果有好的想法或者建议，欢迎提出issue，加入到任务队列  
 
-不定期同步ruoyi-vue3和carole-admin的部分更新。
+目前版本以混合优先，会参考所有现有nest后台开源项目  
+
+不定期同步ruoyi-vue3和carole-admin的部分更新。  
 
 ！！！ 导出excel方法在 controller 不能在最后一个，否则报错500，情况未知
 

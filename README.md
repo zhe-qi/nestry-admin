@@ -9,6 +9,9 @@
 
 临时文档地址：[https://zheqi.netlify.app/admin/](https://zheqi.netlify.app/admin/)
 
+### 技术栈
+  - 后端：nestjs + prisma + redis + webpack + swc
+
 ## 当前fork分支路线图（不包含第一版发布更改）
 
 > 当前版本快速迭代中，不是很稳定，且更新频繁，请勿上生产环境！！！
@@ -27,10 +30,11 @@
 - 添加定时任务页面 [已完成]
 
 - 添加定时任务日志页面 [进行中]
-- 修改为passport全家桶 [未开始] [待定]
+- 从 mysql 迁移到 postgresql [未开始] [待定]
+- 修改为 passport 全家桶 [未开始] [待定]
 - 从 express 替换至 fastify [未开始] [待定]
 - 优化模板引擎，优化模板 [未开始]
-- 重构前端admin部分，使用geeker、pure、vben等后台开源框架整合版本 [未开始]
+- 重构前端 admin 部分，使用 geeker、pure、vben 等后台开源框架整合版本 [未开始]
 - 添加详细文档 [未开始]
 - 添加单元测试 vitest [未开始]
 - 进行性能测试 [未开始]
@@ -40,7 +44,7 @@
 
 不定期同步ruoyi-vue3和carole-admin的部分更新。
 
-！！！ 导出excel函数在 controller不能在最后一个，否则报错500，情况未知
+！！！ 导出excel方法在 controller 不能在最后一个，否则报错500，情况未知
 
 定时任务测试案例，添加调用方法为`testJob`，表达式为 `* * * * * *`，可以发现每秒都在执行控制台输出
 

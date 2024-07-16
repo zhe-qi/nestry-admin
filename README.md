@@ -9,9 +9,6 @@
 
 临时文档地址：[https://zheqi.netlify.app/admin/](https://zheqi.netlify.app/admin/)
 
-### 技术栈
-  - 后端：nestjs + prisma + redis + webpack + swc
-
 ## 当前fork分支路线图（不包含第一版发布更改）
 
 > 当前版本快速迭代中，不是很稳定，且更新频繁，请勿上生产环境！！！

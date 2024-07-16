@@ -1,4 +1,4 @@
-import { randomUUID } from 'node:crypto';
+import { randomBytes, randomUUID, scryptSync } from 'node:crypto';
 import { BadRequestException, Injectable } from '@nestjs/common';
 import * as bowser from 'bowser';
 import { SysLogininfor, SysRole, SysUser } from '@prisma/client';
@@ -6,7 +6,6 @@ import * as jwt from 'jsonwebtoken';
 import * as requestIp from 'request-ip';
 import { Request } from 'express';
 import { capitalize } from 'lodash';
-import * as bcrypt from 'bcrypt';
 import { ConfigService } from '@nestjs/config';
 import type { MenuItem, RawItem } from './types';
 import { LoginBody } from './dto/LoginBody';
@@ -376,8 +375,10 @@ export class AuthService {
   /**
    * @desc 密码加密
    */
-  encrypt(str: string): string {
-    return bcrypt.hashSync(str, bcrypt.genSaltSync(10));
+  encrypt(str: string) {
+    const salt = randomBytes(16).toString('hex');
+    const hashedPassword = scryptSync(str, salt, 64).toString('hex');
+    return `${salt}$${hashedPassword}`;
   }
 
   /** @desc 创建token */
@@ -490,8 +491,10 @@ export class AuthService {
       throw new BadRequestException('用户不存在');
     }
 
-    if (!bcrypt.compareSync(password, user.password)) {
-      throw new BadRequestException('密码不正确');
+    const salt = user.password.split('$')[0];
+    const hashedPassword = scryptSync(password, salt, 64).toString('hex');
+    if (hashedPassword !== user.password.split('$')[1]) {
+      throw new BadRequestException('密码错误');
     }
 
     if (user.status !== '1') {

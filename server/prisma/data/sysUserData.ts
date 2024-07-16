@@ -1,4 +1,4 @@
-import * as bcrypt from 'bcrypt';
+import { randomBytes, scryptSync } from 'node:crypto';
 import { SysUser } from '@prisma/client';
 
 export const sysUserData: SysUser[] = [
@@ -12,7 +12,7 @@ export const sysUserData: SysUser[] = [
     phonenumber: '18888888888',
     sex: '0',
     avatar: '',
-    password: bcrypt.hashSync('123456', bcrypt.genSaltSync(10)),
+    password: encrypt('123456'),
     status: '1',
     loginIp: '127.0.0.1',
     loginDate: '2023-12-21 15:19:31',
@@ -32,7 +32,7 @@ export const sysUserData: SysUser[] = [
     phonenumber: '18888888888',
     sex: '0',
     avatar: '',
-    password: '123456',
+    password: encrypt('123456'),
     status: '1',
     loginIp: '127.0.0.1',
     loginDate: '2023-12-21 15:19:31',
@@ -43,3 +43,9 @@ export const sysUserData: SysUser[] = [
     remark: 'test',
   },
 ];
+
+function encrypt(str: string) {
+  const salt = randomBytes(16).toString('hex');
+  const hashedPassword = scryptSync(str, salt, 64).toString('hex');
+  return `${salt}$${hashedPassword}`;
+}

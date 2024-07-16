@@ -7,6 +7,8 @@
 # 介绍
 **该项目长期维护，且永久开源免费**
 
+> !Node.js版本尽量大于LTS版本，新版更安全同时性能更好
+
 临时文档地址：[https://zheqi.netlify.app/admin/](https://zheqi.netlify.app/admin/)
 
 ## 当前fork分支路线图（不包含第一版发布更改）
@@ -19,7 +21,7 @@
 - 添加 DockerFile 和 DockerCompose [已完成]
 - 添加基于npx prisma db push，和 seed.ts 的数据库初始化脚本 [已完成]
 - 添加 swc 和 webpack 支持 [已完成]
-- 密码加密从crypto改为bcrypt，添加Helmet [已完成]
+- 密码加密从crypto改为bcrypt，从bcrypt改为node自带scrypt，添加Helmet [已完成]
 - 从node-xlsx迁移到exceljs [已完成]
 - 从直接导入config迁移到@nestjs/config [已完成]
 - 重构上传模块 [已完成]

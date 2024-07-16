@@ -196,7 +196,7 @@ model SysUser {
   phonenumber String?       @default("") @map("phonenumber") @db.VarChar(11)
   sex         String?       @default("0") @map("sex") @db.Char(1)
   avatar      String?       @default("") @map("avatar") @db.VarChar(100)
-  password    String?       @default("") @map("password") @db.VarChar(100)
+  password    String?       @default("") @map("password") @db.VarChar(255)
   status      String?       @default("1") @map("status") @db.Char(1)
   loginIp     String?       @default("") @map("login_ip") @db.VarChar(128)
   loginDate   String?       @map("login_date") @db.VarChar(25)

@@ -29,7 +29,6 @@
 - 添加定时任务页面 [已完成]
 
 - 添加定时任务日志页面 [进行中]
-- 添加代码生成从prisma schema model 而不是 sql [未开始]
 - 从 mysql 迁移到 postgresql [未开始] [待定]
 - 修改为 passport 全家桶 [未开始] [待定]
 - 从 express 替换至 fastify [未开始] [待定]
@@ -51,11 +50,13 @@
 定时任务测试案例，添加调用方法为`testJob`，表达式为 `* * * * * *`，可以发现每秒都在执行控制台输出
 
 优化模板引擎方案：
-  1. 使用模板字符串 或者 handlebars
+  1. 使用模板字符串
   2. 生成module、service、controller、dto 和 prisma schema 同时保留sql生成
 
 TODO: 
 1. 修复前端部分页面sass混入报错
+
+关于代码生成，代码质量不高问题，到时候肯定会优化的  
 
 本地快速启动流程
 ```bash

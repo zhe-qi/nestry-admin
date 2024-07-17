@@ -11,6 +11,10 @@ import { ConfigService } from '@nestjs/config';
 import { ColumnInfo, Table } from './types';
 import { queryGenTableDto } from './dto/queryGenTableDto';
 import { queryDataBaseDto } from './dto/queryDatabaseDto';
+import { getDtoTemplate } from './gen-template/nestjs/dto';
+import { getControllerTemplate } from './gen-template/nestjs/controller';
+import { getServiceTemplate } from './gen-template/nestjs/service';
+import { getModuleTemplate } from './gen-template/nestjs/module';
 import { PrismaService } from '@/module/prisma/prisma.service';
 import { addDateRangeConditions, buildQueryCondition, formatDate, nowDateTime, toPascalCase } from '@/common/utils';
 import { GenConstants } from '@/common/constant/gen';
@@ -21,17 +25,6 @@ export class GenService {
 
   // 查询生成表数据
   async listTable(q: queryGenTableDto) {
-    // const queryCondition: Prisma.GenTableWhereInput = {};
-
-    // // 使用对象属性的动态赋值来简化条件判断和赋值
-    // ['tableName', 'tableComment'].forEach((key) => {
-    //   if (isNotEmpty(q[key])) {
-    //     queryCondition[key] = {
-    //       contains: q[key],
-    //     };
-    //   }
-    // });
-
     const conditions = {
       tableName: () => ({ contains: q.tableName }),
       tableComment: () => ({ contains: q.tableComment }),
@@ -278,9 +271,10 @@ export class GenService {
     const renderedTemplates = this.renderTemplates(templates, data);
 
     return {
-      'gen-template/node/service.ts.vm': renderedTemplates.serviceData,
-      'gen-template/node/controller.ts.vm': renderedTemplates.controllerData,
-      'gen-template/node/dto.ts.vm': renderedTemplates.dtoData,
+      'gen-template/nestjs/service.ts.vm': getServiceTemplate(data),
+      'gen-template/nestjs/module.ts.vm': getModuleTemplate(data),
+      'gen-template/nestjs/controller.ts.vm': getControllerTemplate(data),
+      'gen-template/nestjs/dto.ts.vm': getDtoTemplate(data),
       'gen-template/vue/index.vue.vm': renderedTemplates.vueData,
       'gen-template/js/api.js.vm': renderedTemplates.apiData,
       'gen-template/sql/sql.vm': renderedTemplates.sqlData,
@@ -324,12 +318,13 @@ export class GenService {
 
   prepareFilePaths(data) {
     return {
-      servicePath: join(__dirname, `temp/node/${data.packageName}/${data.moduleName}/${data.businessName}/service/${data.filename}.service.ts`),
-      controllerPath: join(__dirname, `temp/node/${data.packageName}/${data.moduleName}/${data.businessName}/${data.filename}.controller.ts`),
-      dtoPath: join(__dirname, `temp/node/${data.packageName}/${data.moduleName}/${data.businessName}/dto/index.ts`),
+      servicePath: join(__dirname, `temp/nestjs/${data.packageName}/${data.moduleName}/${data.businessName}/service/${data.filename}.service.ts`),
+      controllerPath: join(__dirname, `temp/nestjs/${data.packageName}/${data.moduleName}/${data.businessName}/${data.filename}.controller.ts`),
+      dtoPath: join(__dirname, `temp/nestjs/${data.packageName}/${data.moduleName}/${data.businessName}/dto/index.ts`),
       vuePath: join(__dirname, `temp/vue/views/${data.moduleName}/${data.businessName}/index.vue`),
       apiPath: join(__dirname, `temp/vue/api/${data.moduleName}/${data.businessName}.js`),
       sqlPath: join(__dirname, `temp/${data.businessName}.sql`),
+      modulePath: join(__dirname, `temp/nestjs/${data.packageName}/${data.moduleName}/${data.businessName}/${data.filename}.module.ts`),
     };
   }
 
@@ -338,9 +333,6 @@ export class GenService {
       vueTemplateStr: readFileSync(join(__dirname, './gen-template/vue/index.vue.vm')).toString(),
       jsTemplateStr: readFileSync(join(__dirname, './gen-template/js/api.js.vm')).toString(),
       sqlTemplateStr: readFileSync(join(__dirname, './gen-template/sql/sql.vm')).toString(),
-      serviceTemplateStr: readFileSync(join(__dirname, './gen-template/node/service.ts.vm')).toString(),
-      dtoTemplateStr: readFileSync(join(__dirname, './gen-template/node/dto.ts.vm')).toString(),
-      controllerTemplateStr: readFileSync(join(__dirname, './gen-template/node/controller.ts.vm')).toString(),
     };
   }
 
@@ -349,16 +341,14 @@ export class GenService {
       vueData: Velocity.render(templates.vueTemplateStr, data),
       apiData: Velocity.render(templates.jsTemplateStr, data),
       sqlData: Velocity.render(templates.sqlTemplateStr, data),
-      serviceData: Velocity.render(templates.serviceTemplateStr, data).replace(/(\n\s*\n)+/g, '\n'),
-      dtoData: Velocity.render(templates.dtoTemplateStr, data).replace(/(\n\s*\n)+/g, '\n'),
-      controllerData: Velocity.render(templates.controllerTemplateStr, data),
     };
   }
 
   writeFiles(paths, renderedTemplates) {
-    writeFile(paths.servicePath, renderedTemplates.serviceData);
-    writeFile(paths.controllerPath, renderedTemplates.controllerData);
-    writeFile(paths.dtoPath, renderedTemplates.dtoData);
+    writeFile(paths.servicePath, getServiceTemplate(renderedTemplates));
+    writeFile(paths.controllerPath, getControllerTemplate(renderedTemplates));
+    writeFile(paths.dtoPath, getDtoTemplate(renderedTemplates));
+    writeFile(paths.modulePath, getModuleTemplate(renderedTemplates));
     writeFile(paths.vuePath, renderedTemplates.vueData);
     writeFile(paths.apiPath, renderedTemplates.apiData);
     writeFile(paths.sqlPath, renderedTemplates.sqlData);

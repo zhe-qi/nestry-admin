@@ -93,6 +93,9 @@ import '@/common/utils/email';
   ],
   controllers: [],
   providers: [
+    PermissionGuard,
+    RoleGuard,
+    RedisService,
     {
       provide: APP_PIPE,
       useFactory: () => new ValidationPipe({ whitelist: true, exceptionFactory }),
@@ -101,9 +104,6 @@ import '@/common/utils/email';
     { provide: APP_GUARD, useClass: PermissionGuard },
     { provide: APP_GUARD, useClass: RoleGuard },
     { provide: APP_INTERCEPTOR, useClass: RemoveThrottleHeadersInterceptor },
-    PermissionGuard,
-    RoleGuard,
-    RedisService,
     { provide: APP_FILTER, useClass: GlobalErrorFilter },
     { provide: APP_FILTER, useClass: BadRequestFilter },
     { provide: APP_FILTER, useClass: ThrottlerExceptionFilter },

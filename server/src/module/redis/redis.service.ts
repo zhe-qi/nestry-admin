@@ -32,8 +32,7 @@ export class RedisService {
 
   /* 分页查询 */
   async skipFind(data: { key: string, pageSize: number, pageNum: number }) {
-    const rawInfo = await this.redis.lrange(data.key, (data.pageNum - 1) * data.pageSize, data.pageNum * data.pageSize);
-    return rawInfo;
+    return this.redis.lrange(data.key, (data.pageNum - 1) * data.pageSize, data.pageNum * data.pageSize);
   }
 
   /* --------------------- string 相关 -------------------------- */
@@ -41,14 +40,14 @@ export class RedisService {
   /* 插入操作 */
   async set(key: string, value: string, expire?: number): Promise<string> {
     if (expire) {
-      return await this.redis.set(
+      return this.redis.set(
         key,
         value,
         'EX',
         expire,
       );
     } else {
-      return await this.redis.set(key, value);
+      return this.redis.set(key, value);
     }
   }
 
@@ -65,7 +64,7 @@ export class RedisService {
   /* 删除操作 */
   async del(keys: string | string[]): Promise<number> {
     if (typeof keys === 'string') { keys = [keys]; }
-    return await this.redis.del(...keys);
+    return this.redis.del(...keys);
   }
 
   /* 设置过期时间 */
@@ -75,7 +74,7 @@ export class RedisService {
 
   /* 获取所有 key */
   async keys(key?: string) {
-    return await this.redis.keys(key);
+    return this.redis.keys(key);
   }
 
   /* --------------------- hash 相关 -------------------------- */
@@ -119,7 +118,7 @@ export class RedisService {
     if (!key) { return 0; }
     const fields = await this.hvals(key);
     if (fields.length === 0) { return 0; }
-    return await this.hdel(key, fields);
+    return this.hdel(key, fields);
   }
 
   /* -----------   list 相关操作 ------------------ */

@@ -37,15 +37,6 @@ export function getServiceTemplate(data: Record<string, any>) {
     }).filter(Boolean).join('\n    ');
   };
 
-  const handleEmptyFields = (_isUpdate = false) => {
-    return columns.map((column) => {
-      if ((column.columnName !== pkColumn.columnName || !pkColumn.increment) && column.columnName !== 'uuid') {
-        return `if (isEmpty(${entityName}["${column.javaField}"])) { delete ${entityName}["${column.javaField}"]; }`;
-      }
-      return '';
-    }).filter(Boolean).join('\n    ');
-  };
-
   return `import { Injectable } from '@nestjs/common';
 import { PrismaService } from '@/module/prisma/prisma.service';
 import { Response } from 'express';
@@ -88,7 +79,11 @@ export class ${className}Service {
 
   /** @description 新增${functionName} */
   async add${BusinessName}(${entityName}: Create${className}Dto) {
-    ${handleEmptyFields()}
+    Object.keys(${BusinessName}).forEach(key => {
+      if (isEmpty(${BusinessName}[key])) {
+        delete ${BusinessName}[key];
+      }
+    });
     return await this.prisma.${modelName1}.create({
       data: ${entityName},
     });
@@ -96,7 +91,11 @@ export class ${className}Service {
 
   /** @description 修改${functionName} */
   async update${BusinessName}(${entityName}: Update${className}Dto) {
-    ${handleEmptyFields(true)}
+    Object.keys(${BusinessName}).forEach(key => {
+      if (isEmpty(${BusinessName}[key])) {
+        delete ${BusinessName}[key];
+      }
+    });
     return await this.prisma.${modelName1}.update({
       where: { ${pkName}: ${entityName}.${pkName} },
       data: ${entityName},

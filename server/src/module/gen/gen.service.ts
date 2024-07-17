@@ -242,14 +242,10 @@ export class GenService {
       for (const tableName of tableNames) {
         const info = await this.getTableInfoByTableName(tableName);
         this.prepareTableInfo(info);
-
         const data = this.prepareTemplateData(info);
         const paths = this.prepareFilePaths(data);
-
         const templates = this.readTemplates();
-
         const renderedTemplates = this.renderTemplates(templates, data);
-
         this.writeFiles(paths, renderedTemplates);
       }
 
@@ -318,13 +314,13 @@ export class GenService {
 
   prepareFilePaths(data) {
     return {
-      servicePath: join(__dirname, `temp/nestjs/${data.packageName}/${data.moduleName}/${data.businessName}/service/${data.filename}.service.ts`),
-      controllerPath: join(__dirname, `temp/nestjs/${data.packageName}/${data.moduleName}/${data.businessName}/${data.filename}.controller.ts`),
-      dtoPath: join(__dirname, `temp/nestjs/${data.packageName}/${data.moduleName}/${data.businessName}/dto/index.ts`),
+      servicePath: join(__dirname, `temp/nestjs/${data.filename}.service.ts`),
+      controllerPath: join(__dirname, `temp/nestjs/${data.filename}.controller.ts`),
+      dtoPath: join(__dirname, `temp/nestjs/${data.filename}.dto.ts`),
       vuePath: join(__dirname, `temp/vue/views/${data.moduleName}/${data.businessName}/index.vue`),
       apiPath: join(__dirname, `temp/vue/api/${data.moduleName}/${data.businessName}.js`),
       sqlPath: join(__dirname, `temp/${data.businessName}.sql`),
-      modulePath: join(__dirname, `temp/nestjs/${data.packageName}/${data.moduleName}/${data.businessName}/${data.filename}.module.ts`),
+      modulePath: join(__dirname, `temp/nestjs/${data.filename}.module.ts`),
     };
   }
 
@@ -338,6 +334,10 @@ export class GenService {
 
   renderTemplates(templates, data) {
     return {
+      serviceData: data,
+      controllerData: data,
+      dtoData: data,
+      moduleData: data,
       vueData: Velocity.render(templates.vueTemplateStr, data),
       apiData: Velocity.render(templates.jsTemplateStr, data),
       sqlData: Velocity.render(templates.sqlTemplateStr, data),
@@ -345,10 +345,10 @@ export class GenService {
   }
 
   writeFiles(paths, renderedTemplates) {
-    writeFile(paths.servicePath, getServiceTemplate(renderedTemplates));
-    writeFile(paths.controllerPath, getControllerTemplate(renderedTemplates));
-    writeFile(paths.dtoPath, getDtoTemplate(renderedTemplates));
-    writeFile(paths.modulePath, getModuleTemplate(renderedTemplates));
+    writeFile(paths.servicePath, getServiceTemplate(renderedTemplates.serviceData));
+    writeFile(paths.controllerPath, getControllerTemplate(renderedTemplates.controllerData));
+    writeFile(paths.dtoPath, getDtoTemplate(renderedTemplates.dtoData));
+    writeFile(paths.modulePath, getModuleTemplate(renderedTemplates.moduleData));
     writeFile(paths.vuePath, renderedTemplates.vueData);
     writeFile(paths.apiPath, renderedTemplates.apiData);
     writeFile(paths.sqlPath, renderedTemplates.sqlData);

@@ -29,6 +29,7 @@
 - 添加定时任务页面 [已完成]
 
 - 添加定时任务日志页面 [进行中]
+- 添加代码生成从prisma schema model 而不是 sql [未开始]
 - 从 mysql 迁移到 postgresql [未开始] [待定]
 - 修改为 passport 全家桶 [未开始] [待定]
 - 从 express 替换至 fastify [未开始] [待定]

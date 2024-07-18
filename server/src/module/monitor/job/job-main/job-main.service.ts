@@ -23,23 +23,7 @@ export class JobMainService implements OnModuleInit {
     const jobs = await this.prisma.sysJob.findMany({ where: { status: Constants.SUCCESS } });
 
     jobs.forEach((job) => {
-      try {
-        const { invokeTarget, cronExpression } = job;
-
-        if (!getInstanceFunction(this.taskHandlers).includes(invokeTarget)) {
-          throw new BadRequestException(`任务${invokeTarget}不存在`);
-        }
-
-        const cronJob = new CronJob(cronExpression, () => {
-          this.taskHandlers[invokeTarget](job);
-        });
-
-        this.scheduler.addCronJob(invokeTarget, cronJob);
-
-        cronJob.start();
-      } catch (err) {
-        console.error(`任务创建失败, ${err}`);
-      }
+      this.manageCronJob(job, 'create');
     });
   }
 
@@ -145,16 +129,17 @@ export class JobMainService implements OnModuleInit {
 
     const { invokeTarget, status } = res;
 
-    const scheduledJob = this.scheduler.getCronJob(invokeTarget);
-
     try {
+      const scheduledJob = this.scheduler.getCronJob(invokeTarget);
       if (status === Constants.FAIL) {
         scheduledJob.stop();
       } else {
         scheduledJob.start();
       }
-    } catch (err) {
-      return new BadRequestException(`任务状态修改失败, ${err}`);
+    } catch {
+      if (status === Constants.SUCCESS) {
+        await this.manageCronJob(res, 'create');
+      }
     }
 
     return res;

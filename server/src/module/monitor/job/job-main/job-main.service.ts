@@ -1,19 +1,19 @@
 import { BadRequestException, Injectable, OnModuleInit } from '@nestjs/common';
-import { Prisma } from '@prisma/client';
+import { Prisma, SysJob } from '@prisma/client';
 import { isNotEmpty } from 'class-validator';
 import { SchedulerRegistry } from '@nestjs/schedule';
 import { CronJob } from 'cron';
 import { Response } from 'express';
-import { ChangeSysJobStatusDto, CreateSysJobDto, QueryJobDto, UpdateSysJobDto } from './dto';
-import * as TaskHandlers from './taskHandlers';
+import { TaskHandlers } from '../taskHandlers';
+import { ChangeJobMainStatusDto, CreateJobMainDto, QueryJobMainDto, UpdateJobMainDto } from './dto';
 import { PrismaService } from '@/module/prisma/prisma.service';
 import { exportTable } from '@/common/utils/export';
-import { buildQueryCondition } from '@/common/utils';
+import { buildQueryCondition, nowDateTime } from '@/common/utils';
 import { Constants } from '@/common/constant/constants';
 
 @Injectable()
-export class JobService implements OnModuleInit {
-  constructor(private prisma: PrismaService, private scheduler: SchedulerRegistry) {}
+export class JobMainService implements OnModuleInit {
+  constructor(private prisma: PrismaService, private scheduler: SchedulerRegistry, private taskHandlers: TaskHandlers) {}
   onModuleInit() {
     this.startAllJob();
   }
@@ -26,7 +26,13 @@ export class JobService implements OnModuleInit {
       try {
         const { invokeTarget, cronExpression } = job;
 
-        const cronJob = new CronJob(cronExpression, TaskHandlers[invokeTarget]);
+        if (!getInstanceFunction(this.taskHandlers).includes(invokeTarget)) {
+          throw new BadRequestException(`任务${invokeTarget}不存在`);
+        }
+
+        const cronJob = new CronJob(cronExpression, () => {
+          this.taskHandlers[invokeTarget](job);
+        });
 
         this.scheduler.addCronJob(invokeTarget, cronJob);
 
@@ -37,14 +43,14 @@ export class JobService implements OnModuleInit {
     });
   }
 
-  async selectJobList(q: QueryJobDto) {
+  async selectJobList(q: QueryJobMainDto) {
     const conditions = {
       jobName: () => ({ contains: q.jobName }),
       jobGroup: () => ({ contains: q.jobGroup }),
       status: () => ({ equals: q.status }),
     };
 
-    const queryCondition = buildQueryCondition<QueryJobDto, Prisma.SysJobWhereInput>(q, conditions);
+    const queryCondition = buildQueryCondition<QueryJobMainDto, Prisma.SysJobWhereInput>(q, conditions);
 
     return {
       rows: await this.prisma.sysJob.findMany({
@@ -62,47 +68,49 @@ export class JobService implements OnModuleInit {
     return this.prisma.sysJob.findUnique({ where: { jobId } });
   }
 
-  async addJob(job: CreateSysJobDto) {
+  async addJob(job: CreateJobMainDto) {
     this.cleanJobData(job);
-
-    await this.executeJobAction(job);
-
-    const res = await this.prisma.sysJob.create({ data: job });
-
-    await this.manageCronJob(res, 'create');
-
-    return res;
-  }
-
-  async updateJob(job: UpdateSysJobDto) {
-    this.cleanJobData(job);
-
-    await this.executeJobAction(job);
-
-    const res = await this.prisma.sysJob.update({
-      where: { jobId: job.jobId },
-      data: job,
-    });
-
-    await this.manageCronJob(res, 'update');
-
-    return res;
-  }
-
-  async deleteJob(jobId: number) {
-    const res = await this.prisma.sysJob.delete({ where: { jobId } });
 
     try {
-      const scheduledJob = this.scheduler.getCronJob(res.invokeTarget);
-
-      if (scheduledJob) {
-        scheduledJob.stop();
-      }
-
-      this.scheduler.deleteCronJob(res.invokeTarget);
-    } catch {
-      return new BadRequestException('任务已删除，但是定时任务删除时报错');
+      await this.executeJobAction(job);
+      const res = await this.prisma.sysJob.create({ data: job });
+      await this.manageCronJob(res, 'create');
+      return res;
+    } catch (err) {
+      throw new BadRequestException(`任务创建失败, ${err}`);
     }
+  }
+
+  async updateJob(job: UpdateJobMainDto) {
+    this.cleanJobData(job);
+
+    try {
+      await this.executeJobAction(job);
+      const res = await this.prisma.sysJob.update({
+        where: { jobId: job.jobId },
+        data: job,
+      });
+      await this.manageCronJob(res, 'update');
+      return res;
+    } catch (err) {
+      throw new BadRequestException(`任务更新失败, ${err}`);
+    }
+  }
+
+  async deleteJob(ids: number[]) {
+    const jobs = await this.prisma.sysJob.findMany({ where: { jobId: { in: ids } } });
+
+    for (const job of jobs) {
+      try {
+        const scheduledJob = this.scheduler.getCronJob(job.invokeTarget);
+        if (scheduledJob) {
+          scheduledJob.stop();
+        }
+        this.scheduler.deleteCronJob(job.invokeTarget);
+      } catch {}
+    }
+
+    const res = await this.prisma.sysJob.deleteMany({ where: { jobId: { in: ids } } });
 
     return res;
   }
@@ -129,7 +137,7 @@ export class JobService implements OnModuleInit {
     exportTable(data, res);
   }
 
-  async changeStatus(job: ChangeSysJobStatusDto) {
+  async changeStatus(job: ChangeJobMainStatusDto) {
     const res = await this.prisma.sysJob.update({
       where: { jobId: job.jobId },
       data: { status: job.status },
@@ -171,7 +179,7 @@ export class JobService implements OnModuleInit {
     }
   }
 
-  private async manageCronJob(job: any, action: 'create' | 'update'): Promise<void> {
+  private async manageCronJob(job: SysJob, action: 'create' | 'update'): Promise<void> {
     const { invokeTarget, cronExpression, misfirePolicy, status } = job;
 
     if (misfirePolicy === '3' || status === Constants.FAIL) {
@@ -190,11 +198,25 @@ export class JobService implements OnModuleInit {
         this.scheduler.deleteCronJob(invokeTarget);
       }
 
-      cronJob = new CronJob(cronExpression, TaskHandlers[invokeTarget]);
+      if (!getInstanceFunction(this.taskHandlers).includes(invokeTarget)) {
+        throw new BadRequestException(`任务${invokeTarget}不存在`);
+      }
+
+      cronJob = new CronJob(cronExpression, () => {
+        this.taskHandlers[invokeTarget](job);
+      });
       this.scheduler.addCronJob(invokeTarget, cronJob);
       cronJob.start();
     } catch (error) {
       throw new BadRequestException(`任务${action === 'create' ? '创建' : '更新'}失败, ${error}`);
     }
   }
+}
+
+// 获取类上的所有方法，不包含构造函数和原型链上的方法
+function getInstanceFunction(instance) {
+  const proto = Object.getPrototypeOf(instance);
+  const properties = Object.getOwnPropertyNames(proto);
+  const methods = properties.filter(prop => typeof instance[prop] === 'function' && prop !== 'constructor' && prop !== 'seedJobLog');
+  return methods;
 }

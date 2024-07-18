@@ -5,7 +5,7 @@ import { QueryDomain } from '@/common/domain/query';
 import { IsOptional } from '@/common/decorator/dto-optional-property.decorator';
 import { BaseDomain } from '@/common/domain/base';
 
-export class QueryJobDto extends QueryDomain {
+export class QueryJobMainDto extends QueryDomain {
   @ApiProperty({ description: '任务名称' })
   @IsOptional()
   jobName: string;
@@ -19,7 +19,7 @@ export class QueryJobDto extends QueryDomain {
   status: string;
 }
 
-export class CreateSysJobDto extends BaseDomain {
+export class CreateJobMainDto extends BaseDomain {
   @ApiProperty({ description: '任务名称' })
   @IsNotEmpty({ message: '任务名称不能为空' })
   @IsString()
@@ -56,7 +56,7 @@ export class CreateSysJobDto extends BaseDomain {
   status: string;
 }
 
-export class UpdateSysJobDto extends BaseDomain {
+export class UpdateJobMainDto extends BaseDomain {
   @ApiProperty({ description: '任务ID' })
   @IsNotEmpty({ message: '任务ID不能为空' })
   @IsNumber()
@@ -98,7 +98,7 @@ export class UpdateSysJobDto extends BaseDomain {
   status: string;
 }
 
-export class ChangeSysJobStatusDto {
+export class ChangeJobMainStatusDto {
   @ApiProperty({ description: '任务ID' })
   @IsNotEmpty({ message: '任务ID不能为空' })
   @Transform(v => +v.value)

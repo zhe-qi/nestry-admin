@@ -203,7 +203,7 @@ const { queryParams, form, rules } = toRefs(data);
 /** 查询调度日志列表 */
 function getList() {
   loading.value = true;
-  listJobLog(proxy.addDateRange(queryParams.value, dateRange.value)).then(response => {
+  listJobLog(proxy.addDateRange(queryParams.value, dateRange.value, 'CreateTime')).then(response => {
     jobLogList.value = response.rows;
     total.value = response.total;
     loading.value = false;

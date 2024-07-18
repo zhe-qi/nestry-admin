@@ -1,10 +1,9 @@
-import { existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdirSync, rmSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { isNotEmpty } from 'class-validator';
 import { camelCase, kebabCase, toLower, upperFirst } from 'lodash';
-import * as Velocity from 'velocityjs';
 import archiver from 'archiver';
 import { Response } from 'express';
 import { ConfigService } from '@nestjs/config';
@@ -15,6 +14,9 @@ import { getDtoTemplate } from './gen-template/nestjs/dto';
 import { getControllerTemplate } from './gen-template/nestjs/controller';
 import { getServiceTemplate } from './gen-template/nestjs/service';
 import { getModuleTemplate } from './gen-template/nestjs/module';
+import { getApiTemplate } from './gen-template/vue/api';
+import { getSqlTemplate } from './gen-template/nestjs/sql';
+import { getVueTemplate } from './gen-template/vue';
 import { PrismaService } from '@/module/prisma/prisma.service';
 import { addDateRangeConditions, buildQueryCondition, formatDate, nowDateTime, toPascalCase } from '@/common/utils';
 import { GenConstants } from '@/common/constant/gen';
@@ -244,9 +246,7 @@ export class GenService {
         this.prepareTableInfo(info);
         const data = this.prepareTemplateData(info);
         const paths = this.prepareFilePaths(data);
-        const templates = this.readTemplates();
-        const renderedTemplates = this.renderTemplates(templates, data);
-        this.writeFiles(paths, renderedTemplates);
+        this.writeFiles(paths, data);
       }
 
       // eslint-disable-next-line no-console
@@ -263,17 +263,15 @@ export class GenService {
   async previewTable(tableId: number) {
     const info = await this.getTableInfoById(tableId);
     const data = this.prepareTemplateData(info);
-    const templates = this.readTemplates();
-    const renderedTemplates = this.renderTemplates(templates, data);
 
     return {
       'gen-template/nestjs/service.ts.vm': getServiceTemplate(data),
       'gen-template/nestjs/module.ts.vm': getModuleTemplate(data),
       'gen-template/nestjs/controller.ts.vm': getControllerTemplate(data),
       'gen-template/nestjs/dto.ts.vm': getDtoTemplate(data),
-      'gen-template/vue/index.vue.vm': renderedTemplates.vueData,
-      'gen-template/js/api.js.vm': renderedTemplates.apiData,
-      'gen-template/sql/sql.vm': renderedTemplates.sqlData,
+      'gen-template/vue/index.vue.vm': getVueTemplate(data).replace(/(\n\s*\n)+/g, '\n'),
+      'gen-template/js/api.js.vm': getApiTemplate(data),
+      'gen-template/sql/sql.vm': getSqlTemplate(data),
     };
   }
 
@@ -317,41 +315,21 @@ export class GenService {
       servicePath: join(__dirname, `temp/nestjs/${data.filename}.service.ts`),
       controllerPath: join(__dirname, `temp/nestjs/${data.filename}.controller.ts`),
       dtoPath: join(__dirname, `temp/nestjs/${data.filename}.dto.ts`),
-      vuePath: join(__dirname, `temp/vue/views/${data.moduleName}/${data.businessName}/index.vue`),
-      apiPath: join(__dirname, `temp/vue/api/${data.moduleName}/${data.businessName}.js`),
+      vuePath: join(__dirname, `temp/vue/${data.businessName}/index.vue`),
+      apiPath: join(__dirname, `temp/vue/${data.businessName}.js`),
       sqlPath: join(__dirname, `temp/${data.businessName}.sql`),
       modulePath: join(__dirname, `temp/nestjs/${data.filename}.module.ts`),
     };
   }
 
-  readTemplates() {
-    return {
-      vueTemplateStr: readFileSync(join(__dirname, './gen-template/vue/index.vue.vm')).toString(),
-      jsTemplateStr: readFileSync(join(__dirname, './gen-template/js/api.js.vm')).toString(),
-      sqlTemplateStr: readFileSync(join(__dirname, './gen-template/sql/sql.vm')).toString(),
-    };
-  }
-
-  renderTemplates(templates, data) {
-    return {
-      serviceData: data,
-      controllerData: data,
-      dtoData: data,
-      moduleData: data,
-      vueData: Velocity.render(templates.vueTemplateStr, data),
-      apiData: Velocity.render(templates.jsTemplateStr, data),
-      sqlData: Velocity.render(templates.sqlTemplateStr, data),
-    };
-  }
-
-  writeFiles(paths, renderedTemplates) {
-    writeFile(paths.servicePath, getServiceTemplate(renderedTemplates.serviceData));
-    writeFile(paths.controllerPath, getControllerTemplate(renderedTemplates.controllerData));
-    writeFile(paths.dtoPath, getDtoTemplate(renderedTemplates.dtoData));
-    writeFile(paths.modulePath, getModuleTemplate(renderedTemplates.moduleData));
-    writeFile(paths.vuePath, renderedTemplates.vueData);
-    writeFile(paths.apiPath, renderedTemplates.apiData);
-    writeFile(paths.sqlPath, renderedTemplates.sqlData);
+  writeFiles(paths, data) {
+    writeFile(paths.servicePath, getServiceTemplate(data));
+    writeFile(paths.controllerPath, getControllerTemplate(data));
+    writeFile(paths.dtoPath, getDtoTemplate(data));
+    writeFile(paths.modulePath, getModuleTemplate(data));
+    writeFile(paths.vuePath, getVueTemplate(data).replace(/(\n\s*\n)+/g, '\n'));
+    writeFile(paths.apiPath, getApiTemplate(data));
+    writeFile(paths.sqlPath, getSqlTemplate(data));
   }
 
   sendResponse(res) {

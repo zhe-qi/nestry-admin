@@ -1,5 +1,5 @@
 import { SysJob } from '@prisma/client';
-import * as dayjs from 'dayjs';
+import dayjs from 'dayjs';
 
 export const jobData: SysJob[] = [
   {

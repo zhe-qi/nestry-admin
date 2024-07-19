@@ -2,6 +2,7 @@
   "compilerOptions": {
     "incremental": true,
     "target": "ES2021",
+    "lib": ["ESNext"],
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "baseUrl": "./",
@@ -19,6 +20,7 @@
     "removeComments": true,
     "sourceMap": true,
     "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
     "forceConsistentCasingInFileNames": false,
     "skipLibCheck": true
   }

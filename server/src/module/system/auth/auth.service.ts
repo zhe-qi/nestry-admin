@@ -1,13 +1,12 @@
 import { randomBytes, randomUUID, scryptSync } from 'node:crypto';
 import { BadRequestException, Injectable } from '@nestjs/common';
-import * as bowser from 'bowser';
+import bowser from 'bowser';
 import { SysLogininfor, SysRole, SysUser } from '@prisma/client';
-import * as jwt from 'jsonwebtoken';
-import * as requestIp from 'request-ip';
+import jwt from 'jsonwebtoken';
+import requestIp from 'request-ip';
 import { Request } from 'express';
 import { capitalize } from 'lodash';
 import { ConfigService } from '@nestjs/config';
-import type { MenuItem, RawItem } from './types';
 import { LoginBody } from './dto/LoginBody';
 import { PrismaService } from '@/module/prisma/prisma.service';
 import { AxiosService } from '@/module/axios/axios.service';
@@ -44,7 +43,7 @@ export class AuthService {
     // 验证用户
     try {
       user = await this.validateUser(username, password);
-    } catch (e) {
+    } catch (e: any) {
       loginInfo.msg = e.response?.message;
 
       await this.prisma.sysLogininfor.create({

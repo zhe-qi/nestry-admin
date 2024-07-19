@@ -258,7 +258,7 @@ model SysJob {
   concurrent     String  @default("1") @map("concurrent") @db.Char(1)
   status         String  @default("0") @map("status") @db.Char(1)
   createBy       String? @default("") @map("create_by") @db.VarChar(64)
-  createTime     String?  @map("create_time") @db.VarChar(25)
+  createTime     String? @map("create_time") @db.VarChar(25)
   updateBy       String? @default("") @map("update_by") @db.VarChar(64)
   updateTime     String? @map("update_time") @db.VarChar(25)
   remark         String? @default("") @map("remark") @db.VarChar(500)

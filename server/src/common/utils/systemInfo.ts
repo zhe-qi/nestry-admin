@@ -1,5 +1,5 @@
-import * as os from 'node:os';
-import * as si from 'systeminformation';
+import os from 'node:os';
+import si from 'systeminformation';
 import dayjs from 'dayjs';
 
 // 获取cpu

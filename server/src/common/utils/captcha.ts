@@ -1,4 +1,4 @@
-import * as svgCaptcha from 'svg-captcha';
+import svgCaptcha from 'svg-captcha';
 
 const options = {
   // 验证码字符集，可以是字母、数字或者组合

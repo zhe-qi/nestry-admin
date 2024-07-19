@@ -33,6 +33,7 @@
 - 从 mysql 迁移到 postgresql [未开始] [待定]
 - 修改为 passport 全家桶 [未开始] [待定]
 - 从 express 替换至 fastify [未开始] [待定]
+- 添加请求日志
 - 优化模板引擎，优化模板 [未开始]
 - 重构前端 admin 部分，使用 geeker、pure、vben 等后台开源框架整合版本 [未开始]
 - 添加详细文档 [未开始]
@@ -46,7 +47,7 @@
 
 不定期同步ruoyi-vue3和carole-admin的部分更新。  
 
-！！！ 导出excel方法在 controller 不能在最后一个，否则报错500，情况未知
+！！！ 导出excel方法在 controller 不能在最后一个，否则报错，情况未知
 
 定时任务测试案例，添加调用方法为`testJob`，表达式为 `* * * * * *`，可以发现每秒都在执行控制台输出
 

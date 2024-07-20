@@ -112,6 +112,6 @@ export class ThrottlerExceptionFilter implements ExceptionFilter {
 export class GlobalErrorFilter implements ExceptionFilter {
   catch(exception: any, host: ArgumentsHost) {
     const res = host.switchToHttp().getResponse<Response>();
-    res.send(Result.Error('error'));
+    res.send(Result.Error(exception));
   }
 }

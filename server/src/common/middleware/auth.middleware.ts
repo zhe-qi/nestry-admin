@@ -12,7 +12,7 @@ export class AuthMiddleware implements NestMiddleware {
   async use(req: Request & { userId: number, token: string, user: any }, _res: Response, next: () => void) {
     const token = this.extractToken(req);
     try {
-      const { userId, tokenId } = await this.verifyToken(token);
+      const { userId, tokenId } = await this.authService.verifyToken(token);
       await this.validateToken(tokenId, userId);
       const userInfo = await this.getUserInfo(userId);
       this.assignRequestProperties(
@@ -33,10 +33,6 @@ export class AuthMiddleware implements NestMiddleware {
       throw new AuthorizationException('无效的token！');
     }
     return token.slice(7);
-  }
-
-  private async verifyToken(token: string): Promise<{ userId: number, tokenId: string }> {
-    return this.authService.verifyToken(token) as Promise<{ userId: number, tokenId: string }>;
   }
 
   private async validateToken(tokenId: string, _userId: number): Promise<void> {

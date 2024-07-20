@@ -1,12 +1,12 @@
 import { randomBytes, randomUUID, scryptSync } from 'node:crypto';
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Inject, Injectable } from '@nestjs/common';
 import bowser from 'bowser';
 import { SysLogininfor, SysRole, SysUser } from '@prisma/client';
-import jwt from 'jsonwebtoken';
 import requestIp from 'request-ip';
 import { Request } from 'express';
 import { capitalize } from 'lodash';
 import { ConfigService } from '@nestjs/config';
+import { JwtService } from '@nestjs/jwt';
 import { LoginBody } from './dto/LoginBody';
 import { PrismaService } from '@/module/prisma/prisma.service';
 import { AxiosService } from '@/module/axios/axios.service';
@@ -23,6 +23,9 @@ export class AuthService {
     private readonly redis: RedisService,
     private readonly configService: ConfigService,
   ) {}
+
+  @Inject()
+  private jwtService: JwtService;
 
   /** @desc 登录 */
   async login(loginBody: LoginBody, req: Request) {
@@ -381,23 +384,13 @@ export class AuthService {
   }
 
   /** @desc 创建token */
-  createToken(payload) {
-    return jwt.sign(payload, this.configService.get('token.secret'), {
-      expiresIn: this.configService.get('token.expiresIn'),
-    });
+  createToken(payload: any) {
+    return this.jwtService.sign(payload);
   }
 
   /** @desc 解析token */
   verifyToken(token: string) {
-    return new Promise((resolve, reject) => {
-      jwt.verify(token, this.configService.get('token.secret'), (err, data) => {
-        if (err) {
-          reject(err);
-        } else {
-          resolve(data);
-        }
-      });
-    });
+    return this.jwtService.verify(token);
   }
 
   /** @desc 记录登录信息 */

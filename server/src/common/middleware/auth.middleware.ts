@@ -7,7 +7,7 @@ import { RedisService } from '@/module/redis/redis.service';
 
 @Injectable()
 export class AuthMiddleware implements NestMiddleware {
-  constructor(private authService: AuthService, private readonly redis: RedisService) {}
+  constructor(private authService: AuthService, private redis: RedisService) {}
 
   async use(req: Request & { userId: number, token: string, user: any }, _res: Response, next: () => void) {
     const token = this.extractToken(req);
@@ -15,12 +15,9 @@ export class AuthMiddleware implements NestMiddleware {
       const { userId, tokenId } = await this.authService.verifyToken(token);
       await this.validateToken(tokenId, userId);
       const userInfo = await this.getUserInfo(userId);
-      this.assignRequestProperties(
-        req,
-        userId,
-        token,
-        userInfo,
-      );
+      req.userId = userId;
+      req.token = token;
+      req.user = userInfo;
       next();
     } catch {
       throw new AuthorizationException('无效的token！');
@@ -48,16 +45,5 @@ export class AuthMiddleware implements NestMiddleware {
       throw new AuthorizationException('无效的token！');
     }
     return JSON.parse(userInfo);
-  }
-
-  private assignRequestProperties(
-    req: Request & { userId: number, token: string, user: any },
-    userId: number,
-    token: string,
-    userInfo: any,
-  ): void {
-    req.userId = userId;
-    req.token = token;
-    req.user = userInfo;
   }
 }

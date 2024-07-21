@@ -262,6 +262,7 @@ export class GenService {
   // 预览生成代码
   async previewTable(tableId: number) {
     const info = await this.getTableInfoById(tableId);
+
     const data = this.prepareTemplateData(info);
 
     return {

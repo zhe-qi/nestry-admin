@@ -91,7 +91,6 @@ import '@/common/utils/email';
     OnlineModule,
     JobModule,
   ],
-  controllers: [],
   providers: [
     PermissionGuard,
     RoleGuard,

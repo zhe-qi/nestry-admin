@@ -72,7 +72,7 @@
     "systeminformation": "^5.22.11"
   },
   "devDependencies": {
-    "@antfu/eslint-config": "^2.23.0",
+    "@antfu/eslint-config": "^2.23.1",
     "@nestjs/cli": "^10.4.2",
     "@nestjs/schematics": "^10.1.2",
     "@nestjs/testing": "^10.3.10",

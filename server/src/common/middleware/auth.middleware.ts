@@ -11,6 +11,7 @@ export class AuthMiddleware implements NestMiddleware {
 
   async use(req: Request & { userId: number, token: string, user: any }, _res: Response, next: () => void) {
     const token = this.extractToken(req);
+
     try {
       const { userId, tokenId } = await this.authService.verifyToken(token);
       await this.validateToken(tokenId, userId);
@@ -26,24 +27,18 @@ export class AuthMiddleware implements NestMiddleware {
 
   private extractToken(req: Request): string {
     const token = req.headers.authorization;
-    if (!token || !token.startsWith('Bearer ')) {
-      throw new AuthorizationException('无效的token！');
-    }
+    if (!token || !token.startsWith('Bearer ')) { throw new AuthorizationException('无效的token！'); }
     return token.slice(7);
   }
 
   private async validateToken(tokenId: string, _userId: number): Promise<void> {
     const tokenExists = await this.redis.get(Constants.LOGIN_TOKEN_KEY + tokenId);
-    if (!tokenExists) {
-      throw new AuthorizationException('无效的token！');
-    }
+    if (!tokenExists) { throw new AuthorizationException('无效的token！'); }
   }
 
   private async getUserInfo(userId: number): Promise<any> {
     const userInfo = await this.redis.get(Constants.LOGIN_CACHE_TOKEN_KEY + userId);
-    if (!userInfo) {
-      throw new AuthorizationException('无效的token！');
-    }
+    if (!userInfo) { throw new AuthorizationException('无效的token！'); }
     return JSON.parse(userInfo);
   }
 }

@@ -14,7 +14,7 @@ import { addDateRangeConditions, buildQueryCondition } from '@/common/utils';
 
 @Injectable()
 export class UserService {
-  constructor(private readonly prisma: PrismaService, private authService: AuthService, private readonly redis: RedisService) {}
+  constructor(private prisma: PrismaService, private authService: AuthService, private redis: RedisService) {}
 
   /** @description 查询用户所有 */
   async selectUserAll() {

@@ -15,6 +15,7 @@ import { TableDataInfo } from '@/common/domain/table';
 @Controller('system/post')
 export class PostController {
   constructor(private postService: PostService) {}
+
   @ApiOperation({ summary: '查询岗位信息表列表' })
   @ApiQuery({ type: QuerySysPostDto })
   @ApiResponse({ type: TableDataInfo<SysPost> })

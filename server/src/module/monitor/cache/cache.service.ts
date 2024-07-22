@@ -85,10 +85,7 @@ export class CacheService {
     return Result.ok(data);
   }
 
-  /**
-   * 缓存监控
-   * @returns
-   */
+  /** 缓存监控 */
   async getInfo() {
     return Result.ok(await this.redis.getRedisInfo());
   }

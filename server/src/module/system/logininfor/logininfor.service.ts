@@ -10,6 +10,7 @@ import { addDateRangeConditions, buildQueryCondition } from '@/common/utils';
 @Injectable()
 export class LogininforService {
   constructor(private prisma: PrismaService) {}
+
   /** @description 查询登录日志所有 */
   async selectLogininforAll() {
     return this.prisma.sysLogininfor.findMany();

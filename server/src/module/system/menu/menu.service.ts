@@ -10,6 +10,7 @@ import { PrismaService } from '@/module/prisma/prisma.service';
 @Injectable()
 export class MenuService {
   constructor(private prisma: PrismaService) {}
+
   /** @description 查询菜单管理所有 */
   async selectMenuAll() {
     return this.prisma.sysMenu.findMany();

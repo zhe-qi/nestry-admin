@@ -32,6 +32,7 @@ export class CaptchaController {
       math: createMath,
       text: createText,
     };
+
     // 根据配置的是math还是text自动调用方法生成数据
     const captchaInfo = map[this.configService.get('captcha.mode')]();
     // 是否开启验证码
@@ -42,6 +43,7 @@ export class CaptchaController {
       img: captchaInfo.data,
       uuid: randomUUID(),
     };
+
     try {
       await this.redis.set(Constants.CAPTCHA_CODE_KEY + data.uuid, captchaInfo.text.toLowerCase(), this.configService.get('captcha.expiresIn'));
       return data;

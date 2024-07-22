@@ -12,7 +12,7 @@ export class TaskHandlers {
   constructor(private prisma: PrismaService) {}
 
   /**
-   * seedJobLog在白名单当中，不会加入外部执行函数
+   * seedJobLog在黑名单当中，不会加入外部执行函数
    */
   seedJobLog(
     job: SysJob,

@@ -136,7 +136,6 @@ export class UserController {
   /**
    * @description 用户头像上传
    */
-
   @Post('/profile/avatar')
   async updateAvatar(@Body() body, @Req() req) {
     const userId = req.userId;

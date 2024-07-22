@@ -6,6 +6,7 @@ import { CacheService } from './cache.service';
 @Controller('/monitor/cache')
 export class CacheController {
   constructor(private readonly cacheService: CacheService) {}
+
   @ApiOperation({
     summary: '缓存监控信息',
   })

@@ -14,6 +14,7 @@ import { TableDataInfo } from '@/common/domain/table';
 @Controller('monitor/logininfor')
 export class LogininforController {
   constructor(private logininforService: LogininforService) {}
+
   @ApiOperation({ summary: '查询登录日志列表' })
   @ApiQuery({ type: QuerySysLogininforDto })
   @ApiResponse({ type: TableDataInfo<SysLogininfor> })

@@ -10,6 +10,7 @@ import { buildQueryCondition } from '@/common/utils';
 @Injectable()
 export class NoticeService {
   constructor(private prisma: PrismaService) {}
+
   /** @description 查询通知公告表所有 */
   async selectNoticeAll() {
     return this.prisma.sysNotice.findMany();

@@ -490,13 +490,13 @@ export class GenService {
     const { isPk, isIncrement, isRequired, isInsert, isEdit, isList, isQuery } = column;
     return {
       ...column,
-      pk: isPk === '1',
-      increment: isIncrement === '1',
-      required: isRequired === '1',
-      insert: isInsert === '1',
-      edit: isEdit === '1',
-      list: isList === '1',
-      query: isQuery === '1',
+      pk: !!+isPk,
+      increment: !!+isIncrement,
+      required: !!+isRequired,
+      insert: !!+isInsert,
+      edit: !!+isEdit,
+      list: !!+isList,
+      query: !!+isQuery,
     };
   }
 

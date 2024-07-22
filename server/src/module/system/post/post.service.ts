@@ -10,6 +10,7 @@ import { addDateRangeConditions, buildQueryCondition } from '@/common/utils';
 @Injectable()
 export class PostService {
   constructor(private prisma: PrismaService) {}
+
   /** @description 查询岗位信息表所有 */
   async selectPostAll() {
     return this.prisma.sysPost.findMany();

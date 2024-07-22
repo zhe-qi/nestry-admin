@@ -4,17 +4,20 @@ import { ValidationException } from '@/common/exception/validation';
 @Injectable()
 export class ParseIntArrayPipe implements PipeTransform<string, number[]> {
   transform(value: string): number[] {
-    const array = value.split(',').map((item) => {
-      const trimmedItem = item.trim();
-      if (trimmedItem === '') {
-        throw new ValidationException('参数不能为空字符串');
-      }
-      const parsedNumber = Number.parseInt(trimmedItem, 10);
+    const trimmedValue = value.trim();
+    if (!trimmedValue) {
+      throw new ValidationException('参数不能为空');
+    }
+
+    const items = trimmedValue.split(',');
+    const numbers = Array.from<number>({ length: items.length });
+    for (let i = 0; i < items.length; i++) {
+      const parsedNumber = Number.parseInt(items[i].trim(), 10);
       if (Number.isNaN(parsedNumber)) {
         throw new ValidationException('参数不正确');
       }
-      return parsedNumber;
-    });
-    return array;
+      numbers[i] = parsedNumber;
+    }
+    return numbers;
   }
 }

@@ -72,7 +72,7 @@
     "systeminformation": "^5.22.11"
   },
   "devDependencies": {
-    "@antfu/eslint-config": "^2.23.1",
+    "@antfu/eslint-config": "^2.23.2",
     "@nestjs/cli": "^10.4.2",
     "@nestjs/schematics": "^10.1.2",
     "@nestjs/testing": "^10.3.10",
@@ -101,7 +101,7 @@
     "terser-webpack-plugin": "^5.3.10",
     "ts-node": "^10.9.2",
     "tsconfig-paths": "^4.2.0",
-    "typescript": "^5.5.3",
+    "typescript": "^5.5.4",
     "unplugin-swc": "^1.5.1",
     "vitest": "^2.0.4",
     "webpack": "^5.93.0",

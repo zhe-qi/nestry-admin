@@ -450,7 +450,7 @@ export class GenService {
     const { dicts, dictsNoSymbol } = this.extractDicts(tableColumns);
     const pkColumn = tableColumns.find(v => v.pk && v.increment) || tableColumns[0];
     const options = JSON.parse(tableInfo.options || '{}');
-    const parentMenuId = +options.parentMenuId ?? 0;
+    const parentMenuId = +options.parentMenuId || 0;
 
     return {
       ...tableInfo,

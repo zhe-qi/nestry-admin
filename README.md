@@ -31,6 +31,7 @@
 - 添加定时任务日志页面 [已完成]
 
 - 从 mysql 迁移到 postgresql [未开始] [待定]
+- 准备添加 concurrently [未开始]
 - 修改为 passport 全家桶 [未开始] [待定]
 - 从 express 替换至 fastify [未开始] [待定]
 - 添加请求日志 [未开始] [待定]

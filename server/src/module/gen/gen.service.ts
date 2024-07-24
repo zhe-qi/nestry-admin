@@ -406,11 +406,22 @@ export class GenService {
   // 批量获取表的基本信息（包含注释）
   selectDbTableListByNames(names: string[]) {
     if (!names.length) { return null; }
-    return this.prisma.$queryRawUnsafe<Table[]>(`select table_name as tableName, table_comment as tableComment, create_time as createTime, update_time as updateTime from information_schema.tables
+
+    // 创建参数占位符
+    const placeholders = names.map(() => '?').join(',');
+
+    // 构建SQL查询
+    const query = `
+      select table_name as tableName, table_comment as tableComment, create_time as createTime, update_time as updateTime 
+      from information_schema.tables
       where table_schema = (select database())
       and table_name NOT LIKE 'qrtz_%' and table_name NOT LIKE 'gen_%'
       and table_name NOT IN (select table_name from gen_table)
-      and table_name IN (${'?,'.repeat(names.length).slice(0, -1)})`, ...names);
+      and table_name IN (${placeholders})
+    `;
+
+    // 使用参数化查询执行
+    return this.prisma.$queryRawUnsafe<Table[]>(query, ...names);
   }
 
   // 根据表名获取表的字段信息以及注释

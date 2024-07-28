@@ -40,8 +40,7 @@ export class AuthService {
     // ip是否被封禁
     await this.checkBlacklistedIP(loginInfo.ipaddr, loginInfo);
 
-    type UnpackPromise<T> = T extends Promise<infer U> ? U : T;
-    let user: UnpackPromise<ReturnType<typeof this.validateUser>>;
+    let user: Awaited<ReturnType<typeof this.validateUser>>;
 
     // 验证用户
     try {

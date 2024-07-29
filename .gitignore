@@ -3,6 +3,7 @@
 /admin/dist
 /server/node_modules
 /admin/node_modules
+/node_modules
 /server/build
 /admin/build
 _upload
@@ -42,7 +43,8 @@ lerna-debug.log*
 !.vscode/extensions.json
 
 # dotenv environment variable files
-.env
+# 请勿将.env文件提交到git仓库，实际项目中请将.env文件加入到.gitignore中
+# .env
 .env.development.local
 .env.test.local
 .env.production.local

@@ -1,0 +1,5 @@
+packages:
+  # 后台管理系统
+  - admin
+  # 服务端
+  - server

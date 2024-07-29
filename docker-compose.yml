@@ -1,0 +1,28 @@
+# docker-compose down -v                                                                                                      130 ↵
+# docker-compose up --build
+
+services:
+  mysql-container:
+    container_name: mysql-container
+    hostname: mysql-container
+    image: mysql
+    ports:
+      - '3306:3306'
+    volumes:
+      - /Users/zheqi/mysql-data:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: 123456
+      MYSQL_DATABASE: nest_admin
+    healthcheck:
+      test: [ "CMD", "mysqladmin", "ping", "-h", "localhost" ]
+      timeout: 20s
+      retries: 10
+    restart: unless-stopped
+  redis-container:
+    container_name: redis-container
+    image: redis
+    ports:
+      - '6379:6379'
+    volumes:
+      - /Users/zheqi/nest_admin:/data
+    restart: unless-stopped

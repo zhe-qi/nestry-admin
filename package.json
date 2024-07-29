@@ -1,0 +1,14 @@
+{
+  "name": "nestry",
+  "version": "1.0.0",
+  "description": "",
+  "private": true,
+  "scripts": {
+    "dev": "concurrently \"pnpm -r -F \"nestry-server\" dev\" \"pnpm -r -F \"nestry-admin\" dev\"",
+    "prisma:init": "pnpm -r -F \"nestry-server\" prisma:seed && pnpm -r -F \"nestry-server\" prisma:generate"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "concurrently": "^8.2.2"
+  }
+}

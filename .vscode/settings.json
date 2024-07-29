@@ -49,5 +49,8 @@
     "scss",
     "pcss",
     "postcss"
+  ],
+  "cSpell.words": [
+    "nestry"
   ]
 }

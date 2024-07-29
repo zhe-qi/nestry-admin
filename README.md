@@ -61,33 +61,18 @@ TODO:
 
 本地快速启动流程
 ```bash
-# 安装最新版mysql和redis并运行，建议使用docker安装
+# 安装最新版 mysql8 和 redis 并运行，建议使用docker安装，docker需要魔法加速，建议使用orbStack，轻量级，速度快
 
-# /server 目录下
+# 以下操作均在根目录执行
 
 # 安装依赖
 pnpm install
-
-# 复制一份环境变量
-cp .env.example .env
 
 # prisma 确保有环境变量mysql地址结尾的数据库，使用docker启动自动创建
-# 生成表和字段
-npx prisma db push
-# 生成客户端ts类型和代码
-npx prisma generate
-# 初始化数据 db push + db seed 等同于 source init.sql
-npx prisma db seed
+# 生成表和字段, 生成客户端ts类型和代码, 初始化数据 db push + db seed 等同于 source init.sql
+pnpm prisma:init
 
-# 基于swc编译ts，比tsc快20倍
-pnpm dev
-
-# /admin 目录下
-
-# 安装依赖
-pnpm install
-
-# 启动
+# 启动，等待项目完全运行后，打开访问前端地址 http://localhost:3001/
 pnpm dev
 ```
 

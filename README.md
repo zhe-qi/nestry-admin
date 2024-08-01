@@ -56,6 +56,12 @@
 
 关于代码生成，代码质量不高问题，到时候肯定会优化的  
 
+关于 prisma 迁移造成的重置数据库问题，目前默认执行迁移文件名会带上时间戳，所以不会有问题，否则请使用单调递增命名法，1_migration  
+
+关于 prisma 生成，得益于 postinstall ，在任意端执行 pnpm install 都会执行 npx prisma generate  
+
+关于 monorepo，方便安装和一键启动，不用切换目录，不用开两个命令窗口，仅此而已，项目实际还是分开的
+
 本地快速启动流程
 ```bash
 # 安装最新版 mysql8 和 redis 并运行，建议使用docker安装，docker需要魔法加速，建议使用orbStack，轻量级，速度快

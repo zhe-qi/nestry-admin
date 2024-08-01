@@ -5,20 +5,24 @@ import { ValidationException } from '@/common/exception/validation';
 
 @Injectable()
 export class ValidationPipe implements PipeTransform {
-  async transform(value: any, { metatype }: ArgumentMetadata) {
+  async transform(value, { metatype }: ArgumentMetadata) {
     if (!metatype || !this.toValidate(metatype)) {
       return value;
     }
+
     const object = plainToClass(metatype, value);
+
     const errors = await validate(object, {
       skipMissingProperties: false, // 根据需要调整
     });
+
     if (errors.length > 0) {
       // 收集所有验证错误信息
       const messages = errors.map(err =>
         Object.values(err.constraints).join(', ')).join('; ');
       throw new ValidationException(messages);
     }
+
     return object;
   }
 

@@ -29,7 +29,8 @@
     "prisma:reset": "npx prisma migrate reset --force",
     "prisma:seed": "npx prisma db push && ts-node ./prisma/seed.ts",
     "lint": "eslint .",
-    "lint:fix": "eslint . --fix"
+    "lint:fix": "eslint . --fix",
+    "postinstall": "npx prisma generate"
   },
   "dependencies": {
     "@nestjs/axios": "^3.0.2",

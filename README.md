@@ -65,6 +65,7 @@
 本地快速启动流程
 ```bash
 # 安装最新版 mysql8 和 redis 并运行，建议使用docker安装，docker需要魔法加速，建议使用orbStack，轻量级，速度快
+docker-compose up -d
 
 # 以下操作均在根目录执行
 

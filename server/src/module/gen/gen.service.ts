@@ -17,6 +17,7 @@ import { getModuleTemplate } from './gen-template/nestjs/module';
 import { getApiTemplate } from './gen-template/vue/api';
 import { getSqlTemplate } from './gen-template/nestjs/sql';
 import { getVueTemplate } from './gen-template/vue';
+import { getPrismaSeedData } from './gen-template/prisma/data';
 import { PrismaService } from '@/module/prisma/prisma.service';
 import { addDateRangeConditions, buildQueryCondition, formatDate, nowDateTime, toPascalCase } from '@/common/utils';
 import { GenConstants } from '@/common/constant/gen';
@@ -273,6 +274,7 @@ export class GenService {
       'gen-template/vue/index.vue.vm': getVueTemplate(data).replace(/(\n\s*\n)+/g, '\n'),
       'gen-template/js/api.js.vm': getApiTemplate(data),
       'gen-template/sql/sql.vm': getSqlTemplate(data),
+      'gen-template/prisma/data.ts.vm': getPrismaSeedData(data),
     };
   }
 
@@ -320,6 +322,7 @@ export class GenService {
       apiPath: join(__dirname, `temp/vue/${data.businessName}.js`),
       sqlPath: join(__dirname, `temp/${data.businessName}.sql`),
       modulePath: join(__dirname, `temp/nestjs/${data.filename}.module.ts`),
+      dataPath: join(__dirname, 'temp/prisma/data.ts'),
     };
   }
 
@@ -331,6 +334,7 @@ export class GenService {
     writeFile(paths.vuePath, getVueTemplate(data).replace(/(\n\s*\n)+/g, '\n'));
     writeFile(paths.apiPath, getApiTemplate(data));
     writeFile(paths.sqlPath, getSqlTemplate(data));
+    writeFile(paths.dataPath, getPrismaSeedData(data));
   }
 
   sendResponse(res) {

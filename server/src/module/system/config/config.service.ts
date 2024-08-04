@@ -26,8 +26,6 @@ export class ConfigService {
     for (const item of configData) {
       await this.redis.set(Constants.SYS_CONFIG_KEY + item.configKey, item.configValue);
     }
-    // eslint-disable-next-line no-console
-    console.log('系统配置信息初始化完成！');
   }
 
   /** @description 查询参数配置所有 */

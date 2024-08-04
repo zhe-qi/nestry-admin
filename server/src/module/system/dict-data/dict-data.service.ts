@@ -25,8 +25,6 @@ export class DictDataService implements OnModuleInit {
     for (const dictKey in dictData) {
       await this.redis.set(Constants.SYS_DICT_KEY + dictKey, JSON.stringify(dictData[dictKey], null, 2));
     }
-    // eslint-disable-next-line no-console
-    console.log('字典信息初始化完毕！');
   }
 
   // 根据字典类型更新redis字典数据

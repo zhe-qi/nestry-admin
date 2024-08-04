@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "concurrently \"pnpm -r -F \"nestry-server\" dev\" \"pnpm -r -F \"nestry-admin\" dev\"",
     "prisma:init": "pnpm -r -F \"nestry-server\" prisma:seed && pnpm -r -F \"nestry-server\" prisma:generate",
-    "prisma:seed": "pnpm -r -F \"nestry-server\" prisma:seed"
+    "prisma:seed": "pnpm -r -F \"nestry-server\" prisma:seed",
+    "prisma:migrate": "pnpm -r -F \"nestry-server\" prisma:migrate"
   },
   "license": "MIT",
   "dependencies": {

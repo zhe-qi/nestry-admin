@@ -5,6 +5,7 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import helmet from 'helmet';
 import { ConfigService } from '@nestjs/config';
 import { ValidationPipe } from '@nestjs/common';
+import gradientString from 'gradient-string';
 import { AppModule } from './app.module';
 
 async function bootstrap() {
@@ -26,7 +27,14 @@ async function bootstrap() {
     crossOriginResourcePolicy: false,
   }));
 
-  await app.listen(config.get('port'));
+  await app.listen(config.get('port'), () => {
+    const welcomeMessage = gradientString('cyan', 'magenta').multiline(`
+swagger: ${config.get('swagger.enable') ? `http://localhost:${config.get('port')}${config.get('contextPath')}${config.get('swagger.prefix')}` : 'disabled'}
+admin: http://localhost:3001`);
+
+    // eslint-disable-next-line no-console
+    console.log(welcomeMessage);
+  });
 
   if (module.hot) {
     module.hot.accept();

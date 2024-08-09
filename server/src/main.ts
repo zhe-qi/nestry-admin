@@ -27,14 +27,7 @@ async function bootstrap() {
     crossOriginResourcePolicy: false,
   }));
 
-  await app.listen(config.get('port'), () => {
-    const welcomeMessage = gradientString('cyan', 'magenta').multiline(`
-swagger: ${config.get('swagger.enable') ? `http://localhost:${config.get('port')}${config.get('contextPath')}${config.get('swagger.prefix')}` : 'disabled'}
-admin: http://localhost:3001`);
-
-    // eslint-disable-next-line no-console
-    console.log(welcomeMessage);
-  });
+  await app.listen(config.get('port'), () => logInfo(config));
 
   if (module.hot) {
     module.hot.accept();
@@ -59,4 +52,17 @@ async function configureSwagger(app: NestExpressApplication, config: ConfigServi
     const document = SwaggerModule.createDocument(app, options);
     SwaggerModule.setup(`${config.get('contextPath').replace(/\/$/, '')}${config.get('swagger.prefix')}`, app, document);
   }
+}
+
+/**
+ * 打印欢迎信息
+ * @param config ConfigService
+ */
+function logInfo(config: ConfigService<unknown, boolean>) {
+  const welcomeMessage = gradientString('cyan', 'magenta').multiline(`
+swagger: ${config.get('swagger.enable') ? `http://localhost:${config.get('port')}${config.get('contextPath')}${config.get('swagger.prefix')}` : 'disabled'}
+admin: http://localhost:3001`);
+
+  // eslint-disable-next-line no-console
+  console.log(welcomeMessage);
 }

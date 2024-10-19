@@ -1,11 +1,11 @@
-import Redis from 'ioredis';
-import { describe, expect, it } from 'vitest';
-
 import { Injectable } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
+
+import Redis from 'ioredis';
+import { describe, expect, it } from 'vitest';
+import { InjectRedis } from './redis.decorators';
 import { RedisModule } from './redis.module';
 import { getRedisConnectionToken } from './redis.utils';
-import { InjectRedis } from './redis.decorators';
 
 describe('redisModule', () => {
   it('instance Redis', async () => {

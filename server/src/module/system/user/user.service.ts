@@ -1,16 +1,16 @@
+import { Constants } from '@/common/constant/constants';
+import { addDateRangeConditions, buildQueryCondition } from '@/common/utils';
+import { exportTable } from '@/common/utils/export';
+import Result from '@/common/utils/result';
+import { PrismaService } from '@/module/prisma/prisma.service';
+import { RedisService } from '@/module/redis/redis.service';
+import { AuthService } from '@/module/system/auth/auth.service';
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { Response } from 'express';
 import { Prisma } from '@prisma/client';
 import { isNotEmpty } from 'class-validator';
+import { Response } from 'express';
 import { isArray } from 'lodash';
-import { CreateSysUserDto, QuerySysUserDto, UpdateSysUserDto, UpdateSysUserStatusDto, resetPasswordDto, updateProfileDto } from './dto';
-import { AuthService } from '@/module/system/auth/auth.service';
-import { exportTable } from '@/common/utils/export';
-import { PrismaService } from '@/module/prisma/prisma.service';
-import Result from '@/common/utils/result';
-import { Constants } from '@/common/constant/constants';
-import { RedisService } from '@/module/redis/redis.service';
-import { addDateRangeConditions, buildQueryCondition } from '@/common/utils';
+import { CreateSysUserDto, QuerySysUserDto, resetPasswordDto, updateProfileDto, UpdateSysUserDto, UpdateSysUserStatusDto } from './dto';
 
 @Injectable()
 export class UserService {

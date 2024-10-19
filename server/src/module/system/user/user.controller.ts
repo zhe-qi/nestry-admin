@@ -1,18 +1,18 @@
+import { RequirePermission } from '@/common/decorator/require-premission.decorator';
+import { RequireRole } from '@/common/decorator/require-role.decorator';
+import { ParseIntArrayPipe } from '@/common/pipe/parse-int-array.pipe';
+import { nowDateTime, tree } from '@/common/utils';
+import Result from '@/common/utils/result';
+import { PrismaService } from '@/module/prisma/prisma.service';
+import { DeptService } from '@/module/system/dept/dept.service';
 import { BadRequestException, Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put, Query, Req, Res, UploadedFile, UseInterceptors } from '@nestjs/common';
 import { ApiBearerAuth, ApiBody, ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { Response } from 'express';
 import { SysDept, SysUser } from '@prisma/client';
+import { Response } from 'express';
 import { QuerySysDeptDto } from '../dept/dto';
+import { CreateSysUserDto, QuerySysUserDto, resetPasswordDto, updateProfileDto, UpdateSysUserDto, UpdateSysUserStatusDto } from './dto/index';
 import { UserService } from './user.service';
-import { CreateSysUserDto, QuerySysUserDto, UpdateSysUserDto, UpdateSysUserStatusDto, resetPasswordDto, updateProfileDto } from './dto/index';
 import { SysUserTableDataInfo } from './vo';
-import { DeptService } from '@/module/system/dept/dept.service';
-import { ParseIntArrayPipe } from '@/common/pipe/parse-int-array.pipe';
-import Result from '@/common/utils/result';
-import { RequirePermission } from '@/common/decorator/require-premission.decorator';
-import { nowDateTime, tree } from '@/common/utils';
-import { RequireRole } from '@/common/decorator/require-role.decorator';
-import { PrismaService } from '@/module/prisma/prisma.service';
 
 @ApiTags('用户管理')
 @ApiBearerAuth()

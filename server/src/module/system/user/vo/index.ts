@@ -1,6 +1,6 @@
-import { SysUser } from '@prisma/client';
-import { ApiProperty } from '@nestjs/swagger';
 import { TableDataInfo } from '@/common/domain/table';
+import { ApiProperty } from '@nestjs/swagger';
+import { SysUser } from '@prisma/client';
 
 /**
  * vo 的一个示例，效果可以去swagger查看

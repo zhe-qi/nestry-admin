@@ -1,7 +1,7 @@
-import { Controller, Get } from '@nestjs/common';
-import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import Result from '@/common/utils/result';
 import { getServerInfo } from '@/common/utils/systemInfo';
+import { Controller, Get } from '@nestjs/common';
+import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 
 @ApiTags('系统监控')
 @ApiBearerAuth()

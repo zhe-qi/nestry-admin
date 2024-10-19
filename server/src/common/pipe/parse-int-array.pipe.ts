@@ -1,5 +1,5 @@
-import { Injectable, PipeTransform } from '@nestjs/common';
 import { ValidationException } from '@/common/exception/validation';
+import { Injectable, PipeTransform } from '@nestjs/common';
 
 @Injectable()
 export class ParseIntArrayPipe implements PipeTransform<string, number[]> {

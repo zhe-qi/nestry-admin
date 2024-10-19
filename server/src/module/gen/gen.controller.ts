@@ -1,14 +1,14 @@
+import { RequirePermission } from '@/common/decorator/require-premission.decorator';
+import { RequireRole } from '@/common/decorator/require-role.decorator';
+import { ParseIntArrayPipe } from '@/common/pipe/parse-int-array.pipe';
+import Result from '@/common/utils/result';
 import { Body, Controller, Delete, Get, Param, ParseArrayPipe, ParseIntPipe, Post, Put, Query, Res } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { Response } from 'express';
-import { queryGenTableDto } from './dto/queryGenTableDto';
-import { queryDataBaseDto } from './dto/queryDatabaseDto';
 import { excuteSqlDto } from './dto/exucteSqlDto';
+import { queryDataBaseDto } from './dto/queryDatabaseDto';
+import { queryGenTableDto } from './dto/queryGenTableDto';
 import { GenService } from './gen.service';
-import { ParseIntArrayPipe } from '@/common/pipe/parse-int-array.pipe';
-import Result from '@/common/utils/result';
-import { RequirePermission } from '@/common/decorator/require-premission.decorator';
-import { RequireRole } from '@/common/decorator/require-role.decorator';
 
 @ApiTags('代码生成')
 @ApiBearerAuth()

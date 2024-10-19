@@ -1,14 +1,14 @@
+import { RequirePermission } from '@/common/decorator/require-premission.decorator';
+import { ParseIntArrayPipe } from '@/common/pipe/parse-int-array.pipe';
+import { nowDateTime } from '@/common/utils';
+import Result from '@/common/utils/result';
 import { Body, Controller, Delete, Get, Inject, Param, ParseIntPipe, Post, Put, Query, Req, Res } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { Response } from 'express';
-import { queryDictTypeDto } from './dto/queryDictTypeDto';
 import { SysDictTypeService } from './dict-type.service';
 import { CreateDictTypeDto } from './dto/createDictTypeDto';
+import { queryDictTypeDto } from './dto/queryDictTypeDto';
 import { updateDictTypeDto } from './dto/updateDictTypeDto';
-import Result from '@/common/utils/result';
-import { ParseIntArrayPipe } from '@/common/pipe/parse-int-array.pipe';
-import { nowDateTime } from '@/common/utils';
-import { RequirePermission } from '@/common/decorator/require-premission.decorator';
 
 @ApiTags('字典类型')
 @ApiBearerAuth()

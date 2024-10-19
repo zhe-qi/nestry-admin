@@ -1,32 +1,32 @@
-import { APP_FILTER, APP_GUARD, APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core';
-import { ThrottlerModule } from '@nestjs/throttler';
-import { ScheduleModule } from '@nestjs/schedule';
-import { ThrottlerStorageRedisService } from 'nestjs-throttler-storage-redis';
-import { MiddlewareConsumer, Module, NestModule, ValidationError, ValidationPipe } from '@nestjs/common';
+import { ValidationException } from '@/common/exception/validation';
+import { AuthorizationFilter, BadRequestFilter, ForbiddenExceptionFilter, GlobalErrorFilter, MulterErrFilter, NotFoundErrFilter, PayloadTooLargeFilter, ThrottlerExceptionFilter, ValidationExceptionFilter } from '@/common/filter/global-error.filter';
+import { PermissionGuard } from '@/common/guard/permission.guard';
+import { RoleGuard } from '@/common/guard/role.guard';
+import { ThrottlerCustomGuard } from '@/common/guard/throttler-custom.guard';
+import { RemoveThrottleHeadersInterceptor } from '@/common/interceptors/remove-throttle-headers.interceptor';
+import { AuthMiddleware } from '@/common/middleware/auth.middleware';
+import { RedisModule } from '@/module/redis';
 import { HttpModule } from '@nestjs/axios';
+import { MiddlewareConsumer, Module, NestModule, ValidationError, ValidationPipe } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { APP_FILTER, APP_GUARD, APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core';
+import { ScheduleModule } from '@nestjs/schedule';
 import { ServeStaticModule } from '@nestjs/serve-static';
-import { AxiosModule } from './module/axios/axios.module';
+import { ThrottlerModule } from '@nestjs/throttler';
+import { ThrottlerStorageRedisService } from 'nestjs-throttler-storage-redis';
 import { configuration } from './config/index';
+import { AxiosModule } from './module/axios/axios.module';
 import { CaptchaModule } from './module/common/captcha/captcha.module';
 import { UploadModule } from './module/common/upload/upload.module';
 import { GenModule } from './module/gen/gen.module';
-import { SystemModule } from './module/system/system.module';
-import { PrismaModule } from './module/prisma/prisma.module';
-import { AuthModule } from './module/system/auth/auth.module';
-import { ServerModule } from './module/monitor/server/server.module';
-import { RedisService } from './module/redis/redis.service';
 import { CacheModule } from './module/monitor/cache/cache.module';
-import { OnlineModule } from './module/monitor/online/online.module';
 import { JobModule } from './module/monitor/job/job.module';
-import { ThrottlerCustomGuard } from '@/common/guard/throttler-custom.guard';
-import { ValidationException } from '@/common/exception/validation';
-import { RoleGuard } from '@/common/guard/role.guard';
-import { PermissionGuard } from '@/common/guard/permission.guard';
-import { AuthMiddleware } from '@/common/middleware/auth.middleware';
-import { RemoveThrottleHeadersInterceptor } from '@/common/interceptors/remove-throttle-headers.interceptor';
-import { RedisModule } from '@/module/redis';
-import { AuthorizationFilter, BadRequestFilter, ForbiddenExceptionFilter, GlobalErrorFilter, MulterErrFilter, NotFoundErrFilter, PayloadTooLargeFilter, ThrottlerExceptionFilter, ValidationExceptionFilter } from '@/common/filter/global-error.filter';
+import { OnlineModule } from './module/monitor/online/online.module';
+import { ServerModule } from './module/monitor/server/server.module';
+import { PrismaModule } from './module/prisma/prisma.module';
+import { RedisService } from './module/redis/redis.service';
+import { AuthModule } from './module/system/auth/auth.module';
+import { SystemModule } from './module/system/system.module';
 
 import '@/common/utils/email';
 
@@ -44,13 +44,13 @@ import '@/common/utils/email';
         return {
           throttlers: [{ name: 'default', ttl: config.get('rateLimit.ttl'), limit: config.get('rateLimit.limit') }],
           storage: config.get('rateLimit.storage') === 'redis'
-          && new ThrottlerStorageRedisService({
-            db: config.get('redis.db'),
-            host: url.hostname,
-            port: Number.parseInt(url.port),
-            password: config.get('redis.password'),
-            disconnectTimeout: 60 * 5 * 1000,
-          }),
+            && new ThrottlerStorageRedisService({
+              db: config.get('redis.db'),
+              host: url.hostname,
+              port: Number.parseInt(url.port),
+              password: config.get('redis.password'),
+              disconnectTimeout: 60 * 5 * 1000,
+            }),
         };
       },
     }),

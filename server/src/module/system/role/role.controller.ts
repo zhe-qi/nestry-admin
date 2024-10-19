@@ -1,27 +1,23 @@
+import { RequirePermission } from '@/common/decorator/require-premission.decorator';
+import { RequireRole } from '@/common/decorator/require-role.decorator';
+import { TableDataInfo } from '@/common/domain/table';
+import { ParseIntArrayPipe } from '@/common/pipe/parse-int-array.pipe';
+import { nowDateTime } from '@/common/utils';
+import Result from '@/common/utils/result';
+import { PrismaService } from '@/module/prisma/prisma.service';
+import { DeptService } from '@/module/system/dept/dept.service';
 import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put, Query, Req, Res } from '@nestjs/common';
 import { ApiBearerAuth, ApiBody, ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { Response } from 'express';
 import { SysRole } from '@prisma/client';
-import { RoleService } from './role.service';
+import { Response } from 'express';
 import { CreateSysRoleDto, QueryAllocatedListDto, QuerySysRoleDto, UpdateSysRoleDto, UpdateSysRoleStatusDto } from './dto/index';
-import { DeptService } from '@/module/system/dept/dept.service';
-import { ParseIntArrayPipe } from '@/common/pipe/parse-int-array.pipe';
-import Result from '@/common/utils/result';
-import { RequirePermission } from '@/common/decorator/require-premission.decorator';
-import { nowDateTime } from '@/common/utils';
-import { TableDataInfo } from '@/common/domain/table';
-import { PrismaService } from '@/module/prisma/prisma.service';
-import { RequireRole } from '@/common/decorator/require-role.decorator';
+import { RoleService } from './role.service';
 
 @ApiTags('角色管理')
 @ApiBearerAuth()
 @Controller('system/role')
 export class RoleController {
-  constructor(
-    private roleService: RoleService,
-    private deptService: DeptService,
-    private prisma: PrismaService,
-  ) {}
+  constructor(private roleService: RoleService, private deptService: DeptService, private prisma: PrismaService) {}
 
   @ApiOperation({ summary: '查询角色管理列表' })
   @ApiQuery({ type: QuerySysRoleDto })

@@ -1,7 +1,7 @@
-import Redis, { RedisOptions } from 'ioredis';
 import { createPool } from 'generic-pool';
-import { RedisModuleOptions } from './redis.interfaces';
+import Redis, { RedisOptions } from 'ioredis';
 import { REDIS_MODULE_CONNECTION, REDIS_MODULE_CONNECTION_TOKEN, REDIS_MODULE_OPTIONS_TOKEN } from './redis.constants';
+import { RedisModuleOptions } from './redis.interfaces';
 
 export function getRedisOptionsToken(connection?: string): string {
   return `${connection || REDIS_MODULE_CONNECTION}_${REDIS_MODULE_OPTIONS_TOKEN}`;

@@ -1,7 +1,7 @@
+import { IsOptional } from '@/common/decorator/dto-optional-property.decorator';
+import { BaseDomain } from '@/common/domain/base';
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
-import { BaseDomain } from '@/common/domain/base';
-import { IsOptional } from '@/common/decorator/dto-optional-property.decorator';
 
 export class updateDictTypeDto extends BaseDomain {
   @ApiProperty({ description: '字典Id' })

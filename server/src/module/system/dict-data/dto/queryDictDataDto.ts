@@ -1,7 +1,7 @@
+import { IsOptional } from '@/common/decorator/dto-optional-property.decorator';
+import { QueryDomain } from '@/common/domain/query';
 import { ApiProperty } from '@nestjs/swagger';
 import { IsString } from 'class-validator';
-import { QueryDomain } from '@/common/domain/query';
-import { IsOptional } from '@/common/decorator/dto-optional-property.decorator';
 
 export class queryDictDataDto extends QueryDomain {
   @ApiProperty({ description: '字典标签' })

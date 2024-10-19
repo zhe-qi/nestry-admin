@@ -1,7 +1,7 @@
+import { IsOptional } from '@/common/decorator/dto-optional-property.decorator';
 import { ApiProperty } from '@nestjs/swagger';
 import { Transform } from 'class-transformer';
 import { IsNumber } from 'class-validator';
-import { IsOptional } from '@/common/decorator/dto-optional-property.decorator';
 
 export class PageDomain {
   @ApiProperty({ description: '当前页码', required: false })

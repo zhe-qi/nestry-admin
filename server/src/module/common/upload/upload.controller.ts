@@ -1,8 +1,8 @@
 import { Body, Controller, Get, HttpCode, Post, Query, UploadedFile, UseInterceptors } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { ApiBody, ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger';
-import { UploadService } from './upload.service';
 import { ChunkFileDto, ChunkMergeFileDto, FileUploadDto, uploadIdDto } from './dto/index';
+import { UploadService } from './upload.service';
 
 @ApiTags('通用-文件上传')
 @Controller('common/upload')

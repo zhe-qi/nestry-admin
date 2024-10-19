@@ -1,14 +1,14 @@
+import { RequirePermission } from '@/common/decorator/require-premission.decorator';
+import { TableDataInfo } from '@/common/domain/table';
+import { ParseIntArrayPipe } from '@/common/pipe/parse-int-array.pipe';
+import { nowDateTime } from '@/common/utils';
+import Result from '@/common/utils/result';
 import { Body, Controller, Delete, Get, Param, Post, Put, Query, Req, Res } from '@nestjs/common';
 import { ApiBearerAuth, ApiBody, ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { SysJob } from '@prisma/client';
 import { Response } from 'express';
 import { ChangeJobMainStatusDto, CreateJobMainDto, QueryJobMainDto, UpdateJobMainDto } from './dto';
 import { JobMainService } from './job-main.service';
-import { RequirePermission } from '@/common/decorator/require-premission.decorator';
-import Result from '@/common/utils/result';
-import { TableDataInfo } from '@/common/domain/table';
-import { nowDateTime } from '@/common/utils';
-import { ParseIntArrayPipe } from '@/common/pipe/parse-int-array.pipe';
 
 @ApiTags('定时任务')
 @ApiBearerAuth()

@@ -1,13 +1,13 @@
-import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put, Query, Res } from '@nestjs/common';
-import { ApiBearerAuth, ApiBody, ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { Response } from 'express';
-import { SysLogininfor } from '@prisma/client';
-import { LogininforService } from './logininfor.service';
-import { CreateSysLogininforDto, QuerySysLogininforDto, UpdateSysLogininforDto } from './dto/index';
-import { ParseIntArrayPipe } from '@/common/pipe/parse-int-array.pipe';
-import Result from '@/common/utils/result';
 import { RequirePermission } from '@/common/decorator/require-premission.decorator';
 import { TableDataInfo } from '@/common/domain/table';
+import { ParseIntArrayPipe } from '@/common/pipe/parse-int-array.pipe';
+import Result from '@/common/utils/result';
+import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put, Query, Res } from '@nestjs/common';
+import { ApiBearerAuth, ApiBody, ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { SysLogininfor } from '@prisma/client';
+import { Response } from 'express';
+import { CreateSysLogininforDto, QuerySysLogininforDto, UpdateSysLogininforDto } from './dto/index';
+import { LogininforService } from './logininfor.service';
 
 @ApiTags('登录日志')
 @ApiBearerAuth()

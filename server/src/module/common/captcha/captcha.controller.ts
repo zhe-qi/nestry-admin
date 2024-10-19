@@ -1,13 +1,13 @@
 import { randomUUID } from 'node:crypto';
-import { Controller, Get } from '@nestjs/common';
-import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
-import { Throttle } from '@nestjs/throttler';
-import { ConfigService } from '@nestjs/config';
-import CaptchaImageVo from './vo/CaptchaImageVo';
+import { Constants } from '@/common/constant/constants';
 import { createMath, createText } from '@/common/utils/captcha';
 import Result from '@/common/utils/result';
-import { Constants } from '@/common/constant/constants';
 import { RedisService } from '@/module/redis/redis.service';
+import { Controller, Get } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
+import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { Throttle } from '@nestjs/throttler';
+import CaptchaImageVo from './vo/CaptchaImageVo';
 
 @ApiTags('验证码模块')
 @Controller('/captchaImage')

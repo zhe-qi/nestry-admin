@@ -1,10 +1,10 @@
 import fs from 'node:fs';
-import day from 'dayjs';
-import utc from 'dayjs/plugin/utc';
-import timezone from 'dayjs/plugin/timezone';
-import 'dayjs/locale/zh-cn';
-import { camelCase } from 'lodash';
 import { isNotEmpty } from 'class-validator';
+import day from 'dayjs';
+import timezone from 'dayjs/plugin/timezone';
+import utc from 'dayjs/plugin/utc';
+import { camelCase } from 'lodash';
+import 'dayjs/locale/zh-cn';
 
 day.extend(utc);
 day.extend(timezone);

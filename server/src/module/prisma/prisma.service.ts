@@ -1,6 +1,6 @@
+import { configuration } from '@/config';
 import { Injectable, OnModuleDestroy, OnModuleInit } from '@nestjs/common';
 import { PrismaClient } from '@prisma/client';
-import { configuration } from '@/config';
 
 const Config = configuration();
 

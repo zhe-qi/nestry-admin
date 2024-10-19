@@ -1,6 +1,6 @@
+import { IsOptional } from '@/common/decorator/dto-optional-property.decorator';
 import { ApiProperty } from '@nestjs/swagger';
 import { IsString } from 'class-validator';
-import { IsOptional } from '@/common/decorator/dto-optional-property.decorator';
 
 export class BaseDomain {
   @ApiProperty({ description: '创建者', required: false })

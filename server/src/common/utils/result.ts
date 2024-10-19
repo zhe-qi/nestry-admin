@@ -1,7 +1,7 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { HttpStatus } from '@nestjs/common';
-import { TableDataInfo } from '../domain/table';
 import { nowDateTime } from '@/common/utils';
+import { HttpStatus } from '@nestjs/common';
+import { ApiProperty } from '@nestjs/swagger';
+import { TableDataInfo } from '../domain/table';
 
 export default class Result<T> {
   @ApiProperty({

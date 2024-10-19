@@ -1,26 +1,26 @@
 import { existsSync, mkdirSync, rmSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
-import { BadRequestException, Injectable } from '@nestjs/common';
-import { Prisma } from '@prisma/client';
-import { isNotEmpty } from 'class-validator';
-import { camelCase, kebabCase, toLower, upperFirst } from 'lodash';
-import archiver from 'archiver';
-import { Response } from 'express';
-import { ConfigService } from '@nestjs/config';
-import { ColumnInfo, Table } from './types';
-import { queryGenTableDto } from './dto/queryGenTableDto';
-import { queryDataBaseDto } from './dto/queryDatabaseDto';
-import { getDtoTemplate } from './gen-template/nestjs/dto';
-import { getControllerTemplate } from './gen-template/nestjs/controller';
-import { getServiceTemplate } from './gen-template/nestjs/service';
-import { getModuleTemplate } from './gen-template/nestjs/module';
-import { getApiTemplate } from './gen-template/vue/api';
-import { getSqlTemplate } from './gen-template/nestjs/sql';
-import { getVueTemplate } from './gen-template/vue';
-import { getPrismaSeedData } from './gen-template/prisma/data';
-import { PrismaService } from '@/module/prisma/prisma.service';
-import { addDateRangeConditions, buildQueryCondition, formatDate, nowDateTime, toPascalCase } from '@/common/utils';
 import { GenConstants } from '@/common/constant/gen';
+import { addDateRangeConditions, buildQueryCondition, formatDate, nowDateTime, toPascalCase } from '@/common/utils';
+import { PrismaService } from '@/module/prisma/prisma.service';
+import { BadRequestException, Injectable } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
+import { Prisma } from '@prisma/client';
+import archiver from 'archiver';
+import { isNotEmpty } from 'class-validator';
+import { Response } from 'express';
+import { camelCase, kebabCase, toLower, upperFirst } from 'lodash';
+import { queryDataBaseDto } from './dto/queryDatabaseDto';
+import { queryGenTableDto } from './dto/queryGenTableDto';
+import { getControllerTemplate } from './gen-template/nestjs/controller';
+import { getDtoTemplate } from './gen-template/nestjs/dto';
+import { getModuleTemplate } from './gen-template/nestjs/module';
+import { getServiceTemplate } from './gen-template/nestjs/service';
+import { getSqlTemplate } from './gen-template/nestjs/sql';
+import { getPrismaSeedData } from './gen-template/prisma/data';
+import { getVueTemplate } from './gen-template/vue';
+import { getApiTemplate } from './gen-template/vue/api';
+import { ColumnInfo, Table } from './types';
 
 @Injectable()
 export class GenService {
@@ -307,9 +307,9 @@ export class GenService {
       hasCreateTime: info.columnsKey.includes('create_time'),
       hasUpdateTime: info.columnsKey.includes('update_time'),
       hasBaseDomain: info.columnsKey.includes('create_time')
-      && info.columnsKey.includes('update_time')
-      && info.columnsKey.includes('create_by')
-      && info.columnsKey.includes('update_by'),
+        && info.columnsKey.includes('update_time')
+        && info.columnsKey.includes('create_by')
+        && info.columnsKey.includes('update_by'),
     };
   }
 

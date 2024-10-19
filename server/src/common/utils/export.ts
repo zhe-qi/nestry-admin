@@ -1,19 +1,15 @@
-import { Response } from 'express';
 import ExcelJS from 'exceljs';
+import { Response } from 'express';
 
-export async function exportTable(
-  data: any[][],
-  res: Response,
-  options: {
-    header: any[]
-    dictMap?: any
-    sheetName?: string
-  } = {
-    header: [],
-    dictMap: {},
-    sheetName: 'Sheet1',
-  },
-) {
+export async function exportTable(data: any[][], res: Response, options: {
+  header: any[]
+  dictMap?: any
+  sheetName?: string
+} = {
+  header: [],
+  dictMap: {},
+  sheetName: 'Sheet1',
+}) {
   const workbook = new ExcelJS.Workbook();
   const sheetName = options.sheetName;
 

@@ -1,18 +1,14 @@
-import { ThrottlerGuard } from '@nestjs/throttler';
+import { THROTTLE_USER_KEY } from '@/common/decorator/throttle-user';
 import { ExecutionContext, Inject, Injectable } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
-import { THROTTLE_USER_KEY } from '@/common/decorator/throttle-user';
+import { ThrottlerGuard } from '@nestjs/throttler';
 
 @Injectable()
 export class ThrottlerCustomGuard extends ThrottlerGuard {
   @Inject()
   protected reflector: Reflector;
 
-  protected generateKey(
-    context: ExecutionContext,
-    _suffix: string,
-    name: string,
-  ): string {
+  protected generateKey(context: ExecutionContext, _suffix: string, name: string): string {
     const req = context.switchToHttp().getRequest();
     const isThrottleUser = this.reflector.getAllAndOverride<boolean>(THROTTLE_USER_KEY, [context.getClass(), context.getHandler()]);
     return isThrottleUser && req.userId !== undefined

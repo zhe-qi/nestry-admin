@@ -1,26 +1,26 @@
 import { Module } from '@nestjs/common';
 
+import { ConfigController } from './config/config.controller';
 import { ConfigService } from './config/config.service';
+import { DeptController } from './dept/dept.controller';
 import { DeptService } from './dept/dept.service';
-import { SysDictTypeService } from './dict-type/dict-type.service';
+import { DictDataController } from './dict-data/dict-data.controller';
 import { DictDataService } from './dict-data/dict-data.service';
-import { MenuService } from './menu/menu.service';
-import { RoleService } from './role/role.service';
-import { UserService } from './user/user.service';
-import { PostService } from './post/post.service';
-import { NoticeService } from './notice/notice.service';
+import { DictTypeController } from './dict-type/dict-type.controller';
+import { SysDictTypeService } from './dict-type/dict-type.service';
+import { LogininforController } from './logininfor/logininfor.controller';
 import { LogininforService } from './logininfor/logininfor.service';
 
-import { DeptController } from './dept/dept.controller';
-import { DictTypeController } from './dict-type/dict-type.controller';
-import { DictDataController } from './dict-data/dict-data.controller';
 import { MenuController } from './menu/menu.controller';
-import { RoleController } from './role/role.controller';
-import { UserController } from './user/user.controller';
-import { PostController } from './post/post.controller';
+import { MenuService } from './menu/menu.service';
 import { NoticeController } from './notice/notice.controller';
-import { LogininforController } from './logininfor/logininfor.controller';
-import { ConfigController } from './config/config.controller';
+import { NoticeService } from './notice/notice.service';
+import { PostController } from './post/post.controller';
+import { PostService } from './post/post.service';
+import { RoleController } from './role/role.controller';
+import { RoleService } from './role/role.service';
+import { UserController } from './user/user.controller';
+import { UserService } from './user/user.service';
 
 @Module({
   providers: [

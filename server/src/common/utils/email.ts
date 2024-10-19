@@ -1,10 +1,10 @@
+import { configuration } from '@/config';
+import { isEmail } from 'class-validator';
 /* eslint-disable prefer-promise-reject-errors */
 /* eslint-disable no-async-promise-executor */
 /* eslint-disable no-console */
-import { Transporter, createTransport } from 'nodemailer';
+import { createTransport, Transporter } from 'nodemailer';
 import Mail from 'nodemailer/lib/mailer';
-import { isEmail } from 'class-validator';
-import { configuration } from '@/config';
 
 const Config = configuration();
 

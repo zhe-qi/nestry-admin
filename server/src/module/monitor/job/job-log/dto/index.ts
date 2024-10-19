@@ -1,6 +1,6 @@
-import { ApiProperty } from '@nestjs/swagger';
-import { QueryDomain } from '@/common/domain/query';
 import { IsOptional } from '@/common/decorator/dto-optional-property.decorator';
+import { QueryDomain } from '@/common/domain/query';
+import { ApiProperty } from '@nestjs/swagger';
 
 export class QueryJobLogDto extends QueryDomain {
   @ApiProperty({ description: '任务名称' })

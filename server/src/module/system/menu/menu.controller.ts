@@ -1,13 +1,13 @@
+import { RequirePermission } from '@/common/decorator/require-premission.decorator';
+import { ParseIntArrayPipe } from '@/common/pipe/parse-int-array.pipe';
+import { nowDateTime } from '@/common/utils';
+import Result from '@/common/utils/result';
 import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put, Query, Req, Res } from '@nestjs/common';
 import { ApiBearerAuth, ApiBody, ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { Response } from 'express';
 import { SysMenu } from '@prisma/client';
-import { MenuService } from './menu.service';
+import { Response } from 'express';
 import { CreateSysMenuDto, QuerySysMenuDto, UpdateSysMenuDto } from './dto/index';
-import { ParseIntArrayPipe } from '@/common/pipe/parse-int-array.pipe';
-import Result from '@/common/utils/result';
-import { RequirePermission } from '@/common/decorator/require-premission.decorator';
-import { nowDateTime } from '@/common/utils';
+import { MenuService } from './menu.service';
 
 @ApiTags('菜单管理')
 @ApiBearerAuth()

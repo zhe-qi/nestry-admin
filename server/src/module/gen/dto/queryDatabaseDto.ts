@@ -1,5 +1,5 @@
-import { ApiProperty } from '@nestjs/swagger';
 import { QueryDomain } from '@/common/domain/query';
+import { ApiProperty } from '@nestjs/swagger';
 
 export class queryDataBaseDto extends QueryDomain {
   @ApiProperty({ description: '表名称' })

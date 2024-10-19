@@ -1,14 +1,14 @@
+import { RequirePermission } from '@/common/decorator/require-premission.decorator';
+import { TableDataInfo } from '@/common/domain/table';
+import { ParseIntArrayPipe } from '@/common/pipe/parse-int-array.pipe';
+import { nowDateTime } from '@/common/utils';
+import Result from '@/common/utils/result';
 import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put, Query, Req, Res } from '@nestjs/common';
 import { ApiBearerAuth, ApiBody, ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { Response } from 'express';
 import { SysNotice } from '@prisma/client';
-import { NoticeService } from './notice.service';
+import { Response } from 'express';
 import { CreateSysNoticeDto, QuerySysNoticeDto, UpdateSysNoticeDto } from './dto/index';
-import { ParseIntArrayPipe } from '@/common/pipe/parse-int-array.pipe';
-import Result from '@/common/utils/result';
-import { RequirePermission } from '@/common/decorator/require-premission.decorator';
-import { nowDateTime } from '@/common/utils';
-import { TableDataInfo } from '@/common/domain/table';
+import { NoticeService } from './notice.service';
 
 @ApiTags('通知公告表')
 @ApiBearerAuth()

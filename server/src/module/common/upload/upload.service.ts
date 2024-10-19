@@ -1,13 +1,13 @@
-import fs from 'node:fs';
 import { randomUUID } from 'node:crypto';
+import fs from 'node:fs';
 import path from 'node:path';
-import { Injectable } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
-import iconv from 'iconv-lite';
-import COS from 'cos-nodejs-sdk-v5';
-import { ChunkFileDto, ChunkMergeFileDto } from './dto/index';
 import Result from '@/common/utils/result';
 import { PrismaService } from '@/module/prisma/prisma.service';
+import { Injectable } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
+import COS from 'cos-nodejs-sdk-v5';
+import iconv from 'iconv-lite';
+import { ChunkFileDto, ChunkMergeFileDto } from './dto/index';
 
 @Injectable()
 export class UploadService {
@@ -74,11 +74,7 @@ export class UploadService {
   async chunkFileUpload(file: Express.Multer.File, body: ChunkFileDto) {
     const rootPath = process.cwd();
     const baseDirPath = path.join(rootPath, this.config.get('file.location'));
-    const chunckDirPath = path.join(
-      baseDirPath,
-      this.thunkDir,
-      body.uploadId,
-    );
+    const chunckDirPath = path.join(baseDirPath, this.thunkDir, body.uploadId);
     if (!fs.existsSync(chunckDirPath)) {
       this.mkdirsSync(chunckDirPath);
     }
@@ -99,11 +95,7 @@ export class UploadService {
   async checkChunkFile(body) {
     const rootPath = process.cwd();
     const baseDirPath = path.join(rootPath, this.config.get('file.location'));
-    const chunckDirPath = path.join(
-      baseDirPath,
-      this.thunkDir,
-      body.uploadId,
-    );
+    const chunckDirPath = path.join(baseDirPath, this.thunkDir, body.uploadId);
     const chunckFilePath = path.join(chunckDirPath, `${body.uploadId}${body.fileName}@${body.index}`);
     if (!fs.existsSync(chunckFilePath)) {
       return Result.Error('文件不存在', 500);
@@ -135,11 +127,7 @@ export class UploadService {
     const { uploadId, fileName } = body;
     const rootPath = process.cwd();
     const baseDirPath = path.join(rootPath, this.config.get('file.location'));
-    const sourceFilesDir = path.join(
-      baseDirPath,
-      this.thunkDir,
-      uploadId,
-    );
+    const sourceFilesDir = path.join(baseDirPath, this.thunkDir, uploadId);
 
     if (!fs.existsSync(sourceFilesDir)) {
       return Result.Error('文件不存在', 500);

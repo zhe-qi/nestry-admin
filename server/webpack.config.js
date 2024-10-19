@@ -1,7 +1,7 @@
 const TerserPlugin = require('terser-webpack-plugin');
 const swcDefaultConfig = require('@nestjs/cli/lib/compiler/defaults/swc-defaults').swcDefaultsFactory().swcOptions;
-const nodeExternals = require('webpack-node-externals');
 const { RunScriptWebpackPlugin } = require('run-script-webpack-plugin');
+const nodeExternals = require('webpack-node-externals');
 
 module.exports = function (options, webpack) {
   const isProduction = process.env.NODE_ENV === 'production';

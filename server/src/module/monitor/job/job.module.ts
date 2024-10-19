@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
-import { JobMainService } from './job-main/job-main.service';
-import { JobMainController } from './job-main/job-main.controller';
-import { JobLogService } from './job-log/job-log.service';
 import { JobLogController } from './job-log/job-log.controller';
+import { JobLogService } from './job-log/job-log.service';
+import { JobMainController } from './job-main/job-main.controller';
+import { JobMainService } from './job-main/job-main.service';
 import { TaskHandlers } from './taskHandlers';
 
 @Module({

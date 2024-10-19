@@ -1,12 +1,12 @@
-import 'module-alias/register';
+import { ValidationPipe } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { NestFactory } from '@nestjs/core';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import helmet from 'helmet';
-import { ConfigService } from '@nestjs/config';
-import { ValidationPipe } from '@nestjs/common';
 import gradientString from 'gradient-string';
+import helmet from 'helmet';
 import { AppModule } from './app.module';
+import 'module-alias/register';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);

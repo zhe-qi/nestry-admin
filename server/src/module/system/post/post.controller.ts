@@ -1,14 +1,14 @@
+import { RequirePermission } from '@/common/decorator/require-premission.decorator';
+import { TableDataInfo } from '@/common/domain/table';
+import { ParseIntArrayPipe } from '@/common/pipe/parse-int-array.pipe';
+import { nowDateTime } from '@/common/utils';
+import Result from '@/common/utils/result';
 import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put, Query, Req, Res } from '@nestjs/common';
 import { ApiBearerAuth, ApiBody, ApiOperation, ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { Response } from 'express';
 import { SysPost } from '@prisma/client';
-import { PostService } from './post.service';
+import { Response } from 'express';
 import { CreateSysPostDto, QuerySysPostDto, UpdateSysPostDto } from './dto/index';
-import { ParseIntArrayPipe } from '@/common/pipe/parse-int-array.pipe';
-import Result from '@/common/utils/result';
-import { RequirePermission } from '@/common/decorator/require-premission.decorator';
-import { nowDateTime } from '@/common/utils';
-import { TableDataInfo } from '@/common/domain/table';
+import { PostService } from './post.service';
 
 @ApiTags('岗位信息表')
 @ApiBearerAuth()

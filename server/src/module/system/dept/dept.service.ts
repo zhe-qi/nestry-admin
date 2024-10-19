@@ -1,11 +1,11 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
-import { Response } from 'express';
-import { Prisma } from '@prisma/client';
-import { isNotEmpty } from 'class-validator';
-import { CreateSysDeptDto, QuerySysDeptDto, UpdateSysDeptDto } from './dto';
 import { addDateRangeConditions, buildQueryCondition, tree } from '@/common/utils';
 import { exportTable } from '@/common/utils/export';
 import { PrismaService } from '@/module/prisma/prisma.service';
+import { BadRequestException, Injectable } from '@nestjs/common';
+import { Prisma } from '@prisma/client';
+import { isNotEmpty } from 'class-validator';
+import { Response } from 'express';
+import { CreateSysDeptDto, QuerySysDeptDto, UpdateSysDeptDto } from './dto';
 
 @Injectable()
 export class DeptService {

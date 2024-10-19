@@ -1,15 +1,15 @@
+import { Constants } from '@/common/constant/constants';
+import { buildQueryCondition, nowDateTime } from '@/common/utils';
+import { exportTable } from '@/common/utils/export';
+import { PrismaService } from '@/module/prisma/prisma.service';
 import { BadRequestException, Injectable, OnModuleInit } from '@nestjs/common';
+import { SchedulerRegistry } from '@nestjs/schedule';
 import { Prisma, SysJob } from '@prisma/client';
 import { isNotEmpty } from 'class-validator';
-import { SchedulerRegistry } from '@nestjs/schedule';
 import { CronJob } from 'cron';
 import { Response } from 'express';
 import { TaskHandlers } from '../taskHandlers';
 import { ChangeJobMainStatusDto, CreateJobMainDto, QueryJobMainDto, UpdateJobMainDto } from './dto';
-import { PrismaService } from '@/module/prisma/prisma.service';
-import { exportTable } from '@/common/utils/export';
-import { buildQueryCondition, nowDateTime } from '@/common/utils';
-import { Constants } from '@/common/constant/constants';
 
 @Injectable()
 export class JobMainService implements OnModuleInit {

@@ -1,10 +1,10 @@
+import { Constants } from '@/common/constant/constants';
+import { RequirePermission } from '@/common/decorator/require-premission.decorator';
+import Result from '@/common/utils/result';
+import { RedisService } from '@/module/redis/redis.service';
 import { Controller, Delete, Get, Param, ParseArrayPipe, Query } from '@nestjs/common';
 import { ApiBearerAuth, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { Throttle } from '@nestjs/throttler';
-import { Constants } from '@/common/constant/constants';
-import Result from '@/common/utils/result';
-import { RequirePermission } from '@/common/decorator/require-premission.decorator';
-import { RedisService } from '@/module/redis/redis.service';
 
 @ApiTags('系统监控')
 @ApiBearerAuth()

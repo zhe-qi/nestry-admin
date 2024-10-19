@@ -1,5 +1,5 @@
-import { IsNotEmpty, IsString, MinLength } from 'class-validator';
 import { IsOptional } from '@/common/decorator/dto-optional-property.decorator';
+import { IsNotEmpty, IsString, MinLength } from 'class-validator';
 
 export class LoginBody {
   @IsNotEmpty({ message: '用户名不能为空！' })

@@ -1,9 +1,9 @@
+import { IsOptional } from '@/common/decorator/dto-optional-property.decorator';
+import { BaseDomain } from '@/common/domain/base';
+import { QueryDomain } from '@/common/domain/query';
 import { ApiProperty } from '@nestjs/swagger';
 import { Transform } from 'class-transformer';
 import { IsNotEmpty, IsNumber, IsString } from 'class-validator';
-import { BaseDomain } from '@/common/domain/base';
-import { QueryDomain } from '@/common/domain/query';
-import { IsOptional } from '@/common/decorator/dto-optional-property.decorator';
 
 /** @description 查询部门管理Dto */
 export class QuerySysDeptDto extends QueryDomain {

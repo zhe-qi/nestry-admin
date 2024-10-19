@@ -1,21 +1,21 @@
+import { Constants } from '@/common/constant/constants';
+import { ValidationException } from '@/common/exception/validation';
+import { addDateRangeConditions, buildQueryCondition } from '@/common/utils';
+import { exportTable } from '@/common/utils/export';
+import { PrismaService } from '@/module/prisma/prisma.service';
+import { RedisService } from '@/module/redis/redis.service';
+import { DictDataService } from '@/module/system/dict-data/dict-data.service';
 import { Injectable } from '@nestjs/common';
 import { Prisma } from '@prisma/client';
 import { isNotEmpty } from 'class-validator';
 import { Response } from 'express';
-import { queryDictTypeDto } from './dto/queryDictTypeDto';
 import { CreateDictTypeDto } from './dto/createDictTypeDto';
+import { queryDictTypeDto } from './dto/queryDictTypeDto';
 import { updateDictTypeDto } from './dto/updateDictTypeDto';
-import { PrismaService } from '@/module/prisma/prisma.service';
-import { DictDataService } from '@/module/system/dict-data/dict-data.service';
-import { ValidationException } from '@/common/exception/validation';
-import { exportTable } from '@/common/utils/export';
-import { Constants } from '@/common/constant/constants';
-import { RedisService } from '@/module/redis/redis.service';
-import { addDateRangeConditions, buildQueryCondition } from '@/common/utils';
 
 @Injectable()
 export class SysDictTypeService {
-  constructor(private prisma: PrismaService, private dictDataService: DictDataService, private readonly redis: RedisService) {}
+  constructor(private prisma: PrismaService, private dictDataService: DictDataService, private redis: RedisService) {}
 
   // 查询字典类型列表
   async selectDictTypeList(q: queryDictTypeDto) {

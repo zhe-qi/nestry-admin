@@ -42,8 +42,8 @@ lerna-debug.log*
 !.vscode/launch.json
 !.vscode/extensions.json
 
-# dotenv environment variable files
-# 请勿将.env文件提交到git仓库，实际项目中请将.env文件加入到.gitignore中
+# TODO: dotenv environment variable files
+# ! 请勿将.env文件提交到git仓库，实际项目中请将.env文件加入到.gitignore中
 # .env
 .env.development.local
 .env.test.local

@@ -36,6 +36,8 @@ export default antfu({
     'ts/no-unused-expressions': 'off',
     // 关闭对使用不安全的函数类型的检查
     'ts/no-unsafe-function-type': 'off',
+    // 关闭对单行最大语句数量的检查
+    'style/max-statements-per-line': 'off',
   },
   ignores: ['**/prisma-client'],
 });

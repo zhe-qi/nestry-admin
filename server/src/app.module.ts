@@ -20,7 +20,6 @@ import { CaptchaModule } from './module/common/captcha/captcha.module';
 import { UploadModule } from './module/common/upload/upload.module';
 import { GenModule } from './module/gen/gen.module';
 import { CacheModule } from './module/monitor/cache/cache.module';
-import { JobModule } from './module/monitor/job/job.module';
 import { OnlineModule } from './module/monitor/online/online.module';
 import { ServerModule } from './module/monitor/server/server.module';
 import { PrismaModule } from './module/prisma/prisma.module';
@@ -89,7 +88,6 @@ import '@/common/utils/email';
     ServerModule,
     CacheModule,
     OnlineModule,
-    JobModule,
   ],
   providers: [
     PermissionGuard,

@@ -20,7 +20,7 @@
             />
          </el-form-item>
          <el-form-item label="系统内置" prop="configType">
-            <el-select v-model="queryParams.configType" style="width: 240px;" placeholder="系统内置" clearable>
+            <el-select v-model="queryParams.configType" placeholder="系统内置" clearable style="width: 240px">
                <el-option
                   v-for="dict in sys_yes_no"
                   :key="dict.value"
@@ -139,14 +139,14 @@
                <el-input v-model="form.configKey" placeholder="请输入参数键名" />
             </el-form-item>
             <el-form-item label="参数键值" prop="configValue">
-               <el-input v-model="form.configValue" placeholder="请输入参数键值" />
+               <el-input v-model="form.configValue" type="textarea" placeholder="请输入参数键值" />
             </el-form-item>
             <el-form-item label="系统内置" prop="configType">
                <el-radio-group v-model="form.configType">
                   <el-radio
                      v-for="dict in sys_yes_no"
                      :key="dict.value"
-                     :label="dict.value"
+                     :value="dict.value"
                   >{{ dict.label }}</el-radio>
                </el-radio-group>
             </el-form-item>
@@ -208,11 +208,13 @@ function getList() {
     loading.value = false;
   });
 }
+
 /** 取消按钮 */
 function cancel() {
   open.value = false;
   reset();
 }
+
 /** 表单重置 */
 function reset() {
   form.value = {
@@ -225,29 +227,34 @@ function reset() {
   };
   proxy.resetForm("configRef");
 }
+
 /** 搜索按钮操作 */
 function handleQuery() {
   queryParams.value.pageNum = 1;
   getList();
 }
+
 /** 重置按钮操作 */
 function resetQuery() {
   dateRange.value = [];
   proxy.resetForm("queryRef");
   handleQuery();
 }
+
 /** 多选框选中数据 */
 function handleSelectionChange(selection) {
   ids.value = selection.map(item => item.configId);
   single.value = selection.length != 1;
   multiple.value = !selection.length;
 }
+
 /** 新增按钮操作 */
 function handleAdd() {
   reset();
   open.value = true;
   title.value = "添加参数";
 }
+
 /** 修改按钮操作 */
 function handleUpdate(row) {
   reset();
@@ -258,6 +265,7 @@ function handleUpdate(row) {
     title.value = "修改参数";
   });
 }
+
 /** 提交按钮 */
 function submitForm() {
   proxy.$refs["configRef"].validate(valid => {
@@ -278,6 +286,7 @@ function submitForm() {
     }
   });
 }
+
 /** 删除按钮操作 */
 function handleDelete(row) {
   const configIds = row.configId || ids.value;
@@ -288,12 +297,14 @@ function handleDelete(row) {
     proxy.$modal.msgSuccess("删除成功");
   }).catch(() => {});
 }
+
 /** 导出按钮操作 */
 function handleExport() {
   proxy.download("system/config/export", {
     ...queryParams.value
   }, `config_${new Date().getTime()}.xlsx`);
 }
+
 /** 刷新缓存按钮操作 */
 function handleRefreshCache() {
   refreshCache().then(() => {

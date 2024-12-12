@@ -1,12 +1,23 @@
 <template>
   <div class="component-upload-image">
-    <el-upload multiple :action="uploadImgUrl" list-type="picture-card" :on-success="handleUploadSuccess"
-      :before-upload="handleBeforeUpload" :limit="limit" :on-error="handleUploadError" :on-exceed="handleExceed"
-      ref="imageUpload" :before-remove="handleDelete" :show-file-list="true" :headers="headers" :file-list="fileList"
-      :on-preview="handlePictureCardPreview" :class="{ hide: fileList.length >= limit }">
-      <el-icon class="avatar-uploader-icon">
-        <plus />
-      </el-icon>
+    <el-upload
+      multiple
+      :action="uploadImgUrl"
+      list-type="picture-card"
+      :on-success="handleUploadSuccess"
+      :before-upload="handleBeforeUpload"
+      :limit="limit"
+      :on-error="handleUploadError"
+      :on-exceed="handleExceed"
+      ref="imageUpload"
+      :before-remove="handleDelete"
+      :show-file-list="true"
+      :headers="headers"
+      :file-list="fileList"
+      :on-preview="handlePictureCardPreview"
+      :class="{ hide: fileList.length >= limit }"
+    >
+      <el-icon class="avatar-uploader-icon"><plus /></el-icon>
     </el-upload>
     <!-- 上传提示 -->
     <div class="el-upload__tip" v-if="showTip">
@@ -20,21 +31,30 @@
       的文件
     </div>
 
-    <el-dialog v-model="dialogVisible" title="预览" width="800px" append-to-body>
-      <img :src="dialogImageUrl" style="display: block; max-width: 100%; margin: 0 auto" />
+    <el-dialog
+      v-model="dialogVisible"
+      title="预览"
+      width="800px"
+      append-to-body
+    >
+      <img
+        :src="dialogImageUrl"
+        style="display: block; max-width: 100%; margin: 0 auto"
+      />
     </el-dialog>
   </div>
 </template>
 
 <script setup>
 import { getToken } from "@/utils/auth";
-import { getFilePath } from "@/utils/ruoyi.js"
+import { isExternal } from "@/utils/validate";
+
 const props = defineProps({
   modelValue: [String, Object, Array],
   // 图片数量限制
   limit: {
     type: Number,
-    default: 1,
+    default: 5,
   },
   // 大小限制(MB)
   fileSize: {
@@ -44,15 +64,10 @@ const props = defineProps({
   // 文件类型, 例如['png', 'jpg', 'jpeg']
   fileType: {
     type: Array,
-    default: () => ["png", "jpg", "jpeg", "gif"],
+    default: () => ["png", "jpg", "jpeg"],
   },
   // 是否显示提示
   isShowTip: {
-    type: Boolean,
-    default: true
-  },
-  //是否返回filesList字符串，否则返回数组对象
-  isFormat: {
     type: Boolean,
     default: true
   },
@@ -79,19 +94,19 @@ watch(() => props.modelValue, val => {
     // 然后将数组转为对象数组
     fileList.value = list.map(item => {
       if (typeof item === "string") {
-        item = { name: item, url: item };
-      } else {
-        item.name = item.name || item.fileName
-        item.url = item.url || item.filePath
+        if (item.indexOf(baseUrl) === -1 && !isExternal(item)) {
+          item = { name: baseUrl + item, url: baseUrl + item };
+        } else {
+          item = { name: item, url: item };
+        }
       }
-      item.url = getFilePath(item.url)
       return item;
     });
   } else {
     fileList.value = [];
     return [];
   }
-}, { deep: true, immediate: true });
+},{ deep: true, immediate: true });
 
 // 上传前loading加载
 function handleBeforeUpload(file) {
@@ -110,9 +125,11 @@ function handleBeforeUpload(file) {
     isImg = file.type.indexOf("image") > -1;
   }
   if (!isImg) {
-    proxy.$modal.msgError(
-      `文件格式不正确, 请上传${props.fileType.join("/")}图片格式文件!`
-    );
+    proxy.$modal.msgError(`文件格式不正确，请上传${props.fileType.join("/")}图片格式文件!`);
+    return false;
+  }
+  if (file.name.includes(',')) {
+    proxy.$modal.msgError('文件名不正确，不能包含英文逗号!');
     return false;
   }
   if (props.fileSize) {
@@ -134,7 +151,7 @@ function handleExceed() {
 // 上传成功回调
 function handleUploadSuccess(res, file) {
   if (res.code === 200) {
-    uploadList.value.push({ name: res.fileName, url: getFilePath(res.url) });
+    uploadList.value.push({ name: res.fileName, url: res.fileName });
     uploadedSuccessfully();
   } else {
     number.value--;
@@ -150,12 +167,7 @@ function handleDelete(file) {
   const findex = fileList.value.map(f => f.name).indexOf(file.name);
   if (findex > -1 && uploadList.value.length === number.value) {
     fileList.value.splice(findex, 1);
-
-    if (props.isFormat) {
-      emit("update:modelValue", listToString(fileList.value));
-    } else {
-      emit("update:modelValue", fileList.value.map(v => (v.url = v.url.replace(baseUrl, ""), v)));
-    }
+    emit("update:modelValue", listToString(fileList.value));
     return false;
   }
 }
@@ -166,11 +178,7 @@ function uploadedSuccessfully() {
     fileList.value = fileList.value.filter(f => f.url !== undefined).concat(uploadList.value);
     uploadList.value = [];
     number.value = 0;
-    if (props.isFormat) {
-      emit("update:modelValue", listToString(fileList.value));
-    } else {
-      emit("update:modelValue", fileList.value.map(v => (v.url = v.url.replace(baseUrl, ""), v)));
-    }
+    emit("update:modelValue", listToString(fileList.value));
     proxy.$modal.closeLoading();
   }
 }
@@ -203,6 +211,6 @@ function listToString(list, separator) {
 <style scoped lang="scss">
 // .el-upload--picture-card 控制加号部分
 :deep(.hide .el-upload--picture-card) {
-  display: none;
+    display: none;
 }
 </style>

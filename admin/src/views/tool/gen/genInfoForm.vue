@@ -6,6 +6,8 @@
           <template #label>生成模板</template>
           <el-select v-model="info.tplCategory" @change="tplSelectChange">
             <el-option label="单表（增删改查）" value="crud" />
+            <el-option label="树表（增删改查）" value="tree" />
+            <el-option label="主子表（增删改查）" value="sub" />
           </el-select>
         </el-form-item>
       </el-col>
@@ -14,6 +16,7 @@
         <el-form-item prop="tplWebType">
           <template #label>前端类型</template>
           <el-select v-model="info.tplWebType">
+            <el-option label="Vue2 Element UI 模版" value="element-ui" />
             <el-option label="Vue3 Element Plus 模版" value="element-plus" />
           </el-select>
         </el-form-item>
@@ -22,8 +25,8 @@
       <el-col :span="12">
         <el-form-item prop="packageName">
           <template #label>
-            生成模块路径
-            <el-tooltip content="生成在哪个模块下，例如 admin" placement="top">
+            生成包路径
+            <el-tooltip content="生成在哪个java包下，例如 com.ruoyi.system" placement="top">
               <el-icon><question-filled /></el-icon>
             </el-tooltip>
           </template>
@@ -34,8 +37,8 @@
       <el-col :span="12">
         <el-form-item prop="moduleName">
           <template #label>
-            子系统名
-            <el-tooltip content="模块里面的子文件夹，例如 system" placement="top">
+            生成模块名
+            <el-tooltip content="可理解为子系统名，例如 system" placement="top">
               <el-icon><question-filled /></el-icon>
             </el-tooltip>
           </template>
@@ -59,7 +62,7 @@
         <el-form-item prop="functionName">
           <template #label>
             生成功能名
-            <el-tooltip content="用作注释描述以及文档生成，例如 用户" placement="top">
+            <el-tooltip content="用作类描述，例如 用户" placement="top">
               <el-icon><question-filled /></el-icon>
             </el-tooltip>
           </template>
@@ -71,11 +74,12 @@
         <el-form-item prop="genType">
           <template #label>
             生成代码方式
-            <el-tooltip content="默认为zip压缩包下载" placement="top">
+            <el-tooltip content="默认为zip压缩包下载，也可以自定义生成路径" placement="top">
               <el-icon><question-filled /></el-icon>
             </el-tooltip>
           </template>
-          <el-radio v-model="info.genType" label="0">zip压缩包</el-radio>
+          <el-radio v-model="info.genType" :value="0">zip压缩包</el-radio>
+          <el-radio v-model="info.genType" :value="1">自定义路径</el-radio>
         </el-form-item>
       </el-col>
 
@@ -87,12 +91,14 @@
               <el-icon><question-filled /></el-icon>
             </el-tooltip>
           </template>
-          <template v-if="info.parentMenuId != undefined && menuOptions?.length">
-            <tree-select :style="{
-              minWidth: '150px'
-            }" v-model:value="info.parentMenuId" :show-count="true" :options="menuOptions"
-              :objMap="{ value: 'menuId', label: 'menuName', children: 'children' }" placeholder="请选择系统菜单" />
-          </template>
+          <el-tree-select
+            v-model="info.parentMenuId"
+            :data="menuOptions"
+            :props="{ value: 'menuId', label: 'menuName', children: 'children' }"
+            value-key="menuId"
+            placeholder="请选择系统菜单"
+            check-strictly
+          />
         </el-form-item>
       </el-col>
 
@@ -122,7 +128,7 @@
         </el-form-item>
       </el-col>
     </el-row>
-
+    
     <template v-if="info.tplCategory == 'tree'">
       <h4 class="form-header">其他信息</h4>
       <el-row v-show="info.tplCategory == 'tree'">
@@ -135,8 +141,12 @@
               </el-tooltip>
             </template>
             <el-select v-model="info.treeCode" placeholder="请选择">
-              <el-option v-for="(column, index) in info.columns" :key="index"
-                :label="column.columnName + '：' + column.columnComment" :value="column.columnName"></el-option>
+              <el-option
+                v-for="(column, index) in info.columns"
+                :key="index"
+                :label="column.columnName + '：' + column.columnComment"
+                :value="column.columnName"
+              ></el-option>
             </el-select>
           </el-form-item>
         </el-col>
@@ -149,8 +159,12 @@
               </el-tooltip>
             </template>
             <el-select v-model="info.treeParentCode" placeholder="请选择">
-              <el-option v-for="(column, index) in info.columns" :key="index"
-                :label="column.columnName + '：' + column.columnComment" :value="column.columnName"></el-option>
+              <el-option
+                v-for="(column, index) in info.columns"
+                :key="index"
+                :label="column.columnName + '：' + column.columnComment"
+                :value="column.columnName"
+              ></el-option>
             </el-select>
           </el-form-item>
         </el-col>
@@ -163,8 +177,12 @@
               </el-tooltip>
             </template>
             <el-select v-model="info.treeName" placeholder="请选择">
-              <el-option v-for="(column, index) in info.columns" :key="index"
-                :label="column.columnName + '：' + column.columnComment" :value="column.columnName"></el-option>
+              <el-option
+                v-for="(column, index) in info.columns"
+                :key="index"
+                :label="column.columnName + '：' + column.columnComment"
+                :value="column.columnName"
+              ></el-option>
             </el-select>
           </el-form-item>
         </el-col>
@@ -183,8 +201,12 @@
               </el-tooltip>
             </template>
             <el-select v-model="info.subTableName" placeholder="请选择" @change="subSelectChange">
-              <el-option v-for="(table, index) in tables" :key="index"
-                :label="table.tableName + '：' + table.tableComment" :value="table.tableName"></el-option>
+              <el-option
+                v-for="(table, index) in tables"
+                :key="index"
+                :label="table.tableName + '：' + table.tableComment"
+                :value="table.tableName"
+              ></el-option>
             </el-select>
           </el-form-item>
         </el-col>
@@ -197,8 +219,12 @@
               </el-tooltip>
             </template>
             <el-select v-model="info.subTableFkName" placeholder="请选择">
-              <el-option v-for="(column, index) in subColumns" :key="index"
-                :label="column.columnName + '：' + column.columnComment" :value="column.columnName"></el-option>
+              <el-option
+                v-for="(column, index) in subColumns"
+                :key="index"
+                :label="column.columnName + '：' + column.columnComment"
+                :value="column.columnName"
+              ></el-option>
             </el-select>
           </el-form-item>
         </el-col>
@@ -210,6 +236,7 @@
 
 <script setup>
 import { listMenu } from "@/api/system/menu";
+
 const subColumns = ref([]);
 const menuOptions = ref([]);
 const { proxy } = getCurrentInstance();
@@ -233,15 +260,18 @@ const rules = ref({
   businessName: [{ required: true, message: "请输入生成业务名", trigger: "blur" }],
   functionName: [{ required: true, message: "请输入生成功能名", trigger: "blur" }]
 });
+
 function subSelectChange(value) {
   props.info.subTableFkName = "";
 }
+
 function tplSelectChange(value) {
   if (value !== "sub") {
     props.info.subTableName = "";
     props.info.subTableFkName = "";
   }
 }
+
 function setSubTableColumns(value) {
   for (var item in props.tables) {
     const name = props.tables[item].tableName;
@@ -251,14 +281,17 @@ function setSubTableColumns(value) {
     }
   }
 }
+
 /** 查询菜单下拉树结构 */
 function getMenuTreeselect() {
   listMenu().then(response => {
-    let menus = proxy.handleTree(response.data, "menuId")
-    menus.unshift({ menuId: 0, menuName: "顶级目录" })
-    menuOptions.value = menus;
+    menuOptions.value = proxy.handleTree(response.data, "menuId");
   });
 }
+
+onMounted(() => {
+  getMenuTreeselect();
+})
 
 watch(() => props.info.subTableName, val => {
   setSubTableColumns(val);
@@ -270,5 +303,4 @@ watch(() => props.info.tplWebType, val => {
   }
 });
 
-getMenuTreeselect();
 </script>

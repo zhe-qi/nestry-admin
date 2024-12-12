@@ -13,7 +13,7 @@
           :disable-transitions="true"
           :key="item.value + ''"
           :index="index"
-          :type="item.elTagType === 'primary' ? '' : item.elTagType"
+          :type="item.elTagType"
           :class="item.elTagClass"
         >{{ item.label + " " }}</el-tag>
       </template>
@@ -55,7 +55,7 @@ const values = computed(() => {
 const unmatch = computed(() => {
   unmatchArray.value = [];
   // 没有value不显示
-  if (props.value === null || typeof props.value === 'undefined' || props.value === '') return false
+  if (props.value === null || typeof props.value === 'undefined' || props.value === '' || !Array.isArray(props.options) || props.options.length === 0) return false
   // 传入值为数组
   let unmatch = false // 添加一个标志来判断是否有未匹配项
   values.value.forEach(item => {

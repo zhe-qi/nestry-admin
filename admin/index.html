@@ -6,8 +6,8 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
   <meta name="renderer" content="webkit">
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-  <link rel="icon" href="/nest.svg">
-  <title>全栈管理系统</title>
+  <link rel="icon" href="/favicon.ico">
+  <title>若依管理系统</title>
   <!--[if lt IE 11]><script>window.location.href='/html/ie.html';</script><![endif]-->
   <style>
     html,
@@ -32,21 +32,6 @@
       width: 100%;
       height: 100%;
       z-index: 999999;
-      background-image: url("/assets/bg.jpg");
-      background-size: cover;
-    }
-
-    .cover {
-      position: absolute;
-      top: 0;
-      right: 0;
-      bottom: 0;
-      left: 0;
-      z-index: 0;
-      display: block;
-      background-color: rgba(60, 91, 147, 0.6);
-      background-image: -webkit-linear-gradient(-410deg, rgba(61, 66, 96, 0.6) 20%, rgba(21, 23, 34, 0.8));
-      background-image: linear-gradient(140deg, rgba(61, 66, 96, 0.6) 20%, rgba(21, 23, 34, 0.8));
     }
 
     #loader {
@@ -131,16 +116,17 @@
       }
     }
 
+
     #loader-wrapper .loader-section {
       position: fixed;
       top: 0;
       width: 51%;
       height: 100%;
+      background: #7171C6;
       z-index: 1000;
       -webkit-transform: translateX(0);
       -ms-transform: translateX(0);
       transform: translateX(0);
-
     }
 
     #loader-wrapper .loader-section.section-left {
@@ -217,7 +203,6 @@
 <body>
   <div id="app">
     <div id="loader-wrapper">
-      <div class="cover"></div>
       <div id="loader"></div>
       <div class="loader-section section-left"></div>
       <div class="loader-section section-right"></div>

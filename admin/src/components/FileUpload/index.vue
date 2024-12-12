@@ -1,8 +1,19 @@
 <template>
   <div class="upload-file">
-    <el-upload multiple :action="uploadFileUrl" :before-upload="handleBeforeUpload" :file-list="fileList" :limit="limit"
-      :on-error="handleUploadError" :on-exceed="handleExceed" :on-success="handleUploadSuccess" :show-file-list="false"
-      :headers="headers" class="upload-file-uploader" ref="fileUpload">
+    <el-upload
+      multiple
+      :action="uploadFileUrl"
+      :before-upload="handleBeforeUpload"
+      :file-list="fileList"
+      :limit="limit"
+      :on-error="handleUploadError"
+      :on-exceed="handleExceed"
+      :on-success="handleUploadSuccess"
+      :show-file-list="false"
+      :headers="headers"
+      class="upload-file-uploader"
+      ref="fileUpload"
+    >
       <!-- 上传按钮 -->
       <el-button type="primary">选取文件</el-button>
     </el-upload>
@@ -29,34 +40,29 @@
 
 <script setup>
 import { getToken } from "@/utils/auth";
-import { getFilePath } from "@/utils/ruoyi.js"
+
 const props = defineProps({
   modelValue: [String, Object, Array],
   // 数量限制
   limit: {
     type: Number,
-    default: 1,
+    default: 5,
   },
   // 大小限制(MB)
   fileSize: {
     type: Number,
-    default: 100,
+    default: 5,
   },
   // 文件类型, 例如['png', 'jpg', 'jpeg']
   fileType: {
     type: Array,
-    default: () => ["png", "jpg", "jpeg", "gif", "docx", "xlsx", "ppt", "txt", "pdf", "zip", "mp4", "mp3"],
+    default: () => ["doc", "xls", "ppt", "txt", "pdf"],
   },
   // 是否显示提示
   isShowTip: {
     type: Boolean,
     default: true
-  },
-   //是否返回filesList字符串，否则返回数组对象
-   isFormat: {
-    type: Boolean,
-    default:true
-  },
+  }
 });
 
 const { proxy } = getCurrentInstance();
@@ -80,11 +86,7 @@ watch(() => props.modelValue, val => {
     fileList.value = list.map(item => {
       if (typeof item === "string") {
         item = { name: item, url: item };
-      } else {
-        item.name = item.name || item.fileName
-        item.url = item.url || item.filePath
       }
-      item.url = getFilePath(item.url)
       item.uid = item.uid || new Date().getTime() + temp++;
       return item;
     });
@@ -92,7 +94,7 @@ watch(() => props.modelValue, val => {
     fileList.value = [];
     return [];
   }
-}, { deep: true, immediate: true });
+},{ deep: true, immediate: true });
 
 // 上传前校检格式和大小
 function handleBeforeUpload(file) {
@@ -102,9 +104,14 @@ function handleBeforeUpload(file) {
     const fileExt = fileName[fileName.length - 1];
     const isTypeOk = props.fileType.indexOf(fileExt) >= 0;
     if (!isTypeOk) {
-      proxy.$modal.msgError(`文件格式不正确, 请上传${props.fileType.join("/")}格式文件!`);
+      proxy.$modal.msgError(`文件格式不正确，请上传${props.fileType.join("/")}格式文件!`);
       return false;
     }
+  }
+  // 校检文件名是否包含特殊字符
+  if (file.name.includes(',')) {
+    proxy.$modal.msgError('文件名不正确，不能包含英文逗号!');
+    return false;
   }
   // 校检文件大小
   if (props.fileSize) {
@@ -132,7 +139,7 @@ function handleUploadError(err) {
 // 上传成功回调
 function handleUploadSuccess(res, file) {
   if (res.code === 200) {
-    uploadList.value.push({ name: res.fileName, url: res.url });
+    uploadList.value.push({ name: res.fileName, url: res.fileName });
     uploadedSuccessfully();
   } else {
     number.value--;
@@ -146,12 +153,7 @@ function handleUploadSuccess(res, file) {
 // 删除文件
 function handleDelete(index) {
   fileList.value.splice(index, 1);
-  if (props.isFormat) {
-    emit("update:modelValue", listToString(fileList.value));
-  } else {
-    emit("update:modelValue", fileList.value.map(v => (v.url=v.url.replace(baseUrl,""),v)));
-  }
-
+  emit("update:modelValue", listToString(fileList.value));
 }
 
 // 上传结束处理
@@ -160,11 +162,7 @@ function uploadedSuccessfully() {
     fileList.value = fileList.value.filter(f => f.url !== undefined).concat(uploadList.value);
     uploadList.value = [];
     number.value = 0;
-    if (props.isFormat) {
-      emit("update:modelValue", listToString(fileList.value));
-    } else {
-      emit("update:modelValue", fileList.value.map(v => (v.url=v.url.replace(baseUrl,""),v)));
-    }
+    emit("update:modelValue", listToString(fileList.value));
     proxy.$modal.closeLoading();
   }
 }
@@ -184,8 +182,8 @@ function listToString(list, separator) {
   let strs = "";
   separator = separator || ",";
   for (let i in list) {
-    if (undefined !== list[i].url && list[i].url.indexOf("blob:") !== 0) {
-      strs += list[i].url.replace(baseUrl, "") + separator;
+    if (list[i].url) {
+      strs += list[i].url + separator;
     }
   }
   return strs != '' ? strs.substr(0, strs.length - 1) : '';
@@ -196,21 +194,18 @@ function listToString(list, separator) {
 .upload-file-uploader {
   margin-bottom: 5px;
 }
-
 .upload-file-list .el-upload-list__item {
   border: 1px solid #e4e7ed;
   line-height: 2;
   margin-bottom: 10px;
   position: relative;
 }
-
 .upload-file-list .ele-upload-list__item-content {
   display: flex;
   justify-content: space-between;
   align-items: center;
   color: inherit;
 }
-
 .ele-upload-list__item-content-action .el-link {
   margin-right: 10px;
 }

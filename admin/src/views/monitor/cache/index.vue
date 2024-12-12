@@ -3,11 +3,7 @@
     <el-row>
       <el-col :span="24" class="card-box">
         <el-card>
-          <template #header>
-            <div class="flex items-center gap-1">
-              <Monitor style="width: 1em; height: 1em; vertical-align: middle;" /> <span style="vertical-align: middle;">基本信息</span>
-            </div>
-          </template>
+          <template #header><Monitor style="width: 1em; height: 1em; vertical-align: middle;" /> <span style="vertical-align: middle;">基本信息</span></template>
           <div class="el-table el-table--enable-row-hover el-table--medium">
             <table cellspacing="0" style="width: 100%">
               <tbody>
@@ -49,11 +45,7 @@
 
       <el-col :span="12" class="card-box">
         <el-card>
-          <template #header>
-            <div class="flex items-center gap-1">
-              <PieChart style="width: 1em; height: 1em; vertical-align: middle;" /> <span style="vertical-align: middle;">命令统计</span>
-            </div>
-          </template>
+          <template #header><PieChart style="width: 1em; height: 1em; vertical-align: middle;" /> <span style="vertical-align: middle;">命令统计</span></template>
           <div class="el-table el-table--enable-row-hover el-table--medium">
             <div ref="commandstats" style="height: 420px" />
           </div>
@@ -62,11 +54,7 @@
 
       <el-col :span="12" class="card-box">
         <el-card>
-          <template #header>
-            <div class="flex items-center gap-1">
-              <Odometer style="width: 1em; height: 1em; vertical-align: middle;" /> <span style="vertical-align: middle;">内存信息</span>
-            </div>
-          </template>
+          <template #header><Odometer style="width: 1em; height: 1em; vertical-align: middle;" /> <span style="vertical-align: middle;">内存信息</span></template>
           <div class="el-table el-table--enable-row-hover el-table--medium">
             <div ref="usedmemory" style="height: 420px" />
           </div>

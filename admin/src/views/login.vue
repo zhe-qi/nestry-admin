@@ -1,69 +1,64 @@
 <template>
-  <div class="content">
-    <div class="login-bg" style="overflow: hidden;">
-      <video ref="videoRef" :poster="base64" :class="{ 'brightness-[0.7]': isDark }" autoplay loop muted
-        x5-video-player-type="h5-page" webkit-playsinline mtt-playsinline playsinline
-        class="w-full h-full object-cover">
-        <source src="/bg.mp4" type="video/mp4">
-      </video>
-      <div class="login">
-        <el-form ref="loginRef" :model="loginForm" :rules="loginRules" class="login-form">
-          <h3 class="bg-clip-text text-transparent bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 font-bold text-3xl text-center mb-10">{{ title }}</h3>
-          <el-form-item prop="username">
-            <el-input v-model="loginForm.username" type="text" size="large" auto-complete="off" placeholder="账号">
-              <template #prefix>
-                <svg class="el-input__icon input-icon" xmlns="http://www.w3.org/2000/svg"
-                  xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 448 512">
-                  <path
-                    d="M224 256c70.7 0 128-57.3 128-128S294.7 0 224 0S96 57.3 96 128s57.3 128 128 128zm89.6 32h-16.7c-22.2 10.2-46.9 16-72.9 16s-50.6-5.8-72.9-16h-16.7C60.2 288 0 348.2 0 422.4V464c0 26.5 21.5 48 48 48h352c26.5 0 48-21.5 48-48v-41.6c0-74.2-60.2-134.4-134.4-134.4z"
-                    fill="var(--el-color-primary-light-6)"></path>
-                </svg>
-              </template>
-            </el-input>
-          </el-form-item>
-          <el-form-item prop="password">
-            <el-input v-model="loginForm.password" type="password" size="large" auto-complete="off" placeholder="密码"
-              @keyup.enter="handleLogin">
-              <template #prefix>
-                <svg class="el-input__icon input-icon" xmlns="http://www.w3.org/2000/svg"
-                  xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 448 512">
-                  <path
-                    d="M400 256H152V152.9c0-39.6 31.7-72.5 71.3-72.9c40-.4 72.7 32.1 72.7 72v16c0 13.3 10.7 24 24 24h32c13.3 0 24-10.7 24-24v-16C376 68 307.5-.3 223.5 0C139.5.3 72 69.5 72 153.5V256H48c-26.5 0-48 21.5-48 48v160c0 26.5 21.5 48 48 48h352c26.5 0 48-21.5 48-48V304c0-26.5-21.5-48-48-48zM264 408c0 22.1-17.9 40-40 40s-40-17.9-40-40v-48c0-22.1 17.9-40 40-40s40 17.9 40 40v48z"
-                    fill="var(--el-color-primary-light-6)"></path>
-                </svg>
-              </template>
-            </el-input>
-          </el-form-item>
-          <el-form-item prop="code" v-if="captchaEnabled">
-            <el-input v-model="loginForm.code" size="large" auto-complete="off" placeholder="验证码" style="width: 63%"
-              @keyup.enter="handleLogin">
-              <template #prefix>
-                <svg t="1717471493285" class="el-input__icon input-icon" viewBox="0 0 1024 1024" version="1.1"
-                  xmlns="http://www.w3.org/2000/svg" p-id="5230" width="200" height="200">
-                  <path
-                    d="M905.450308 125.1037C896.061252 125.413837 886.857235 125.529313 877.875951 125.529313 640.975313 125.529313 536.595731 24.886788 535.697946 23.964627L512.065963 0 488.341461 23.964627C487.370003 25.002264 385.085824 125.529313 146.190869 125.529313 137.182172 125.529313 128.039835 125.413837 118.556545 125.1037L85.333333 124.052866 85.333333 580.377175C85.333333 699.862129 128.353375 874.191718 500.387895 1007.504132L511.999142 1011.694272 523.60525 1007.504132C895.638059 874.18512 938.666667 699.862129 938.666667 580.377175L938.666667 124.052866 905.450308 125.1037 905.450308 125.1037ZM475.450355 698.445071 261.083455 511.162345 317.998615 465.71418 431.988275 548.583255C431.988275 548.583255 589.347494 388.025039 741.338848 313.003401L763.015919 337.149491C763.015919 337.149491 573.091405 492.385901 475.450355 698.445071L475.450355 698.445071Z"
-                    fill="var(--el-color-primary-light-6)" p-id="5231"></path>
-                </svg>
-              </template>
-            </el-input>
-            <div class="login-code">
-              <div @click="getCode" class="login-code-img" v-html="codeUrl">
-              </div>
-            </div>
-          </el-form-item>
-          <el-checkbox v-model="loginForm.rememberMe" style="margin:0px 0px 25px 0px;">记住密码</el-checkbox>
-          <el-form-item style="width:100%;">
-            <el-button :loading="loading" size="large" type="primary" style="width:100%;" @click.prevent="handleLogin">
-              <span v-if="!loading">登 录</span>
-              <span v-else>登 录 中...</span>
-            </el-button>
-          </el-form-item>
-        </el-form>
-        <!--  底部  -->
-        <div class="el-login-footer">
-          <span>Copyright © 2024-{{ new Date().getFullYear() }} {{ title }} All Rights Reserved.</span>
+  <div class="login">
+    <el-form ref="loginRef" :model="loginForm" :rules="loginRules" class="login-form">
+      <h3 class="title">若依后台管理系统</h3>
+      <el-form-item prop="username">
+        <el-input v-model="loginForm.username" type="text" size="large" auto-complete="off" placeholder="账号">
+          <template #prefix><svg-icon icon-class="user" class="el-input__icon input-icon" /></template>
+        </el-input>
+      </el-form-item>
+      <el-form-item prop="password">
+        <el-input v-model="loginForm.password" type="password" size="large" auto-complete="off" placeholder="密码"
+          @keyup.enter="handleLogin">
+          <template #prefix><svg-icon icon-class="password" class="el-input__icon input-icon" /></template>
+        </el-input>
+      </el-form-item>
+      <!-- <el-form-item prop="code" v-if="captchaEnabled">
+        <el-input
+          v-model="loginForm.code"
+          size="large"
+          auto-complete="off"
+          placeholder="验证码"
+          style="width: 63%"
+          @keyup.enter="handleLogin"
+        >
+          <template #prefix><svg-icon icon-class="validCode" class="el-input__icon input-icon" /></template>
+        </el-input>
+        <div class="login-code">
+          <img :src="codeUrl" @click="getCode" class="login-code-img"/>
         </div>
-      </div>
+      </el-form-item> -->
+      <el-form-item prop="code" v-if="captchaEnabled">
+        <el-input v-model="loginForm.code" size="large" auto-complete="off" placeholder="验证码" style="width: 63%"
+          @keyup.enter="handleLogin">
+          <template #prefix>
+            <svg t="1717471493285" class="el-input__icon input-icon" viewBox="0 0 1024 1024" version="1.1"
+              xmlns="http://www.w3.org/2000/svg" p-id="5230" width="200" height="200">
+              <path
+                d="M905.450308 125.1037C896.061252 125.413837 886.857235 125.529313 877.875951 125.529313 640.975313 125.529313 536.595731 24.886788 535.697946 23.964627L512.065963 0 488.341461 23.964627C487.370003 25.002264 385.085824 125.529313 146.190869 125.529313 137.182172 125.529313 128.039835 125.413837 118.556545 125.1037L85.333333 124.052866 85.333333 580.377175C85.333333 699.862129 128.353375 874.191718 500.387895 1007.504132L511.999142 1011.694272 523.60525 1007.504132C895.638059 874.18512 938.666667 699.862129 938.666667 580.377175L938.666667 124.052866 905.450308 125.1037 905.450308 125.1037ZM475.450355 698.445071 261.083455 511.162345 317.998615 465.71418 431.988275 548.583255C431.988275 548.583255 589.347494 388.025039 741.338848 313.003401L763.015919 337.149491C763.015919 337.149491 573.091405 492.385901 475.450355 698.445071L475.450355 698.445071Z"
+                fill="var(--el-color-primary-light-6)" p-id="5231"></path>
+            </svg>
+          </template>
+        </el-input>
+        <div class="login-code">
+          <div @click="getCode" class="login-code-img" v-html="codeUrl">
+          </div>
+        </div>
+      </el-form-item>
+      <el-checkbox v-model="loginForm.rememberMe" style="margin:0px 0px 25px 0px;">记住密码</el-checkbox>
+      <el-form-item style="width:100%;">
+        <el-button :loading="loading" size="large" type="primary" style="width:100%;" @click.prevent="handleLogin">
+          <span v-if="!loading">登 录</span>
+          <span v-else>登 录 中...</span>
+        </el-button>
+        <div style="float: right;" v-if="register">
+          <router-link class="link-type" :to="'/register'">立即注册</router-link>
+        </div>
+      </el-form-item>
+    </el-form>
+    <!--  底部  -->
+    <div class="el-login-footer">
+      <span>Copyright © 2018-2024 ruoyi.vip All Rights Reserved.</span>
     </div>
   </div>
 </template>
@@ -73,16 +68,11 @@ import { getCodeImg } from "@/api/login";
 import Cookies from "js-cookie";
 import { encrypt, decrypt } from "@/utils/jsencrypt";
 import useUserStore from '@/store/modules/user'
-import { ElNotification } from 'element-plus'
 
 const userStore = useUserStore()
 const route = useRoute();
 const router = useRouter();
 const { proxy } = getCurrentInstance();
-const title = import.meta.env.VITE_APP_TITLE;
-
-const base64 =
-  "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAQAAAACCAIAAADwyuo0AAAACXBIWXMAAAsTAAALEwEAmpwYAAAAIklEQVR4nGNgYFRcMnfV/y9/GbkVGdjUnDNzW1JyOxhYlAF40Ah0YMgUXQAAAABJRU5ErkJggg==";
 
 const loginForm = ref({
   username: "admin",
@@ -134,7 +124,6 @@ function handleLogin() {
           }
           return acc;
         }, {});
-        ElNotification.success({ title: '登录成功' })
         router.push({ path: redirect.value || "/", query: otherQueryParams });
       }).catch(() => {
         loading.value = false;
@@ -146,6 +135,16 @@ function handleLogin() {
     }
   });
 }
+
+// function getCode() {
+//   getCodeImg().then(res => {
+//     captchaEnabled.value = res.captchaEnabled === undefined ? true : res.captchaEnabled;
+//     if (captchaEnabled.value) {
+//       codeUrl.value = "data:image/gif;base64," + res.img;
+//       loginForm.value.uuid = res.uuid;
+//     }
+//   });
+// }
 
 function getCode() {
   getCodeImg().then(res => {
@@ -167,57 +166,45 @@ function getCookie() {
     rememberMe: rememberMe === undefined ? false : Boolean(rememberMe)
   };
 }
+
 getCode();
 getCookie();
 </script>
 
 <style lang='scss' scoped>
-.content {
-  width: 100%;
-  height: 100%;
-}
-
-.login-bg {
-  width: 100%;
-  height: 100%;
+.login {
   display: flex;
   justify-content: center;
   align-items: center;
-  overflow: hidden;
-}
-
-.login {
-  position: absolute;
+  height: 100%;
+  background-image: url("../assets/images/login-background.jpg");
+  background-size: cover;
 }
 
 .title {
   margin: 0px auto 30px auto;
   text-align: center;
-  font-weight: 700;
-  font-size: 24px;
+  color: #707070;
 }
 
 .login-form {
-  border-radius: 12px;
-  backdrop-filter: blur(4px);
-  background-color: #ffffffa7;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  width: clamp(350px, 50vw, 560px);
-  min-width: 350px;
-  padding: 51px 32px 30px;
+  border-radius: 6px;
+  background: #ffffff;
+  width: clamp(350px, 50vw, 490px);
+  padding: 25px 25px 5px 25px;
 
   .el-input {
-    height: 38px;
+    height: 40px;
 
     input {
-      height: 38px;
+      height: 40px;
     }
   }
 
   .input-icon {
     height: 39px;
     width: 14px;
-    margin-left: 2px;
+    margin-left: 0px;
   }
 }
 
@@ -229,9 +216,8 @@ getCookie();
 
 .login-code {
   width: 33%;
-  height: 38px;
+  height: 40px;
   float: right;
-  margin-left: 10px;
 
   img {
     cursor: pointer;
@@ -244,7 +230,6 @@ getCookie();
   line-height: 40px;
   position: fixed;
   bottom: 0;
-  left: 0;
   width: 100%;
   text-align: center;
   color: #fff;
@@ -254,11 +239,7 @@ getCookie();
 }
 
 .login-code-img {
-  height: 38px;
-}
-
-:deep(svg) {
-  width: 100%;
-  height: 100%;
+  height: 40px;
+  padding-left: 12px;
 }
 </style>

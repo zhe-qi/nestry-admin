@@ -10,10 +10,10 @@
                @keyup.enter="handleQuery"
             />
          </el-form-item>
-         <el-form-item label="创建者" prop="createBy">
+         <el-form-item label="操作人员" prop="createBy">
             <el-input
                v-model="queryParams.createBy"
-               placeholder="请输入创建者"
+               placeholder="请输入操作人员"
                clearable
                style="width: 200px"
                @keyup.enter="handleQuery"
@@ -70,31 +70,30 @@
 
       <el-table v-loading="loading" :data="noticeList" @selection-change="handleSelectionChange">
          <el-table-column type="selection" width="55" align="center" />
-         <el-table-column label="序号" align="center" prop="noticeId" min-width="150" />
+         <el-table-column label="序号" align="center" prop="noticeId" width="100" />
          <el-table-column
             label="公告标题"
             align="center"
-            width="200"
             prop="noticeTitle"
             :show-overflow-tooltip="true"
          />
-         <el-table-column label="公告类型" align="center" prop="noticeType" min-width="150">
+         <el-table-column label="公告类型" align="center" prop="noticeType" width="100">
             <template #default="scope">
                <dict-tag :options="sys_notice_type" :value="scope.row.noticeType" />
             </template>
          </el-table-column>
-         <el-table-column label="状态" align="center" prop="status" min-width="150">
+         <el-table-column label="状态" align="center" prop="status" width="100">
             <template #default="scope">
                <dict-tag :options="sys_notice_status" :value="scope.row.status" />
             </template>
          </el-table-column>
-         <el-table-column label="创建者" align="center" prop="createBy" min-width="150" />
-         <el-table-column label="创建时间" align="center" prop="createTime" min-width="150">
+         <el-table-column label="创建者" align="center" prop="createBy" width="100" />
+         <el-table-column label="创建时间" align="center" prop="createTime" width="100">
             <template #default="scope">
                <span>{{ parseTime(scope.row.createTime, '{y}-{m}-{d}') }}</span>
             </template>
          </el-table-column>
-         <el-table-column label="操作" align="center" width="150" class-name="small-padding fixed-width">
+         <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
             <template #default="scope">
                <el-button link type="primary" icon="Edit" @click="handleUpdate(scope.row)" v-hasPermi="['system:notice:edit']">修改</el-button>
                <el-button link type="primary" icon="Delete" @click="handleDelete(scope.row)" v-hasPermi="['system:notice:remove']" >删除</el-button>
@@ -137,7 +136,7 @@
                         <el-radio
                            v-for="dict in sys_notice_status"
                            :key="dict.value"
-                           :label="dict.value"
+                           :value="dict.value"
                         >{{ dict.label }}</el-radio>
                      </el-radio-group>
                   </el-form-item>
@@ -201,11 +200,13 @@ function getList() {
     loading.value = false;
   });
 }
+
 /** 取消按钮 */
 function cancel() {
   open.value = false;
   reset();
 }
+
 /** 表单重置 */
 function reset() {
   form.value = {
@@ -213,32 +214,37 @@ function reset() {
     noticeTitle: undefined,
     noticeType: undefined,
     noticeContent: undefined,
-    status: "1"
+    status: "0"
   };
   proxy.resetForm("noticeRef");
 }
+
 /** 搜索按钮操作 */
 function handleQuery() {
   queryParams.value.pageNum = 1;
   getList();
 }
+
 /** 重置按钮操作 */
 function resetQuery() {
   proxy.resetForm("queryRef");
   handleQuery();
 }
+
 /** 多选框选中数据 */
 function handleSelectionChange(selection) {
   ids.value = selection.map(item => item.noticeId);
   single.value = selection.length != 1;
   multiple.value = !selection.length;
 }
+
 /** 新增按钮操作 */
 function handleAdd() {
   reset();
   open.value = true;
   title.value = "添加公告";
 }
+
 /**修改按钮操作 */
 function handleUpdate(row) {
   reset();
@@ -249,6 +255,7 @@ function handleUpdate(row) {
     title.value = "修改公告";
   });
 }
+
 /** 提交按钮 */
 function submitForm() {
   proxy.$refs["noticeRef"].validate(valid => {
@@ -269,6 +276,7 @@ function submitForm() {
     }
   });
 }
+
 /** 删除按钮操作 */
 function handleDelete(row) {
   const noticeIds = row.noticeId || ids.value

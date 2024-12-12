@@ -55,19 +55,19 @@
          :default-expand-all="isExpandAll"
          :tree-props="{ children: 'children', hasChildren: 'hasChildren' }"
       >
-         <el-table-column prop="deptName" label="部门名称" min-width="150"></el-table-column>
-         <el-table-column prop="orderNum" label="排序" align="center" min-width="150"></el-table-column>
-         <el-table-column prop="status" label="状态" align="center" min-width="150">
+         <el-table-column prop="deptName" label="部门名称" width="260"></el-table-column>
+         <el-table-column prop="orderNum" label="排序" width="200"></el-table-column>
+         <el-table-column prop="status" label="状态" width="100">
             <template #default="scope">
                <dict-tag :options="sys_normal_disable" :value="scope.row.status" />
             </template>
          </el-table-column>
-         <el-table-column label="创建时间" align="center" prop="createTime" min-width="150">
+         <el-table-column label="创建时间" align="center" prop="createTime" width="200">
             <template #default="scope">
                <span>{{ parseTime(scope.row.createTime) }}</span>
             </template>
          </el-table-column>
-         <el-table-column label="操作" align="center" width="220" class-name="small-padding fixed-width">
+         <el-table-column label="操作" align="center" class-name="small-padding fixed-width">
             <template #default="scope">
                <el-button link type="primary" icon="Edit" @click="handleUpdate(scope.row)" v-hasPermi="['system:dept:edit']">修改</el-button>
                <el-button link type="primary" icon="Plus" @click="handleAdd(scope.row)" v-hasPermi="['system:dept:add']">新增</el-button>
@@ -79,7 +79,7 @@
       <!-- 添加或修改部门对话框 -->
       <el-dialog :title="title" v-model="open" width="600px" append-to-body>
          <el-form ref="deptRef" :model="form" :rules="rules" label-width="80px">
-            <el-row :gutter="20">
+            <el-row>
                <el-col :span="24" v-if="form.parentId !== 0">
                   <el-form-item label="上级部门" prop="parentId">
                      <el-tree-select
@@ -123,7 +123,7 @@
                         <el-radio
                            v-for="dict in sys_normal_disable"
                            :key="dict.value"
-                           :label="dict.value"
+                           :value="dict.value"
                         >{{ dict.label }}</el-radio>
                      </el-radio-group>
                   </el-form-item>
@@ -180,11 +180,13 @@ function getList() {
     loading.value = false;
   });
 }
+
 /** 取消按钮 */
 function cancel() {
   open.value = false;
   reset();
 }
+
 /** 表单重置 */
 function reset() {
   form.value = {
@@ -195,19 +197,22 @@ function reset() {
     leader: undefined,
     phone: undefined,
     email: undefined,
-    status: "1"
+    status: "0"
   };
   proxy.resetForm("deptRef");
 }
+
 /** 搜索按钮操作 */
 function handleQuery() {
   getList();
 }
+
 /** 重置按钮操作 */
 function resetQuery() {
   proxy.resetForm("queryRef");
   handleQuery();
 }
+
 /** 新增按钮操作 */
 function handleAdd(row) {
   reset();
@@ -220,6 +225,7 @@ function handleAdd(row) {
   open.value = true;
   title.value = "添加部门";
 }
+
 /** 展开/折叠操作 */
 function toggleExpandAll() {
   refreshTable.value = false;
@@ -228,6 +234,7 @@ function toggleExpandAll() {
     refreshTable.value = true;
   });
 }
+
 /** 修改按钮操作 */
 function handleUpdate(row) {
   reset();
@@ -240,6 +247,7 @@ function handleUpdate(row) {
     title.value = "修改部门";
   });
 }
+
 /** 提交按钮 */
 function submitForm() {
   proxy.$refs["deptRef"].validate(valid => {
@@ -260,6 +268,7 @@ function submitForm() {
     }
   });
 }
+
 /** 删除按钮操作 */
 function handleDelete(row) {
   proxy.$modal.confirm('是否确认删除名称为"' + row.deptName + '"的数据项?').then(function() {

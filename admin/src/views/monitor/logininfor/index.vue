@@ -73,6 +73,16 @@
          </el-col>
          <el-col :span="1.5">
             <el-button
+               type="primary"
+               plain
+               icon="Unlock"
+               :disabled="single"
+               @click="handleUnlock"
+               v-hasPermi="['monitor:logininfor:unlock']"
+            >解锁</el-button>
+         </el-col>
+         <el-col :span="1.5">
+            <el-button
                type="warning"
                plain
                icon="Download"
@@ -151,11 +161,13 @@ function getList() {
     loading.value = false;
   });
 }
+
 /** 搜索按钮操作 */
 function handleQuery() {
   queryParams.value.pageNum = 1;
   getList();
 }
+
 /** 重置按钮操作 */
 function resetQuery() {
   dateRange.value = [];
@@ -163,6 +175,7 @@ function resetQuery() {
   queryParams.value.pageNum = 1;
   proxy.$refs["logininforRef"].sort(defaultSort.value.prop, defaultSort.value.order);
 }
+
 /** 多选框选中数据 */
 function handleSelectionChange(selection) {
   ids.value = selection.map(item => item.infoId);
@@ -170,12 +183,14 @@ function handleSelectionChange(selection) {
   single.value = selection.length != 1;
   selectName.value = selection.map(item => item.userName);
 }
+
 /** 排序触发事件 */
 function handleSortChange(column, prop, order) {
   queryParams.value.orderByColumn = column.prop;
   queryParams.value.isAsc = column.order;
   getList();
 }
+
 /** 删除按钮操作 */
 function handleDelete(row) {
   const infoIds = row.infoId || ids.value;
@@ -186,6 +201,7 @@ function handleDelete(row) {
     proxy.$modal.msgSuccess("删除成功");
   }).catch(() => {});
 }
+
 /** 清空按钮操作 */
 function handleClean() {
   proxy.$modal.confirm("是否确认清空所有登录日志数据项?").then(function () {
@@ -195,11 +211,22 @@ function handleClean() {
     proxy.$modal.msgSuccess("清空成功");
   }).catch(() => {});
 }
+
+/** 解锁按钮操作 */
+function handleUnlock() {
+  const username = selectName.value;
+  proxy.$modal.confirm('是否确认解锁用户"' + username + '"数据项?').then(function () {
+    return unlockLogininfor(username);
+  }).then(() => {
+    proxy.$modal.msgSuccess("用户" + username + "解锁成功");
+  }).catch(() => {});
+}
+
 /** 导出按钮操作 */
 function handleExport() {
   proxy.download("monitor/logininfor/export", {
     ...queryParams.value,
-  }, `config_${new Date().getTime()}.xlsx`);
+  }, `logininfor_${new Date().getTime()}.xlsx`);
 }
 
 getList();

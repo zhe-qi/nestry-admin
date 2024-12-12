@@ -63,7 +63,6 @@ import "vue-cropper/dist/index.css";
 import { VueCropper } from "vue-cropper";
 import { uploadAvatar } from "@/api/system/user";
 import useUserStore from "@/store/modules/user";
-import { uploadFile } from "@/api/common";
 
 const userStore = useUserStore();
 const { proxy } = getCurrentInstance();
@@ -80,7 +79,7 @@ const options = reactive({
   autoCropHeight: 200,       // 默认生成截图框高度
   fixedBox: true,            // 固定截图框大小 不允许改变
   outputType: "png",         // 默认生成截图为PNG格式
-  filename: 'avatar.png',        // 文件名称
+  filename: 'avatar',        // 文件名称
   previews: {}               //预览数据
 });
 
@@ -88,25 +87,31 @@ const options = reactive({
 function editCropper() {
   open.value = true;
 }
+
 /** 打开弹出层结束时的回调 */
 function modalOpened() {
   visible.value = true;
 }
+
 /** 覆盖默认上传行为 */
 function requestUpload() {}
+
 /** 向左旋转 */
 function rotateLeft() {
   proxy.$refs.cropper.rotateLeft();
 }
+
 /** 向右旋转 */
 function rotateRight() {
   proxy.$refs.cropper.rotateRight();
 }
+
 /** 图片缩放 */
 function changeScale(num) {
   num = num || 1;
   proxy.$refs.cropper.changeScale(num);
 }
+
 /** 上传预处理 */
 function beforeUpload(file) {
   if (file.type.indexOf("image/") == -1) {
@@ -120,27 +125,27 @@ function beforeUpload(file) {
     };
   }
 }
+
 /** 上传图片 */
 function uploadImg() {
-  proxy.$refs.cropper.getCropBlob(async data => {
+  proxy.$refs.cropper.getCropBlob(data => {
     let formData = new FormData();
-    formData.append("file", data, options.filename);
-    const res = await uploadFile(formData)
-
-    const avatar = res.data.url
-
-    uploadAvatar({ avatar }).then(() => {
+    formData.append("avatarfile", data, options.filename);
+    uploadAvatar(formData).then(response => {
       open.value = false;
-      userStore.avatar = avatar;
+      options.img = import.meta.env.VITE_APP_BASE_API + response.imgUrl;
+      userStore.avatar = options.img;
       proxy.$modal.msgSuccess("修改成功");
       visible.value = false;
     });
   });
 }
+
 /** 实时预览 */
 function realTime(data) {
   options.previews = data;
 }
+
 /** 关闭窗口 */
 function closeDialog() {
   options.img = userStore.avatar;

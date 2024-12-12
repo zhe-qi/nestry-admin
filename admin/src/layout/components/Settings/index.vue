@@ -96,7 +96,7 @@ const showSettings = ref(false);
 const theme = ref(settingsStore.theme);
 const sideTheme = ref(settingsStore.sideTheme);
 const storeSettings = computed(() => settingsStore);
-const predefineColors = ref(['#3F51B5', '#409EFF', '#FF9CA8','#F44336', '#E91E63', '#9C27B0', '#673AB7', '#3F51B5', '#2196F3', '#00BCD4', '#009688', '#795548', '#607D8F'])
+const predefineColors = ref(["#409EFF", "#ff4500", "#ff8c00", "#ffd700", "#90ee90", "#00ced1", "#1e90ff", "#c71585"]);
 
 /** 是否需要topnav */
 function topNavChange(val) {
@@ -110,10 +110,12 @@ function themeChange(val) {
   settingsStore.theme = val;
   handleThemeStyle(val);
 }
+
 function handleTheme(val) {
   settingsStore.sideTheme = val;
   sideTheme.value = val;
 }
+
 function saveSetting() {
   proxy.$modal.loading("正在保存到本地，请稍候...");
   let layoutSetting = {
@@ -128,11 +130,13 @@ function saveSetting() {
   localStorage.setItem("layout-setting", JSON.stringify(layoutSetting));
   setTimeout(proxy.$modal.closeLoading(), 1000)
 }
+
 function resetSetting() {
   proxy.$modal.loading("正在清除设置缓存并刷新，请稍候...");
   localStorage.removeItem("layout-setting")
   setTimeout("window.location.reload()", 1000)
 }
+
 function openSetting() {
   showSettings.value = true;
 }
@@ -145,13 +149,15 @@ defineExpose({
 <style lang='scss' scoped>
 .setting-drawer-title {
   margin-bottom: 12px;
-  color: rgba(0, 0, 0, 0.85);
+  color: var(--el-text-color-primary, rgba(0, 0, 0, 0.85));
   line-height: 22px;
   font-weight: bold;
+
   .drawer-title {
     font-size: 14px;
   }
 }
+
 .setting-drawer-block-checbox {
   display: flex;
   justify-content: flex-start;
@@ -170,13 +176,6 @@ defineExpose({
       height: 48px;
     }
 
-    .custom-img {
-      width: 48px;
-      height: 38px;
-      border-radius: 5px;
-      box-shadow: 1px 1px 2px #898484;
-    }
-
     .setting-drawer-block-checbox-selectIcon {
       position: absolute;
       top: 0;
@@ -193,7 +192,7 @@ defineExpose({
 }
 
 .drawer-item {
-  color: rgba(0, 0, 0, 0.65);
+  color: var(--el-text-color-regular, rgba(0, 0, 0, 0.65));
   padding: 12px 0;
   font-size: 14px;
 

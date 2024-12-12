@@ -40,10 +40,13 @@ const classObj = computed(() => ({
 const { width, height } = useWindowSize();
 const WIDTH = 992; // refer to Bootstrap's responsive design
 
-watchEffect(() => {
+watch(() => device.value, () => {
   if (device.value === 'mobile' && sidebar.value.opened) {
     useAppStore().closeSideBar({ withoutAnimation: false })
   }
+})
+
+watchEffect(() => {
   if (width.value - 1 < WIDTH) {
     useAppStore().toggleDevice('mobile')
     useAppStore().closeSideBar({ withoutAnimation: true })
@@ -67,13 +70,10 @@ function setLayout() {
   @import "@/assets/styles/variables.module.scss";
 
 .app-wrapper {
+  @include clearfix;
   position: relative;
   height: 100%;
   width: 100%;
-
-  & {
-    @include clearfix;
-  }
 
   &.mobile.openSidebar {
     position: fixed;

@@ -102,19 +102,29 @@
             <template #default="scope">
                <el-switch
                   v-model="scope.row.status"
-                  active-value="0"
-                  inactive-value="1"
+                  active-value="1"
+                  inactive-value="0"
                   @change="handleStatusChange(scope.row)"
                ></el-switch>
             </template>
          </el-table-column>
-         <el-table-column label="操作" align="center" width="370" class-name="small-padding fixed-width">
+         <el-table-column label="操作" align="center" width="200" class-name="small-padding fixed-width">
             <template #default="scope">
-               <el-button link type="primary" icon="Edit" @click="handleUpdate(scope.row)" v-hasPermi="['monitor:job:edit']">修改</el-button>
-               <el-button link type="primary" icon="Delete" @click="handleDelete(scope.row)" v-hasPermi="['monitor:job:remove']">删除</el-button>
-               <el-button link type="primary" icon="CaretRight" @click="handleRun(scope.row)" v-hasPermi="['monitor:job:changeStatus']">执行一次</el-button>
-               <el-button link type="primary" icon="View" @click="handleView(scope.row)" v-hasPermi="['monitor:job:query']">详情</el-button>
-               <el-button link type="primary" icon="Operation" @click="handleJobLog(scope.row)" v-hasPermi="['monitor:job:query']">日志</el-button>
+               <el-tooltip content="修改" placement="top">
+                  <el-button link type="primary" icon="Edit" @click="handleUpdate(scope.row)" v-hasPermi="['monitor:job:edit']"></el-button>
+               </el-tooltip>
+               <el-tooltip content="删除" placement="top">
+                  <el-button link type="primary" icon="Delete" @click="handleDelete(scope.row)" v-hasPermi="['monitor:job:remove']"></el-button>
+               </el-tooltip>
+               <el-tooltip content="执行一次" placement="top">
+                  <el-button link type="primary" icon="CaretRight" @click="handleRun(scope.row)" v-hasPermi="['monitor:job:changeStatus']"></el-button>
+               </el-tooltip>
+               <el-tooltip content="任务详细" placement="top">
+                  <el-button link type="primary" icon="View" @click="handleView(scope.row)" v-hasPermi="['monitor:job:query']"></el-button>
+               </el-tooltip>
+               <el-tooltip content="调度日志" placement="top">
+                  <el-button link type="primary" icon="Operation" @click="handleJobLog(scope.row)" v-hasPermi="['monitor:job:query']"></el-button>
+               </el-tooltip>
             </template>
          </el-table-column>
       </el-table>
@@ -186,7 +196,7 @@
                         <el-radio
                            v-for="dict in sys_job_status"
                            :key="dict.value"
-                           :label="dict.value"
+                           :value="dict.value"
                         >{{ dict.label }}</el-radio>
                      </el-radio-group>
                   </el-form-item>
@@ -194,17 +204,17 @@
                <el-col :span="12">
                   <el-form-item label="执行策略" prop="misfirePolicy">
                      <el-radio-group v-model="form.misfirePolicy">
-                        <el-radio-button label="1">立即执行</el-radio-button>
-                        <el-radio-button label="2">执行一次</el-radio-button>
-                        <el-radio-button label="3">放弃执行</el-radio-button>
+                        <el-radio-button :value="1">立即执行</el-radio-button>
+                        <el-radio-button :value="2">执行一次</el-radio-button>
+                        <el-radio-button :value="3">放弃执行</el-radio-button>
                      </el-radio-group>
                   </el-form-item>
                </el-col>
                <el-col :span="12">
                   <el-form-item label="是否并发" prop="concurrent">
                      <el-radio-group v-model="form.concurrent">
-                        <el-radio-button label="0">允许</el-radio-button>
-                        <el-radio-button label="1">禁止</el-radio-button>
+                        <el-radio-button :value="0">允许</el-radio-button>
+                        <el-radio-button :value="1">禁止</el-radio-button>
                      </el-radio-group>
                   </el-form-item>
                </el-col>
@@ -321,15 +331,18 @@ function getList() {
     loading.value = false;
   });
 }
+
 /** 任务组名字典翻译 */
 function jobGroupFormat(row, column) {
   return proxy.selectDictLabel(sys_job_group.value, row.jobGroup);
 }
+
 /** 取消按钮 */
 function cancel() {
   open.value = false;
   reset();
 }
+
 /** 表单重置 */
 function reset() {
   form.value = {
@@ -344,22 +357,26 @@ function reset() {
   };
   proxy.resetForm("jobRef");
 }
+
 /** 搜索按钮操作 */
 function handleQuery() {
   queryParams.value.pageNum = 1;
   getList();
 }
+
 /** 重置按钮操作 */
 function resetQuery() {
   proxy.resetForm("queryRef");
   handleQuery();
 }
+
 // 多选框选中数据
 function handleSelectionChange(selection) {
   ids.value = selection.map(item => item.jobId);
   single.value = selection.length != 1;
   multiple.value = !selection.length;
 }
+
 // 更多操作触发
 function handleCommand(command, row) {
   switch (command) {
@@ -376,6 +393,7 @@ function handleCommand(command, row) {
       break;
   }
 }
+
 // 任务状态修改
 function handleStatusChange(row) {
   let text = row.status === "0" ? "启用" : "停用";
@@ -387,6 +405,7 @@ function handleStatusChange(row) {
     row.status = row.status === "0" ? "1" : "0";
   });
 }
+
 /* 立即执行一次 */
 function handleRun(row) {
   proxy.$modal.confirm('确认要立即执行一次"' + row.jobName + '"任务吗?').then(function () {
@@ -395,6 +414,7 @@ function handleRun(row) {
     proxy.$modal.msgSuccess("执行成功");})
   .catch(() => {});
 }
+
 /** 任务详细信息 */
 function handleView(row) {
   getJob(row.jobId).then(response => {
@@ -402,26 +422,31 @@ function handleView(row) {
     openView.value = true;
   });
 }
+
 /** cron表达式按钮操作 */
 function handleShowCron() {
   expression.value = form.value.cronExpression;
   openCron.value = true;
 }
+
 /** 确定后回传值 */
 function crontabFill(value) {
   form.value.cronExpression = value;
 }
+
 /** 任务日志列表查询 */
 function handleJobLog(row) {
   const jobId = row.jobId || 0;
   router.push('/monitor/job-log/index/' + jobId)
 }
+
 /** 新增按钮操作 */
 function handleAdd() {
   reset();
   open.value = true;
   title.value = "添加任务";
 }
+
 /** 修改按钮操作 */
 function handleUpdate(row) {
   reset();
@@ -432,6 +457,7 @@ function handleUpdate(row) {
     title.value = "修改任务";
   });
 }
+
 /** 提交按钮 */
 function submitForm() {
   proxy.$refs["jobRef"].validate(valid => {
@@ -452,6 +478,7 @@ function submitForm() {
     }
   });
 }
+
 /** 删除按钮操作 */
 function handleDelete(row) {
   const jobIds = row.jobId || ids.value;
@@ -462,6 +489,7 @@ function handleDelete(row) {
     proxy.$modal.msgSuccess("删除成功");
   }).catch(() => {});
 }
+
 /** 导出按钮操作 */
 function handleExport() {
   proxy.download("monitor/job/export", {

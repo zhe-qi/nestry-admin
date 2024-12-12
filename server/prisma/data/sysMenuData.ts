@@ -1532,4 +1532,25 @@ export const sysMenuData = [
     updateTime: null,
     remark: '',
   },
+  {
+    menuId: 117, // 使用未被占用的menuId
+    menuName: '表单构建',
+    parentId: 3, // 父级是"系统工具"
+    orderNum: 1, // 放在第一位
+    path: 'build',
+    component: 'tool/build/index',
+    query: '',
+    isFrame: 0,
+    isCache: 1,
+    menuType: 'C', // C表示菜单
+    visible: '1',
+    status: '1',
+    perms: 'tool:build:list', // 权限标识
+    icon: 'build', // 图标
+    createBy: 'admin',
+    createTime: '2024-12-12 22:07:49',
+    updateBy: '',
+    updateTime: null,
+    remark: '表单构建菜单',
+  },
 ];
